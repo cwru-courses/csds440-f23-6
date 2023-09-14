@@ -146,3 +146,44 @@ There are $2^{n}$ because there are $n$ number of boolean attributes
 
 For every set of attributes, a tree can be constructed that outputs either $true$ or $false$, so there are $2^{2^{n}}$ number of possible trees that can be constructed from the set of all possible attributes. 
 
+Define the set of all possible boolean functions over the $n$ attributes:
+
+$B_{n} = \{f: \{0,1\}^{n} \rightarrow \{0,1\} | f \ is \ a \ boolean \ function\}$
+
+Define the set of all possible decision trees made from the $n$ attributes:
+
+$D_{n} = \{T \ is \ a \ distinct \ tree \ using \ n \ boolean \ attributes\}$
+
+$B_{n}$ is distinct from $D_{N}$ as $B_{n}$ represents the set of all possible boolean functions that take $n$ boolean inputs. $D_{n}$ represents the set of all possible distinct decision trees that can be formed using the $n$ attributes. 
+
+
+Constructing a distinct decision tree from a given boolean function
+
+Consider an abstract boolean function of 3 attributes $(A,B,C)$:
+$f : \{0,1\}^{3} \rightarrow \{0,1\}$
+
+
+```tikz
+\usepackage{tikz-cd}
+\usetikzlibrary{positioning}
+
+\begin{document}
+\begin{tikzpicture}[
+roundnode/.style={circle, draw=green!60, fill=green!5, very thick, minimum size=7mm},
+squarednode/.style={rectangle, draw=red!60, fill=red!5, very thick, minimum size=5mm},
+]
+%Nodes
+\node[squarednode]      (maintopic)                              {7};
+\node[roundnode]        (uppercircle)       [above=of maintopic] {1};
+\node[squarednode]      (rightsquare)       [right=of maintopic] {3};
+\node[roundnode]        (lowercircle)       [below=of maintopic] {4};
+
+%Lines
+\draw[->] (uppercircle.south) -- (maintopic.north);
+\draw[->] (maintopic.east) -- (rightsquare.west);
+\draw[->] (rightsquare.south) .. controls +(down:7mm) and +(right:7mm) .. (lowercircle.east);
+\end{tikzpicture}
+\end{document}
+```
+
+
