@@ -127,17 +127,24 @@ Answer:
 2. 
 
 
-3. Explain in your own words: why memorization should not be considered a valid learning approach. Try to use good, intuitive examples from human learning to motivate your arguments.
+5. Explain in your own words: why memorization should not be considered a valid learning approach. Try to use good, intuitive examples from human learning to motivate your arguments.
 
 Answer: 
+ Though memorizing as a major learning strategy has its place in certain contexts, depending solely on memorization might stiffle deeper knowledge and critical thinking. Consider a learner who is memorizing mathematical formulae or concepts from a computer programming language. While they may be able to solve issues using the formula or principles they have learned, they may struggle when confronted with a slightly different challenge that needs them to modify what they have learned.
+	Furthermore, difficulties in practice are frequently complicated and need a better comprehension of principles as well as training. For example, a soldier who has memorized the whole handbook of any weapon handed to him would be unable to utilize it adequately to protect themselves or others on a battlefield unless they have undergone rigorous training with that weapon to manage stressful scenarios.
 
 6. Explain in your own words: why tabula rasa learning is impossible. 
 
 Answer: 
+ Basically, tabula rasa learning is the concept of starting with a completely blank slate, where the learning system has no prior knowledge or assumptions about the problem it is attempting to solve. In practice, however, machine learning algorithms always benefit from existing knowledge; they require data to learn and cannot begin from scratch. The idea is not to start from scratch, but to efficiently harness existing information and data to discover patterns and generate predictions. Furthermore, the process of learning entails generating informed assumptions based on evidence and existing knowledge. As a result, in regard to machine learning algorithms, tabula rasa learning is impossible.
 
 7. Explain in your own words: why picking a good example representation is important for learning. Try to use good, intuitive examples from human learning to motivate your arguments.
 
 Answer: 
+When you're learning, a good example representation to present or explain anything is like laying sturdy foundations. It opens the door to learning and helps you grasp things better.
+	When learning a new language, for example, you begin with the alphabet and grammatical rules, which serve as the basic building blocks of the language. Once you have these, learning new words and phrases becomes easy since they fit together like jigsaw pieces. Similarly, when you learn something well, you become quite well-versed in it and can use it in a variety of contexts. Assume you learn to ride a bike and can adapt that ability to new bikes or terrains because you have a solid mental model of it.
+	So, choosing the best manner to convey anything is critical. It allows you to learn faster, grasp things more fully, and apply your knowledge in a variety of ways. It's like having a solid learning foundation.
+
 
 8. Consider a learning problem where the examples are described by $n$ Boolean attributes. Prove that the number of *distinct* decision trees that can be constructed in this setting is $2^{2^n}$. *Distinct* means that each tree must represent a different hypothesis in the space. \[Hint: Show that there is a bijection between the set of all Boolean functions over $n$ Boolean attributes and the set of all distinct trees.\] (20 points)
 
