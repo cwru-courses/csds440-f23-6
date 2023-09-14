@@ -6,6 +6,7 @@ When working as a group, only one answer to each question is needed unless other
 1. For three random variables A, B and C, show with a clear example that the statement “A is independent of B” does not imply the statement “A is independent of B given C.” 
 
 Answer:
+
 $A$ = the event that a randomly drawn card from a shuffled deck is a red card (*heart or diamond*) 
 
 $B$ = the event that a randomly drawn card from a shuffled deck is a black card (*spades or clubs*)
@@ -34,6 +35,7 @@ This means that $A$ and $B$ remain independent despite being given $C$.
 2. Points are sampled uniformly at random from the interval $(0,1)^2$ so that they lie on the line $x+y=1$. Determine the expected squared distance between any two sampled points. 
 
 Answer: 
+
 Defining parametric equations for $x$ and $y$
 
 $x+y = 1$
@@ -44,27 +46,34 @@ $y(t)=1-t$
 
 
 Defining random variables for the $x$ and $y$ coordinates of the randomly selected points.
+
 $X$: represents the $x$-coordinate of a point chosen uniformly at random from the interval $(0,1)^2$ such that it lies on the line $x+y=1$
 $X \sim U[0,1]$
 
 $Y$: represents the $y$-coordinate of a point chosen uniformly at random from the interval $(0,1)^2$ such that it lies on the line $x+y=1$ 
-$Y \sim U[0,1]$
+
+$Y \sim U[0,1]$,
 $Y=1-X$
+
 $Y$ is uniquely determined by the value of $X$ and is equal to $1-X$ due to the constrain $x+y=1$ 
 
 Establishing a probability density function for the system
 
 PDF of $X$:
+
 $p_{X}(x) = 1 \ for \ 0\leq x \leq 1$
 
 PDF of $Y$:
+
 $p_{Y}(y) = 1 \ for \ 0\leq y \leq 1$
 
 Setting up equation for squared distance between two sampled points:
 Two randomly sampled points:
+
 $(X_{1}, Y_{1}), (X_{2}, Y_{2})$
 
 Distance formula for two randomly sampled points:
+
 $D^{2} = (X_{2}-X_{1})^{2}+(Y_{2}-Y_{1})^{2}$ 
 
 Calculating Expectation: *not sure abt this yet will come back to it*
@@ -78,25 +87,36 @@ Alternative Answer:
 
 
 Answer: 
+
 Recall the Linearity of Expectations:
+
 $E(a_{1}​X_{1}​+a_{2}​X_{2}​+\dots+a_{n}​X_{n}​)=a_{1}​E(X_{1}​)+a_{2}​E(X_{2}​)+\dots+a_{n}​E(X_{n}​)$
 
-$E(A+B|C=c) = \sum\limits_{a,b}(a+b)p_{A+B}(a+b|C=c)$
+Setting up Expectation Equation:
+
+$E(A+B|C=c) = \sum\limits_{a,b}(a+b)P_{A+B}(a+b|C=c)$
 Using the linearity of expectations we can rewrite the above equation as:
-$\sum\limits_{a,b}(a \cdot p_{A+B}(a+b|C=c)+b \cdot p_{A+B}(a+b|C=c))$
+$\sum\limits_{a,b}(a \cdot P_{A+B}(a+b|C=c)+b \cdot P_{A+B}(a+b|C=c))$
 
 Since we condition the above equation on $C=c$ and $A$ and $B$ are independent we can rewrite:
-$p_{A+B}(a+b|C=c) \rightarrow p_{A}(a|C=c) \cdot p_{b}(b|C=c)$
+
+$P_{A+B}(a+b|C=c) \rightarrow P_{A}(a|C=c) \cdot P_{b}(b|C=c)$
+
 Now our expectation equation looks like:
-$\sum\limits_{a,b}(a \cdot p_{A}(a|C=c) \cdot p_{b}(b|C=c) + b \cdot p_{A}(a|C=c) \cdot p_{B}(b|C=c))$
-$=(\sum\limits_{a}(a \cdot p_{A}(a|C=c)\cdot p_{B}(b|C=c))) + (\sum\limits_{b}(b \cdot p_{A}(a|C=c)\cdot p_{B}(b|C=c)))$
+
+$\sum\limits_{a,b}(a \cdot P_{A}(a|C=c) \cdot P_{b}(b|C=c) + b \cdot P_{A}(a|C=c) \cdot P_{B}(b|C=c))$
+$=(\sum\limits_{a}(a \cdot P_{A}(a|C=c)\cdot P_{B}(b|C=c))) + (\sum\limits_{b}(b \cdot P_{A}(a|C=c)\cdot P_{B}(b|C=c)))$
+
 We can use the linearity of expectations to again, split these sums:
-$= (\sum\limits_{a}(a \cdot p_{A}(a|C=c))) + (\sum\limits_{b}(b \cdot p_{B}(b|C=c)))$
+
+$= (\sum\limits_{a}(a \cdot P_{A}(a|C=c))) + (\sum\limits_{b}(b \cdot P_{B}(b|C=c)))$
 
 The two sums above are simply the conditional expectation equations for the random variables $A$ and $B$ given $C=c$
+
 $= E(A|C=c) + E(B|C=c)$
 
 We have now shown that:
+
 $E(A+B|C=c) = E(A|C=c) + E(B|C=c) \blacksquare$
 
 
