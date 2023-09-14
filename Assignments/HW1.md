@@ -161,6 +161,7 @@ Constructing a distinct decision tree from a given boolean function
 
 Consider an abstract boolean function of 3 attributes $(A,B,C)$:
 $f : \{0,1\}^{3} \rightarrow \{0,1\}$
+&#123;
 
 
 ```tikz
