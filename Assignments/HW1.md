@@ -160,10 +160,6 @@ $B_{n}$ is distinct from $D_{N}$ as $B_{n}$ represents the set of all possible b
 Constructing a distinct decision tree from a given boolean function
 
 Consider an abstract boolean function of 3 attributes $(A,B,C)$:
-$f : `\{0,1\}`^{3} \rightarrow \{0,1\}$
+$f : \{0,1\}^{3} \rightarrow \{0,1\}$
  
 We would start at the root node, and branch out twice, to represent the two possible states of the first boolean attribute, we would continue this branching for all 3 attributes until we run out. This is how we would construct a unique decision tree for a given boolean function.
-
-```math
-{as}
-```
