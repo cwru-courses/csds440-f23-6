@@ -76,9 +76,9 @@ Distance formula for two randomly sampled points:
 
 $D^{2} = (X_{2}-X_{1})^{2}+(Y_{2}-Y_{1})^{2}$ 
 
-Calculating Expectation: *not sure abt this yet will come back to it*
+Calculating Expectation: 
 
-$E[D^{2}] = \int\int_{(0,1)^{2}} D^{2}p_{X}(x)p_{Y}(y)dxdy$
+$E[D^{2}] = \int\int_{(0,1)^{2}} D^{2}p_{X}(x)p_{Y}(y)dxdy = \frac{1}{3}$
 
 
 3. For any two random variables $X$ and $Y$, the conditional expectation of $X$ given $Y=y$ is defined by $E(X|Y=y)=\sum_x p_X(x|Y=y)$ for a fixed $y$. Show that, for any three random variables $A$, $B$ and $C$, $E(A+B|C=c)=E(A|C=c)+E(B|C=c)$.
@@ -160,31 +160,7 @@ $B_{n}$ is distinct from $D_{N}$ as $B_{n}$ represents the set of all possible b
 Constructing a distinct decision tree from a given boolean function
 
 Consider an abstract boolean function of 3 attributes $(A,B,C)$:
-$f : \{0,1\}^{3} \rightarrow \{0,1\}$
-&#123;
+$f : `\{0,1`\}^{3} \rightarrow \{0,1\}$
 
-
-```tikz
-\usepackage{tikz-cd}
-\usetikzlibrary{positioning}
-
-\begin{document}
-\begin{tikzpicture}[
-roundnode/.style={circle, draw=green!60, fill=green!5, very thick, minimum size=7mm},
-squarednode/.style={rectangle, draw=red!60, fill=red!5, very thick, minimum size=5mm},
-]
-%Nodes
-\node[squarednode]      (maintopic)                              {7};
-\node[roundnode]        (uppercircle)       [above=of maintopic] {1};
-\node[squarednode]      (rightsquare)       [right=of maintopic] {3};
-\node[roundnode]        (lowercircle)       [below=of maintopic] {4};
-
-%Lines
-\draw[->] (uppercircle.south) -- (maintopic.north);
-\draw[->] (maintopic.east) -- (rightsquare.west);
-\draw[->] (rightsquare.south) .. controls +(down:7mm) and +(right:7mm) .. (lowercircle.east);
-\end{tikzpicture}
-\end{document}
-```
-
+We would start at the root node, and branch out twice, to represent the two possible states of the first boolean attribute, we would continue this branching for all 3 attributes until we run out. This is how we would construct a unique decision tree for a given boolean function.
 
