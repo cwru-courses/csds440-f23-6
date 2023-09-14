@@ -7,15 +7,18 @@ When working as a group, only one answer to each question is needed unless other
 
 Answer:
 $A$ = the event that a randomly drawn card from a shuffled deck is a red card (*heart or diamond*) 
+
 $B$ = the event that a randomly drawn card from a shuffled deck is a black card (*spades or clubs*)
+
 $C$ = the event that a randomly drawn card from a shuffled deck is an *odd numbered* card
-$$
-\begin{align*}
-P(A) = \frac{26}{52}&\\
-P(B) = \frac{26}{52}&\\
-P(C) = \frac{12}{52}&
-\end{align*}
-$$
+
+
+$P(A) = \frac{26}{52}$
+$P(B) = \frac{26}{52}$
+$P(C) = \frac{12}{52}$
+
+
+
 $A$ and $B$ are independent of one another because drawing a red card does not affect the chances of the card being black. 
 
 $P(A|C)$ = the probability of drawing a red card given the card is odd
@@ -32,16 +35,14 @@ This means that $A$ and $B$ remain independent despite being given $C$.
 
 Answer: 
 Defining parametric equations for $x$ and $y$
-$$
-\begin{align*}
-&x+y = 1\\
-&Let, \ 0\leq t \leq 1\\
-&So \ that,\\
-&x(t)=t\\
-&y(t)=1-t\\
 
-\end{align*}
-$$
+$x+y = 1$
+$Let, \ 0\leq t \leq 1$
+$So \ that,$
+$x(t)=t$
+$y(t)=1-t$
+
+
 Defining random variables for the $x$ and $y$ coordinates of the randomly selected points.
 $X$: represents the $x$-coordinate of a point chosen uniformly at random from the interval $(0,1)^2$ such that it lies on the line $x+y=1$
 $X \sim U[0,1]$
