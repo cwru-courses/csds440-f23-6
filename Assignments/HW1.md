@@ -175,10 +175,4 @@ Proving the injection between the sets $B_{n}$ and $D_{n}$:
 
 
 
-\[ 
-f_i(n) = \begin{cases}  \\
-\text{True} & \text{if } T_i(n) = \text{True} \\
-\text{False} & \text{if } T_i(n) = \text{False} \\
-\end{cases} 
-\]
-
+$$ \begin{align*} f(x) &= x^2 + 2x + 1 \\ g(x) &= \frac{1}{x} \end{align*} $$
