@@ -13,12 +13,9 @@ $B$ = the event that a randomly drawn card from a shuffled deck is a black card 
 
 $C$ = the event that a randomly drawn card from a shuffled deck is an *odd numbered* card
 
-
 $P(A) = \frac{26}{52}$
 $P(B) = \frac{26}{52}$
 $P(C) = \frac{12}{52}$
-
-
 
 $A$ and $B$ are independent of one another because drawing a red card does not affect the chances of the card being black. 
 
@@ -83,8 +80,6 @@ $E[D^{2}] = \int\int_{(0,1)^{2}} D^{2}p_{X}(x)p_{Y}(y)dxdy = \frac{1}{3}$
 
 3. For any two random variables $X$ and $Y$, the conditional expectation of $X$ given $Y=y$ is defined by $E(X|Y=y)=\sum_x p_X(x|Y=y)$ for a fixed $y$. Show that, for any three random variables $A$, $B$ and $C$, $E(A+B|C=c)=E(A|C=c)+E(B|C=c)$.
 
-Alternative Answer:
-
 
 Answer: 
 
@@ -124,13 +119,12 @@ $E(A+B|C=c) = E(A|C=c) + E(B|C=c) \blacksquare$
 
 Answer:
 1. A suitable task for a machine learning application could be the classification of the famous Iris Dataset. In this dataset there are three classes, or species of flowers, each datapoint has five features and one label. While teaching the model, each of the five features would be provided and it would have three outputs between 0 and 1. The largest output would signify its prediction on the datapoints as that specific species of flower. Our performance measure would indicate how wrong the model's prediction is. If the model outputs a low value for species 1, and a higher value for species 2 and 3, while the correct answer is species 1, we would assign the model with a particularly low performance measure. A suitable hypothesis space would have to include all the features on which the species of the flower is dependent upon. The final concept would have to precisely distinguish between the three species based on the various possible combinations of the 5 features. 
-2. 
-
+2. Another interesting possible application for machine learning would be as a content recommendation system for users on sites like Youtube, Facebook, Netflix etcetera. The attributes to be fed to the model would be user data like, tags for content the user has 'interacted' with. The output for the model would be tags for content the model thinks the user will 'like'. A performance measure would be the relative amount of interaction the user has with the recommended content from the model. Examples would be actual users from the site and their respective interaction data. The hypothesis space for the model would simply be the set of optimized weights and biases calculated from gradient optimization. 
 
 5. Explain in your own words: why memorization should not be considered a valid learning approach. Try to use good, intuitive examples from human learning to motivate your arguments.
 
 Answer: 
- Though memorizing as a major learning strategy has its place in certain contexts, depending solely on memorization might stiffle deeper knowledge and critical thinking. Consider a learner who is memorizing mathematical formulae or concepts from a computer programming language. While they may be able to solve issues using the formula or principles they have learned, they may struggle when confronted with a slightly different challenge that needs them to modify what they have learned.
+ Though memorizing as a major learning strategy has its place in certain contexts, depending solely on memorization might stifle deeper knowledge and critical thinking. Consider a learner who is memorizing mathematical formulae or concepts from a computer programming language. While they may be able to solve issues using the formula or principles they have learned, they may struggle when confronted with a slightly different challenge that needs them to modify what they have learned.
 	Furthermore, difficulties in practice are frequently complicated and need a better comprehension of principles as well as training. For example, a soldier who has memorized the whole handbook of any weapon handed to him would be unable to utilize it adequately to protect themselves or others on a battlefield unless they have undergone rigorous training with that weapon to manage stressful scenarios.
 
 6. Explain in your own words: why tabula rasa learning is impossible. 
@@ -172,10 +166,54 @@ f_i(n) =
 \begin{cases}
 \text{True} & \text{if } T_i(n) = \text{True} \\
 \text{False} & \text{if } T_i(n) = \text{False} \\
-\end{cases} \\
+\end{cases}
 $$
 
-
-
 Proving the injection between the sets $B_{n}$ and $D_{n}$:
+
+In order to prove that there is an injection between the two sets we must establish that for every decision tree in the set $B_{n}$ there is one and only one boolean function with matching behavior in the set $B_{n}$.
+
+Let's suppose there are two different boolean functions that both take $n$ attributes as input:
+
+$f(n) \ and \ g(n)$
+
+These two functions each map to 2 distinct trees. 
+
+$f(n) \rightarrow T_{f}$
+$g(n) \rightarrow T_{g}$
+
+These two boolean functions are distinct from one another, therefore there must exist a set of $n$ boolean attributes that serve as input for both such that
+
+$f(n) \cancel{=} g(n)$
+
+Assuming our mapping holds
+
+$T_{f} \cancel{=} T_{g}$ 
+
+Since there will always exist at least one set of $n$ boolean attributes such that the two functions $f(n),g(n)$ and the two trees $T_{f},T_{G}$ will remain distinct from one another the two sets $B_{n}$ and $D_{n}$ *must have an injective relationship.*
+
+Proving the surjection between the sets $B_{n}$ and $D_{n}$:
+
+In order to prove that there is a surjection between the two sets we must establish that for every decision tree in the set $B_{n}$ there is at least one boolean function with matching behavior in the set $B_{n}$.
+
+Let's suppose there is a decision tree that evaluates a set of $n$ attributes:
+
+$T(n)$
+
+From this one tree we can construct a boolean function $f(n)$ that maps to our decision tree. 
+
+Considering all the possible sets of $n$ boolean attributes. For each set, $T(n)$ will generate an output of either $true$ or $false$. 
+
+Let us construct two sets $P$ and $N$ such that
+
+$P = [\forall n \in [T(n)=True]]$
+$N = [\forall n \in [T(n)=False]]$
+
+We can construct our boolean function $f(n)$ such that
+$f(n) = True \ if \ n \in P$
+$f(n) = False \ if \ n \in N$
+
+Since it is possible to construct a boolean function given a single arbitrary decision tree we have shown that it is possible for every decision tree in the set $D_{n}$ to have a corresponding boolean function in the set $B_{n}$ *this means that there is a surjective relationship between the two sets.*
+
+Now that we have shown the two sets have both an injective and surjective relationship *this means that they are also bijective.* Since the two sets are bijective their sizes must match, therefore we have proven that since there are $2^{2^{n}}$ possible boolean functions there must also be $2^{2^{n}}$ distinct possible decision trees as well. 
 
