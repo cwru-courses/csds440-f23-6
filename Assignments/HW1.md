@@ -151,19 +151,25 @@ When you're learning, a good example representation to present or explain anythi
 Answer: 
 For every set of $n$ attributes, there are $2^{n}$ possible combinations available to us. This means that if we were to construct a set of all possible functions that take in up to $n$ boolean we could feed up to $2^{n}$ possible inputs. For each input combination in the set of $2^{n}$ possible inputs we can create two functions, one that outputs $true$ and another that outputs $false$. This means that there are $2^{2^{n}}$ possible boolean functions that can be created from a set of $n$ boolean attributes. 
 
-When considering the set of all possible distinct decision trees we must first take into account the fact that each tree contains $n$ nodes as each attribute can be tested with a single node. Each node will branch two ways, either $true$ or $false$. The number of leaf nodes that arises from the construction of a tree should be $2^{n}$ as the number of nodes in the tree doubles each layer. 
+When considering the set of all possible distinct decision trees we must first take into account the fact that each tree contains $n$ nodes as each attribute can be tested with a single node. Each node will branch two ways, either $true$ or $false$. The number of leaf nodes that arises from the construction of a tree should be $2^{n}$ as the number of nodes in the tree doubles each layer. On top of this we must also consider the distinct trees that can arise from the specific layering of all terminal and leaf nodes. Taking this into account we can have up to $2^{2^{n}}$ number of distinct decision trees. 
 
 Define the set of all possible boolean functions over the $n$ attributes:
 
-$B_{n} = [f: [0,1]^{n} \rightarrow [0,1] | f_{1}, \dots, f_{2^{2^{n}}}| f \ is \ a \ boolean \ function]$
+$B_{n} = [f_{1}, \dots, f_{2^{2^{n}}}|f: [0,1]^{n} \rightarrow [0,1]| f \ is \ a \ boolean \ function]$
 
 Define the set of all possible decision trees made from the $n$ attributes:
 
-$D_{n} = [T_{1}, \dots, T_{2^{n}}|T \ is \ a \ distinct \ tree \ using \ n \ boolean \ attributes]$
+$D_{n} = [T_{1}, \dots, T_{2^{2^{n}}}|T \ is \ a \ distinct \ tree \ using \ n \ boolean \ attributes]$
 
-$B_{n}$ is distinct from $D_{N}$ as $B_{n}$ represents the set of all possible boolean functions that take $n$ boolean inputs. $D_{n}$ represents the set of all possible distinct decision trees that can be formed using the $n$ attributes. 
+$B_{n}$ is distinct from $D_{n}$ as $B_{n}$ represents the set of all possible boolean functions that take $n$ boolean inputs. $D_{n}$ represents the set of all possible distinct decision trees that can be formed using the $n$ attributes. 
+
+Defining a mapping between the two sets
+
+There exists for every $f$ in $B_{n}$ a $T$ in $D_{n}$ such that 
+$$
+f_i(n) = \begin{cases} \text{True} & \text{if } T_i(n) = \text{True} \\ \text{False} & \text{if } T_i(n) = \text{False} \end{cases} \
+$$
 
 Proving the injection between the sets $B_{n}$ and $D_{n}$:
-
 
 
