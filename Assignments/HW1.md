@@ -170,6 +170,15 @@ $$
 f_i(n) = \begin{cases} \text{True} & \text{if } T_i(n) = \text{True} \\ \text{False} & \text{if } T_i(n) = \text{False} \end{cases} \
 $$
 
+
 Proving the injection between the sets $B_{n}$ and $D_{n}$:
 
+
+
+\[ 
+f_i(n) = \begin{cases}  \\
+\text{True} & \text{if } T_i(n) = \text{True} \\
+\text{False} & \text{if } T_i(n) = \text{False} \\
+\end{cases} 
+\]
 
