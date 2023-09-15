@@ -174,4 +174,5 @@ $$
 
 Proving the injection between the sets $B_{n}$ and $D_{n}$:
 
+$$ f(x) = \begin{cases} x^2 + 2x + 1 & \text{if } x \geq 0 \\ \frac{1}{x} & \text{if } x < 0 \end{cases} $$
 
