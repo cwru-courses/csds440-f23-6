@@ -61,11 +61,11 @@ Establishing a probability density function for the system
 
 PDF of $X$:
 
-$p_{X}(x) = 1 \ for \ 0\leq x \leq 1$
+$P_{X}(x) = 1 \ for \ 0\leq x \leq 1$
 
 PDF of $Y$:
 
-$p_{Y}(y) = 1 \ for \ 0\leq y \leq 1$
+$P_{Y}(y) = 1 \ for \ 0\leq y \leq 1$
 
 Setting up equation for squared distance between two sampled points:
 Two randomly sampled points:
@@ -149,28 +149,21 @@ When you're learning, a good example representation to present or explain anythi
 8. Consider a learning problem where the examples are described by $n$ Boolean attributes. Prove that the number of *distinct* decision trees that can be constructed in this setting is $2^{2^n}$. *Distinct* means that each tree must represent a different hypothesis in the space. \[Hint: Show that there is a bijection between the set of all Boolean functions over $n$ Boolean attributes and the set of all distinct trees.\] (20 points)
 
 Answer: 
-There are $2^{n}$ because there are $n$ number of boolean attributes
+For every set of $n$ attributes, there are $2^{n}$ possible combinations available to us. This means that if we were to construct a set of all possible functions that take in up to $n$ boolean we could feed up to $2^{n}$ possible inputs. For each input combination in the set of $2^{n}$ possible inputs we can create two functions, one that outputs $true$ and another that outputs $false$. This means that there are $2^{2^{n}}$ possible boolean functions that can be created from a set of $n$ boolean attributes. 
 
-For every set of attributes, a tree can be constructed that outputs either $true$ or $false$, so there are $2^{2^{n}}$ number of possible trees that can be constructed from the set of all possible attributes. 
+When considering the set of all possible distinct decision trees we must first take into account the fact that each tree contains $n$ nodes as each attribute can be tested with a single node. Each node will branch two ways, either $true$ or $false$. The number of leaf nodes that arises from the construction of a tree should be $2^{n}$ as the number of nodes in the tree doubles each layer. 
 
 Define the set of all possible boolean functions over the $n$ attributes:
 
-$B_{n} = \{f: \{0,1\}^{n} \rightarrow \{0,1\} | f \ is \ a \ boolean \ function\}$
+$B_{n} = [f: [0,1]^{n} \rightarrow [0,1] | f_{1}, \dots, f_{2^{2^{n}}}| f \ is \ a \ boolean \ function]$
 
 Define the set of all possible decision trees made from the $n$ attributes:
 
-$D_{n} = \{T \ is \ a \ distinct \ tree \ using \ n \ boolean \ attributes\}$
+$D_{n} = [T_{1}, \dots, T_{2^{n}}|T \ is \ a \ distinct \ tree \ using \ n \ boolean \ attributes]$
 
 $B_{n}$ is distinct from $D_{N}$ as $B_{n}$ represents the set of all possible boolean functions that take $n$ boolean inputs. $D_{n}$ represents the set of all possible distinct decision trees that can be formed using the $n$ attributes. 
 
+Proving the injection between the sets $B_{n}$ and $D_{n}$:
 
-Constructing a distinct decision tree from a given boolean function
 
-Consider an abstract boolean function of 3 attributes $(A,B,C)$:
-$f : `\{0,1\}`^{3} \rightarrow \{0,1\}$
- 
-We would start at the root node, and branch out twice, to represent the two possible states of the first boolean attribute, we would continue this branching for all 3 attributes until we run out. This is how we would construct a unique decision tree for a given boolean function.
 
-```math
-{as}
-```
