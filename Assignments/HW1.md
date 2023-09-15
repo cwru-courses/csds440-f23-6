@@ -167,19 +167,9 @@ Defining a mapping between the two sets
 
 There exists for every $f$ in $B_{n}$ a $T$ in $D_{n}$ such that 
 $$
-\begin{align*} \\
+
 f_i(n) = \begin{cases} \text{True} & \text{if } T_i(n) = \text{True} \\ \text{False} & \text{if } T_i(n) = \text{False} \end{cases} \\
-\end{align*} 
 $$
-
-$$
-\begin{align*}
-2+3=5\\
-34
-\end{align*}
-$$
-
-
 
 
 Proving the injection between the sets $B_{n}$ and $D_{n}$:
