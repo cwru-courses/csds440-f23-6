@@ -175,4 +175,10 @@ Proving the injection between the sets $B_{n}$ and $D_{n}$:
 
 
 
-$$ \begin{align*} f(x) &= x^2 + 2x + 1 \\ g(x) &= \frac{1}{x} \end{align*} $$
+$$ 
+\begin{align*} \\
+f(x) &= x^2 + 2x + 1 \\ 
+g(x) &= \frac{1}{x} \\
+\end{align*} 
+$$
+
