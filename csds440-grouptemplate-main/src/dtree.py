@@ -86,11 +86,11 @@ class DecisionTree(Classifier):
         #print('Information Gain of First Feature w.r.t the Labels:', information_gain)
         
         # Testing out faulty Entropy calculations for the 12th Feature in the volcano dataset
-        entropy1 = util.entropy(X[:, 10], y)
-        entropy2 = util.entropy(X[:, 11], y)
+        #entropy1 = util.entropy(X[:, 10], y)
+        #entropy2 = util.entropy(X[:, 11], y)
         
-        print('Entropy of Label w.r.t 11th Feature:', entropy1)
-        print('Entropy of Label w.r.t 12th Feature:', entropy2)
+        #print('Entropy of Label w.r.t 11th Feature:', entropy1)
+        #print('Entropy of Label w.r.t 12th Feature:', entropy2)
         
         #infogain = util.infogain(X[:, 11], y)
         #print('Information Gain of 12th Feature w.r.t the Labels:', infogain)
@@ -98,18 +98,18 @@ class DecisionTree(Classifier):
         
         # Loop through each column of data, calculate the entropy and information gain of each feature w.r.t the label
         # and select the feature with the highest information gain
-        #infogains = {}
-        #for i in range(0, len(X[0])):
-            #entropy = util.entropy(X[:, i], y) # Entropy of the ith feature w.r.t the label
-            #print('Entropy of Feature', i+1,':', entropy)
-            #information_gain = util.infogain(X[:, i], y) # Information Gain of the ith feature w.r.t the label
-            #print('IG of Feature', i+1,':', information_gain)
-            #infogains[i] = information_gain
-            #print('-------------------------')
+        infogains = {}
+        for i in range(0, len(X[0])):
+            entropy = util.entropy(X[:, i], y) # Entropy of the ith feature w.r.t the label
+            print('Entropy of Feature', i+1,':', entropy)
+            information_gain = util.infogain(X[:, i], y) # Information Gain of the ith feature w.r.t the label
+            print('IG of Feature', i+1,':', information_gain)
+            infogains[i] = information_gain
+            print('-------------------------')
             
         # Select the feature with the highest information gain
-        #max_ig_index = max(infogains, key=infogains.get) # returns the index of the feature with the highest information gain
-        #print('Max IG:', infogains[max_ig_index])
+        max_ig_index = max(infogains, key=infogains.get) # returns the index of the feature with the highest information gain
+        print('Max IG:', infogains[max_ig_index])
         
         
         # Calculating the information gain of each feature w.r.t the label
