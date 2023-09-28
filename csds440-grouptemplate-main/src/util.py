@@ -29,11 +29,71 @@ def count_label_occurrences(y: np.ndarray) -> Tuple[int, int]:
     return n_zeros, n_ones
 
 
-def entropy():
+def entropy(data, labels):
     # Implement this on your own!
-    raise NotImplementedError
+        
+    # Calculate the unique values and their counts in the data
+    unique_values, counts = np.unique(data, return_counts=True)
+    
+    for value,count in zip(unique_values, counts):
+        print(value,':', count)
+        
+    # If calculating the entrpy of the data with respect to itself
+    if(data.all() == labels.all()):
+            probabilities = counts / len(data)
+            entropy_value = -np.sum(probabilities * np.log2(probabilities))
+            return entropy_value
+        
+    else:
+        # Calculate entropy using the formula: H(D) = -Σ(p_i * log2(p_i))
+        entropy_value = 0.0
+        
+        for value, count in zip(unique_values, counts):
+            # Filter the labels corresponding to the current unique value
+            subset_labels = labels[data == value]
+            
+            # Printing the label metadata
+            #n_zero, n_one = count_label_occurrences(subset_labels)
+            #print(value,':', '0s:', n_zero, ',' , '1s:', n_one)
 
+            # Calculate the probability of the current unique value
+            probability = count / len(data)
+            
+            #Find no. of unique labels in subset_labels
+            unique_labels = np.unique(subset_labels)
+            
+            # If there is only one unique label associated with this unique value
+            if len(unique_labels) == 1:
+                # Since there is only one label, the entropy is 0
+                entropy_value += probability * 0 # entropy = 0
+                
+            # If there are two unique labels associated with this unique value 
+            else:
+                #Finding the entropy of the label w.r.t the unique feature value: H(Label | Feature = value)
+                entropy_contribution = -np.sum(
+                    (subset_labels == 0).sum() / len(subset_labels) * np.log2((subset_labels == 0).sum() / len(subset_labels)) +
+                    (subset_labels == 1).sum() / len(subset_labels) * np.log2((subset_labels == 1).sum() / len(subset_labels))
+                )
+                # Adding on the H(Label | Feature = value) to the total entropy value (H(Label | Feature)
+                entropy_value += probability * entropy_contribution
+     
 
+            # Update the total entropy value
+        #return entropy_value
+        return entropy_value # Return the entropy value: H(Label | Feature) general entropy of the label w.r.t the feature
+    
+def infogain(data, labels):
+    # Get the entropy of the labels w.r.t themself
+    entropy_labels = entropy(labels, labels)
+    
+    # Get the entropy of the labels w.r.t the data
+    entropy_labels_data = entropy(data, labels)
+    
+    # Calculate the information gain
+    information_gain = entropy_labels - entropy_labels_data
+    
+    return information_gain
+    
 def cv_split(
         X: np.ndarray, y: np.ndarray, folds: int, stratified: bool = False
     ) -> Tuple[Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray], ...]:
@@ -68,7 +128,7 @@ def cv_split(
     if stratified:
         n_zeros, n_ones = count_label_occurrences(y)
 
-    warnings.warn('cv_split is not yet implemented. Simply returning the entire dataset as a single fold...')
+    #warnings.warn('cv_split is not yet implemented. Simply returning the entire dataset as a single fold...')
 
     return (X, y, X, y),
 

@@ -22,8 +22,8 @@ class DecisionTree(Classifier):
         Good luck!
         """
 
-        warnings.warn('The DecisionTree class is currently running dummy Majority Classifier code. ' +
-                      'Once you start implementing your decision tree delete this warning message.')
+        #warnings.warn('The DecisionTree class is currently running dummy Majority Classifier code. ' +
+                      #'Once you start implementing your decision tree delete this warning message.')
 
         self._schema = schema  # For some models (like a decision tree) it makes sense to keep track of the data schema
         self._majority_label = 0  # Protected attributes in Python have an underscore prefix
@@ -41,12 +41,79 @@ class DecisionTree(Classifier):
         # In Java, it is best practice to LBYL (Look Before You Leap), i.e. check to see if code will throw an exception
         # BEFORE running it. In Python, the dominant paradigm is EAFP (Easier to Ask Forgiveness than Permission), where
         # try/except blocks (like try/catch blocks) are commonly used to catch expected exceptions and deal with them.
-        try:
-            split_criterion = self._determine_split_criterion(X, y)
-        except NotImplementedError:
-            warnings.warn('This is for demonstration purposes only.')
+        
+        
+        # Implement Split Criterion for Decision Tree
+        #try:
+            #split_criterion = self._determine_split_criterion(X, y)
+        #except NotImplementedError:
+            #warnings.warn('This is for demonstration purposes only.')
+            
+            
+        #if(split_criterion):
+            # Implement split criterion of a continuous attribute
+            
+            
+            
+        #for i in range(0, len(X)):
+            #print('Data:', X[i])
+            #print('Label:', y[i])
+            
+        #Steps for ID3 Algorithm Training
+        #Step 1. For Each Feature F, Calculate the Entropy of the Feature, and the Information Gain of the Feature
+        
+        #Step 2. Select the Feature with the Highest Information Gain
+        
+                
 
         n_zero, n_one = util.count_label_occurrences(y)
+        
+        #print('Total Labels: ', n_zero + n_one)
+        #print('Total Ones: ', n_one)
+        #print('Total Zeroes: ', n_zero)
+        
+        
+        # Entropy of Voting Label = 0.99139
+        # Entropy Calculation of the Label
+        #entropy = util.entropy(y, y) # Passing in the label vector for both inputs as I want the entropy of just the label
+        
+        # Entropy of the First Feature w.r.t the label = 
+        #entropy = util.entropy(X[:, 0], y) # Passing in the first column of data and the label vector
+        #print('Entropy of Label w.r.t First Feature:', entropy)
+        
+        # Calculating the Information Gain of the First Feature w.r.t the label
+        #information_gain = util.infogain(X[:, 0], y)
+        #print('Information Gain of First Feature w.r.t the Labels:', information_gain)
+        
+        # Testing out faulty Entropy calculations for the 12th Feature in the volcano dataset
+        entropy1 = util.entropy(X[:, 10], y)
+        entropy2 = util.entropy(X[:, 11], y)
+        
+        print('Entropy of Label w.r.t 11th Feature:', entropy1)
+        print('Entropy of Label w.r.t 12th Feature:', entropy2)
+        
+        #infogain = util.infogain(X[:, 11], y)
+        #print('Information Gain of 12th Feature w.r.t the Labels:', infogain)
+       
+        
+        # Loop through each column of data, calculate the entropy and information gain of each feature w.r.t the label
+        # and select the feature with the highest information gain
+        #infogains = {}
+        #for i in range(0, len(X[0])):
+            #entropy = util.entropy(X[:, i], y) # Entropy of the ith feature w.r.t the label
+            #print('Entropy of Feature', i+1,':', entropy)
+            #information_gain = util.infogain(X[:, i], y) # Information Gain of the ith feature w.r.t the label
+            #print('IG of Feature', i+1,':', information_gain)
+            #infogains[i] = information_gain
+            #print('-------------------------')
+            
+        # Select the feature with the highest information gain
+        #max_ig_index = max(infogains, key=infogains.get) # returns the index of the feature with the highest information gain
+        #print('Max IG:', infogains[max_ig_index])
+        
+        
+        # Calculating the information gain of each feature w.r.t the label
+        #information_gain = util.information_gain(X[:, 0], y)
 
         if n_one > n_zero:
             self._majority_label = 1
@@ -64,7 +131,7 @@ class DecisionTree(Classifier):
         """
 
         # Returns either all 1s or all 0s, depending on _majority_label.
-        return np.ones(X.shape[0], dtype=np.int) * self._majority_label
+        return np.ones(X.shape[0], dtype=int) * self._majority_label
 
     # In Python, instead of getters and setters we have properties: docs.python.org/3/library/functions.html#property
     @property
@@ -80,6 +147,8 @@ class DecisionTree(Classifier):
         Determine decision tree split criterion. This is just an example to encourage you to use helper methods.
         Implement this however you like!
         """
+        
+        
         raise NotImplementedError()
 
 
@@ -96,7 +165,7 @@ def evaluate_and_print_metrics(dtree: DecisionTree, X: np.ndarray, y: np.ndarray
     print('Maximum Depth:', 0)
     print('First Feature:', dtree.schema[0])
 
-    raise NotImplementedError()
+    #raise NotImplementedError()
 
 
 def dtree(data_path: str, tree_depth_limit: int, use_cross_validation: bool = True, information_gain: bool = True):
@@ -125,9 +194,9 @@ def dtree(data_path: str, tree_depth_limit: int, use_cross_validation: bool = Tr
     for X_train, y_train, X_test, y_test in datasets:
         decision_tree = DecisionTree(schema)
         decision_tree.fit(X_train, y_train)
-        evaluate_and_print_metrics(decision_tree, X_test, y_test)
+        #evaluate_and_print_metrics(decision_tree, X_test, y_test)
 
-    raise NotImplementedError()
+    #raise NotImplementedError()
 
 
 if __name__ == '__main__':
