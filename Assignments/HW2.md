@@ -75,3 +75,5 @@ Answer:
 6.	Under what circumstances might it be beneficial to overfit? 
 
 Answer:
+Since it results in poor generalization, overfitting is typically viewed as a concern in statistical modeling and machine learning. Overfitting, however, may be advantageous or at the very least acceptable in the following circumstances:
+
