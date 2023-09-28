@@ -11,7 +11,7 @@ from sting.data import Feature, parse_c45
 import util
 
 
-# In Python, the convention for class names is CamelCase, just like Java! However, the convention for method and
+# In Python, the convention for class names is CamelCase, just like in Java! However, the convention for method and
 # variable names is lowercase_separated_by_underscores, unlike Java.
 class DecisionTree(Classifier):
     def __init__(self, schema: List[Feature]):
@@ -38,7 +38,7 @@ class DecisionTree(Classifier):
             weights: Weights for each example. Will become relevant later in the course, ignore for now.
         """
 
-        # In Java, it is best practice to LBYL (Look Before You Leap), i.e. check to see if code will throw an exception
+        # In Java, it is the best practice to LBYL (Look Before You Leap), i.e. check to see if code will throw an exception
         # BEFORE running it. In Python, the dominant paradigm is EAFP (Easier to Ask Forgiveness than Permission), where
         # try/except blocks (like try/catch blocks) are commonly used to catch expected exceptions and deal with them.
         
