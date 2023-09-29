@@ -1,6 +1,7 @@
 import random
 import warnings
 from typing import Tuple, Iterable
+from sting.data import FeatureType
 
 import numpy as np
 
@@ -29,16 +30,49 @@ def count_label_occurrences(y: np.ndarray) -> Tuple[int, int]:
     return n_zeros, n_ones
 
 
-def entropy(data, labels):
+def entropy(schema, feature_index, data, labels):
     # Implement this on your own!
+    
+    datatype = schema[feature_index].ftype
         
+
+    
+    #for value,count in zip(unique_values, counts):
+        #print(value,':', count)
+        
+    # List of all unique feature values. For partitioning the data
+    #tests = []
+    
+    '''
+    # If the feature is continuous
+    if datatype == FeatureType.CONTINUOUS:
+        
+        # Construct Testing List
+        lastValChange = None # Index of the last value change
+        for index, (value, label) in enumerate(zip(data, labels)):
+            
+            prevValue = data[index - 1] if index > 0 else None  # Get the previous value
+            prevLabel = labels[index - 1] if index > 0 else None  # Get the previous label
+            print(f"Index {index}: Value: {value}, Label: {label}, Previous Label: {prevLabel}")
+            
+            
+            if prevValue != value:
+                lastValChange = index
+                
+            if prevLabel != label:
+                newTest = (value + data[lastValChange]) / 2 if prevValue != None else value     
+                tests.append(newTest)
+                   
+    '''           
+            
+            
+            
+            
+    
+    # If the feature is discrete    
     # Calculate the unique values and their counts in the data
     unique_values, counts = np.unique(data, return_counts=True)
-    
-    for value,count in zip(unique_values, counts):
-        print(value,':', count)
-        
-    # If calculating the entrpy of the data with respect to itself
+    # If calculating the entropy of the data with respect to itself
     if(data.all() == labels.all()):
             probabilities = counts / len(data)
             entropy_value = -np.sum(probabilities * np.log2(probabilities))
@@ -76,18 +110,17 @@ def entropy(data, labels):
                 )
                 # Adding on the H(Label | Feature = value) to the total entropy value (H(Label | Feature)
                 entropy_value += probability * entropy_contribution
-     
 
             # Update the total entropy value
-        #return entropy_value
+        #return entropy_value            
         return entropy_value # Return the entropy value: H(Label | Feature) general entropy of the label w.r.t the feature
     
-def infogain(data, labels):
+def infogain(schema, feature_index, data, labels):
     # Get the entropy of the labels w.r.t themself
-    entropy_labels = entropy(labels, labels)
+    entropy_labels = entropy(schema, feature_index, labels, labels)
     
     # Get the entropy of the labels w.r.t the data
-    entropy_labels_data = entropy(data, labels)
+    entropy_labels_data = entropy(schema, feature_index, data, labels)
     
     # Calculate the information gain
     information_gain = entropy_labels - entropy_labels_data
