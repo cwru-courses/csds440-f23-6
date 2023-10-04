@@ -94,14 +94,22 @@ class DecisionTree(Classifier):
         
         # Entropy of Voting Label = 0.99139
         # Entropy Calculation of the Label
-        entropy = util.entropy(self._schema, 0, y, y, split_criterion) # Passing in the label vector for both inputs as I want the entropy of just the label
-        print('Entropy of Label w.r.t Itself:', entropy)
+        #entropy = util.entropy(self._schema, 0, y, y, split_criterion) # Passing in the label vector for both inputs as I want the entropy of just the label
+        #print('Entropy of Label w.r.t Itself:', entropy)
 
         
-        
+
         # Entropy of the First Feature w.r.t the label = 
-        #entropy = util.entropy(X[:, 0], y) # Passing in the first column of data and the label vector
+        #entropy = util.entropy(self._schema, 0, X[:, 0], y, split_criterion) # Passing in the first column of data and the label vector
         #print('Entropy of Label w.r.t First Feature:', entropy)
+        
+        entropy = util.entropy(self._schema, 1, X[:, 1], y, split_criterion) # Passing in the first column of data and the label vector
+        #print('Entropy of Label w.r.t Second Feature:', entropy)
+        
+        #entropy = util.entropy(self._schema, 2, X[:, 2], y, split_criterion) # Passing in the first column of data and the label vector
+        #print('Entropy of Label w.r.t Third Feature:', entropy)
+        
+        
         
         # Calculating the Information Gain of the First Feature w.r.t the label
         #information_gain = util.infogain(X[:, 0], y)

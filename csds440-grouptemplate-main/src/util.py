@@ -33,15 +33,7 @@ def count_label_occurrences(y: np.ndarray) -> Tuple[int, int]:
 def entropy(schema, feature_index, data, labels, split_criterion):
     # Implement this on your own!
     
-    datatype = schema[feature_index].ftype
-        
-
-    
-    #for value,count in zip(unique_values, counts):
-        #print(value,':', count)
-        
-    # List of all unique feature values. For partitioning the data
-    #tests = []
+    datatype = schema[feature_index].ftype        
     
     '''
     # If the feature is continuous
@@ -63,13 +55,7 @@ def entropy(schema, feature_index, data, labels, split_criterion):
                 newTest = (value + data[lastValChange]) / 2 if prevValue != None else value     
                 tests.append(newTest)
                    
-    '''           
-            
-            
-            
-            
-    
-    # If the feature is discrete    
+    ''' 
     # Calculate the unique values and their counts in the data
     unique_values, counts = np.unique(data, return_counts=True)
     # If calculating the entropy of the data with respect to itself
@@ -82,36 +68,82 @@ def entropy(schema, feature_index, data, labels, split_criterion):
         # Calculate entropy using the formula: H(D) = -Σ(p_i * log2(p_i))
         entropy_value = 0.0
         
-        for value, count in zip(unique_values, counts):
-            # Filter the labels corresponding to the current unique value
-            subset_labels = labels[data == value]
+        # Feature is Continuous
+        if datatype == FeatureType.CONTINUOUS:
+            tests = split_criterion[feature_index]
+            #print(tests)
             
-            # Printing the label metadata
-            #n_zero, n_one = count_label_occurrences(subset_labels)
-            #print(value,':', '0s:', n_zero, ',' , '1s:', n_one)
+            
+            #for test in tests:
+            for i in range(3): # testing loop
 
-            # Calculate the probability of the current unique value
-            probability = count / len(data)
-            
-            #Find no. of unique labels in subset_labels
-            unique_labels = np.unique(subset_labels)
-            
-            # If there is only one unique label associated with this unique value
-            if len(unique_labels) == 1:
-                # Since there is only one label, the entropy is 0
-                entropy_value += probability * 0 # entropy = 0
+                entropy_value += 0.0
+                # Filter the labels corresponding to the current unique value
+                lower_bound_labels = labels[data <= tests[i]]
                 
-            # If there are two unique labels associated with this unique value 
-            else:
-                #Finding the entropy of the label w.r.t the unique feature value: H(Label | Feature = value)
-                entropy_contribution = -np.sum(
-                    (subset_labels == 0).sum() / len(subset_labels) * np.log2((subset_labels == 0).sum() / len(subset_labels)) +
-                    (subset_labels == 1).sum() / len(subset_labels) * np.log2((subset_labels == 1).sum() / len(subset_labels))
-                )
-                # Adding on the H(Label | Feature = value) to the total entropy value (H(Label | Feature)
-                entropy_value += probability * entropy_contribution
+                print("Test:", tests[i])
+                
+                print("Lower:", lower_bound_labels)
+                
+                upper_bound_labels = labels[data > tests[i]]
+                print("Upper:", upper_bound_labels)
+                
+                # Printing the label metadata
+                #n_zero, n_one = count_label_occurrences(subset_labels)
+                #print(value,':', '0s:', n_zero, ',' , '1s:', n_one)
 
-            # Update the total entropy value
+                # Calculate the probability of the current unique value
+                #probability = count / len(data)
+                
+                #Find no. of unique labels in subset_labels
+                #unique_labels = np.unique(subset_labels)
+                
+                # If there is only one unique label associated with this unique value
+                #if len(unique_labels) == 1:
+                    # Since there is only one label, the entropy is 0
+                    #entropy_value += probability * 0 # entropy = 0
+                    
+                # If there are two unique labels associated with this unique value 
+                #else:
+                    #Finding the entropy of the label w.r.t the unique feature value: H(Label | Feature = value)
+                    #entropy_contribution = -np.sum(
+                        #(subset_labels == 0).sum() / len(subset_labels) * np.log2((subset_labels == 0).sum() / len(subset_labels)) +
+                        #(subset_labels == 1).sum() / len(subset_labels) * np.log2((subset_labels == 1).sum() / len(subset_labels))
+                    #)
+                    # Adding on the H(Label | Feature = value) to the total entropy value (H(Label | Feature)
+                    #entropy_value += probability * entropy_contribution
+        
+        # Feature is Discrete
+        else:  
+            for value, count in zip(unique_values, counts):
+                # Filter the labels corresponding to the current unique value
+                subset_labels = labels[data == value]
+                
+                # Printing the label metadata
+                #n_zero, n_one = count_label_occurrences(subset_labels)
+                #print(value,':', '0s:', n_zero, ',' , '1s:', n_one)
+
+                # Calculate the probability of the current unique value
+                probability = count / len(data)
+                
+                #Find no. of unique labels in subset_labels
+                unique_labels = np.unique(subset_labels)
+                
+                # If there is only one unique label associated with this unique value
+                if len(unique_labels) == 1:
+                    # Since there is only one label, the entropy is 0
+                    entropy_value += probability * 0 # entropy = 0
+                    
+                # If there are two unique labels associated with this unique value 
+                else:
+                    #Finding the entropy of the label w.r.t the unique feature value: H(Label | Feature = value)
+                    entropy_contribution = -np.sum(
+                        (subset_labels == 0).sum() / len(subset_labels) * np.log2((subset_labels == 0).sum() / len(subset_labels)) +
+                        (subset_labels == 1).sum() / len(subset_labels) * np.log2((subset_labels == 1).sum() / len(subset_labels))
+                    )
+                    # Adding on the H(Label | Feature = value) to the total entropy value (H(Label | Feature)
+                    entropy_value += probability * entropy_contribution
+
         #return entropy_value            
         return entropy_value # Return the entropy value: H(Label | Feature) general entropy of the label w.r.t the feature
     
