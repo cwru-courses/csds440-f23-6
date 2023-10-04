@@ -13,7 +13,7 @@ from decimal import Decimal
 
 import util
 
-class Node(schema, tests):
+class Node():
     def __init__(self, schema, tests):
         self.schema = schema
         self.tests = tests
@@ -166,22 +166,50 @@ class DecisionTree(Classifier):
         # and select the feature with the highest information gain
         infogains = {}
         for i in range(0, len(X[0])):
-            entropy = util.entropy(self._schema, i, X[:, i], y, split_criterion) # Entropy of the ith feature w.r.t the label
-            print('Entropy of Feature', i+1,':', entropy)
-            print('Name:', self._schema[i].name)
+            #entropy = util.entropy(self._schema, i, X[:, i], y, split_criterion) # Entropy of the ith feature w.r.t the label
+            #print('Entropy of Feature', i+1,':', entropy)
+            #print('Name:', self._schema[i].name)
             #print('DType:', self._schema[i].ftype)
             information_gain = util.infogain(self._schema, i, X[:, i], y, split_criterion) # Information Gain of the ith feature w.r.t the label
-            print('IG of Feature', i+1,':', information_gain)
+            #print('IG of Feature', i+1,':', information_gain)
             infogains[i] = information_gain
-            print('-------------------------')
+            #print('-------------------------')
             
         # Select the feature with the highest information gain
         max_ig_index = max(infogains, key=infogains.get) # returns the index of the feature with the highest information gain
         print('Max IG name:', self._schema[max_ig_index].name)
         print('Max IG:', infogains[max_ig_index])
         
+        print('+++++++++++++++++++++++++++++++')
         
-        # Creating Children manually
+        # Create root node
+        root = Node(self._schema[max_ig_index], split_criterion[max_ig_index]) # Passing the schema of the root feature only, not general schema
+        #print('Root Schema:', root.get_schema().name)
+        #print('Root Tests:', root.get_tests())
+        
+        
+        
+        # Creating Children manually for now
+        
+        # Generate child nodes for root
+        for test in root.get_tests():
+            print(test)
+            # Create masked data and labels for the current test
+            mask = X[:, max_ig_index] == test  
+             
+            mask_X = X[mask]
+            mask_y = y[mask]
+            
+            mask_X = np.delete(mask_X, max_ig_index, axis=1) # Delete the column of the root feature
+            
+            #print(mask_X)
+            #print(mask_y)
+            
+            
+              
+            print('-------------------------')
+   
+        
         
 
         #if n_one > n_zero:
