@@ -58,6 +58,7 @@ def entropy(schema, feature_index, data, labels, split_criterion):
     ''' 
     # Calculate the unique values and their counts in the data
     unique_values, counts = np.unique(data, return_counts=True)
+    unique_labels, label_counts = np.unique(labels, return_counts=True)
     # If calculating the entropy of the data with respect to itself
     if(np.array_equal(data, labels)):
             probabilities = counts / len(data)
@@ -75,18 +76,55 @@ def entropy(schema, feature_index, data, labels, split_criterion):
             
             
             #for test in tests:
-            for i in range(3): # testing loop
-
-                entropy_value += 0.0
-                # Filter the labels corresponding to the current unique value
-                lower_bound_labels = labels[data <= tests[i]]
+            for i in range(1): # testing loop
+                entropy_contribution = 0.0
                 
                 print("Test:", tests[i])
+
+                # Calculating lower bound entropy contribution
+                lower_bound_labels = labels[data <= tests[i]]
+                probs_is_lower = len(lower_bound_labels) / len(labels)
+                #print("Lower:", lower_bound_labels)
                 
-                print("Lower:", lower_bound_labels)
+                probs_lower = []
+                # Find probabilites of each unique label within lower_bound_labels
+                for label in unique_labels:
+                    probs_lower.append((lower_bound_labels == label).sum() / len(lower_bound_labels))
+                    
+                #print(probs_lower)
                 
+                # Calculating the entropy contribution of the lower bound
+                for prob in probs_lower:
+                    if prob != 0:
+                        entropy_contribution -= prob * np.log2(prob)
+                        
+                entropy_value += probs_is_lower * entropy_contribution
+                
+                
+                # Reset Entropy Contribution
+                entropy_contribution = 0.0
+                
+                # Calculating upper bound entropy contribution
                 upper_bound_labels = labels[data > tests[i]]
-                print("Upper:", upper_bound_labels)
+                probs_is_upper = len(upper_bound_labels) / len(labels)
+                #print("Upper:", upper_bound_labels)
+                
+                probs_upper = []
+                # Find probabilites of each unique label within upper_bound_labels
+                for label in unique_labels:
+                    probs_upper.append((upper_bound_labels == label).sum() / len(upper_bound_labels))
+                    
+                #print(probs_upper)
+                
+                # Calculating the entropy contribution of the upper bound
+                for prob in probs_upper:
+                    if prob != 0:
+                        entropy_contribution -= prob * np.log2(prob)
+                
+                entropy_value += probs_is_upper * entropy_contribution
+                
+
+                
                 
                 # Printing the label metadata
                 #n_zero, n_one = count_label_occurrences(subset_labels)
