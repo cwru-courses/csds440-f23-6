@@ -189,12 +189,12 @@ def entropy(schema, feature_index, data, labels, split_criterion):
         #return entropy_value            
         return entropy_value # Return the entropy value: H(Label | Feature) general entropy of the label w.r.t the feature
     
-def infogain(schema, feature_index, data, labels):
+def infogain(schema, feature_index, data, labels, split_criterion):
     # Get the entropy of the labels w.r.t themself
-    entropy_labels = entropy(schema, feature_index, labels, labels)
+    entropy_labels = entropy(schema, feature_index, labels, labels, split_criterion)
     
     # Get the entropy of the labels w.r.t the data
-    entropy_labels_data = entropy(schema, feature_index, data, labels)
+    entropy_labels_data = entropy(schema, feature_index, data, labels, split_criterion)
     
     # Calculate the information gain
     information_gain = entropy_labels - entropy_labels_data

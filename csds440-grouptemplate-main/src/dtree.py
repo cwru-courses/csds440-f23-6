@@ -13,6 +13,38 @@ from decimal import Decimal
 
 import util
 
+class Node(schema, tests):
+    def __init__(self, schema, tests):
+        self.schema = schema
+        self.tests = tests
+        self.children = {} # Empty dictionary, Every child key will be a test and the value will be a node
+        
+    # Adds a child node to the current node given a certain test
+    # all children will have an associated test, from the parent node
+    def add_child(self, test, node):
+        self.children[test] = node
+        
+    # Returns the children of the node
+    def get_children(self):
+        return self.children
+    
+    # Returns the schema of the node
+    def get_schema(self):
+        return self.schema
+    
+    # Returns the list of tests for the node
+    def get_tests(self):
+        return self.tests
+    
+    # Returns the child node associated with the test
+    def get_child(self, test):
+        return self.children[test]
+    
+    # Returns whether node is a leaf or not
+    def is_leaf(self):
+        return len(self.children) == 0
+      
+
 
 # In Python, the convention for class names is CamelCase, just like in Java! However, the convention for method and
 # variable names is lowercase_separated_by_underscores, unlike Java.
@@ -132,20 +164,22 @@ class DecisionTree(Classifier):
         
         # Loop through each column of data, calculate the entropy and information gain of each feature w.r.t the label
         # and select the feature with the highest information gain
-        #infogains = {}
-        #for i in range(0, len(X[0])):
-            #entropy = util.entropy(self._schema, i, X[:, i], y) # Entropy of the ith feature w.r.t the label
-            #print('Entropy of Feature', i+1,':', entropy)
-            #print('Name:', self._schema[i].name)
+        infogains = {}
+        for i in range(0, len(X[0])):
+            entropy = util.entropy(self._schema, i, X[:, i], y, split_criterion) # Entropy of the ith feature w.r.t the label
+            print('Entropy of Feature', i+1,':', entropy)
+            print('Name:', self._schema[i].name)
             #print('DType:', self._schema[i].ftype)
-            #information_gain = util.infogain(X[:, i], y) # Information Gain of the ith feature w.r.t the label
-            #print('IG of Feature', i+1,':', information_gain)
-            #infogains[i] = information_gain
-            #print('-------------------------')
+            information_gain = util.infogain(self._schema, i, X[:, i], y, split_criterion) # Information Gain of the ith feature w.r.t the label
+            print('IG of Feature', i+1,':', information_gain)
+            infogains[i] = information_gain
+            print('-------------------------')
             
         # Select the feature with the highest information gain
-        #max_ig_index = max(infogains, key=infogains.get) # returns the index of the feature with the highest information gain
-        #print('Max IG:', infogains[max_ig_index])
+        max_ig_index = max(infogains, key=infogains.get) # returns the index of the feature with the highest information gain
+        print('Max IG name:', self._schema[max_ig_index].name)
+        print('Max IG:', infogains[max_ig_index])
+
         
         
         # Calculating the information gain of each feature w.r.t the label
