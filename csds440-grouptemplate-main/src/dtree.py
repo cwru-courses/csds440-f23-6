@@ -179,11 +179,10 @@ class DecisionTree(Classifier):
         max_ig_index = max(infogains, key=infogains.get) # returns the index of the feature with the highest information gain
         print('Max IG name:', self._schema[max_ig_index].name)
         print('Max IG:', infogains[max_ig_index])
-
         
         
-        # Calculating the information gain of each feature w.r.t the label
-        #information_gain = util.information_gain(X[:, 0], y)
+        # Creating Children manually
+        
 
         #if n_one > n_zero:
             #self._majority_label = 1
