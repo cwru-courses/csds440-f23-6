@@ -52,7 +52,7 @@ class DecisionTree(Classifier):
         except NotImplementedError:
             warnings.warn('This is for demonstration purposes only.')
             
-        print(split_criterion)
+        #print(split_criterion)
         
         
         # Testing Split Criterion method
@@ -85,7 +85,7 @@ class DecisionTree(Classifier):
         
                 
 
-        n_zero, n_one = util.count_label_occurrences(y)
+        #n_zero, n_one = util.count_label_occurrences(y)
         
         #print('Total Labels: ', n_zero + n_one)
         #print('Total Ones: ', n_one)
@@ -94,7 +94,10 @@ class DecisionTree(Classifier):
         
         # Entropy of Voting Label = 0.99139
         # Entropy Calculation of the Label
-        #entropy = util.entropy(y, y) # Passing in the label vector for both inputs as I want the entropy of just the label
+        entropy = util.entropy(self._schema, 0, y, y, split_criterion) # Passing in the label vector for both inputs as I want the entropy of just the label
+        print('Entropy of Label w.r.t Itself:', entropy)
+
+        
         
         # Entropy of the First Feature w.r.t the label = 
         #entropy = util.entropy(X[:, 0], y) # Passing in the first column of data and the label vector

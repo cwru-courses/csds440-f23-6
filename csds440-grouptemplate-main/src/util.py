@@ -30,7 +30,7 @@ def count_label_occurrences(y: np.ndarray) -> Tuple[int, int]:
     return n_zeros, n_ones
 
 
-def entropy(schema, feature_index, data, labels):
+def entropy(schema, feature_index, data, labels, split_criterion):
     # Implement this on your own!
     
     datatype = schema[feature_index].ftype
@@ -73,7 +73,7 @@ def entropy(schema, feature_index, data, labels):
     # Calculate the unique values and their counts in the data
     unique_values, counts = np.unique(data, return_counts=True)
     # If calculating the entropy of the data with respect to itself
-    if(data.all() == labels.all()):
+    if(np.array_equal(data, labels)):
             probabilities = counts / len(data)
             entropy_value = -np.sum(probabilities * np.log2(probabilities))
             return entropy_value
