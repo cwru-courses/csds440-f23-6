@@ -99,15 +99,19 @@ class DecisionTree(Classifier):
 
         
 
-        # Entropy of the First Feature w.r.t the label = 
+        # Entropies of the toy features
         #entropy = util.entropy(self._schema, 0, X[:, 0], y, split_criterion) # Passing in the first column of data and the label vector
         #print('Entropy of Label w.r.t First Feature:', entropy)
+        #print("-------------------------")
         
-        entropy = util.entropy(self._schema, 1, X[:, 1], y, split_criterion) # Passing in the first column of data and the label vector
+        #entropy = util.entropy(self._schema, 1, X[:, 1], y, split_criterion) # Passing in the first column of data and the label vector
         #print('Entropy of Label w.r.t Second Feature:', entropy)
+        #print("-------------------------")
         
         #entropy = util.entropy(self._schema, 2, X[:, 2], y, split_criterion) # Passing in the first column of data and the label vector
         #print('Entropy of Label w.r.t Third Feature:', entropy)
+        #print("-------------------------")
+
         
         
         

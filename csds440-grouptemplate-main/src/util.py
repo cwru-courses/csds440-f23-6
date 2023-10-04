@@ -75,29 +75,30 @@ def entropy(schema, feature_index, data, labels, split_criterion):
             #print(tests)
             
             
-            #for test in tests:
-            for i in range(1): # testing loop
+            for test in tests:
                 entropy_contribution = 0.0
                 
-                print("Test:", tests[i])
+                #print("Test:", tests[i])
 
                 # Calculating lower bound entropy contribution
-                lower_bound_labels = labels[data <= tests[i]]
+                lower_bound_labels = labels[data <= test]
                 probs_is_lower = len(lower_bound_labels) / len(labels)
                 #print("Lower:", lower_bound_labels)
                 
                 probs_lower = []
                 # Find probabilites of each unique label within lower_bound_labels
-                for label in unique_labels:
+                for label in unique_labels:                    
                     probs_lower.append((lower_bound_labels == label).sum() / len(lower_bound_labels))
                     
                 #print(probs_lower)
                 
                 # Calculating the entropy contribution of the lower bound
                 for prob in probs_lower:
-                    if prob != 0:
+                    if prob != 0 and prob != 0.5: # PATCHWORK SOLUTION ASK PROFESSOR RAY ABOUT WHAT TO DO WHEN PROB = 0.5
                         entropy_contribution -= prob * np.log2(prob)
                         
+                #print("Lower Bound Entropy Contribution:", entropy_contribution)
+                #print(probs_is_lower)
                 entropy_value += probs_is_lower * entropy_contribution
                 
                 
@@ -105,7 +106,7 @@ def entropy(schema, feature_index, data, labels, split_criterion):
                 entropy_contribution = 0.0
                 
                 # Calculating upper bound entropy contribution
-                upper_bound_labels = labels[data > tests[i]]
+                upper_bound_labels = labels[data > test]
                 probs_is_upper = len(upper_bound_labels) / len(labels)
                 #print("Upper:", upper_bound_labels)
                 
@@ -118,10 +119,13 @@ def entropy(schema, feature_index, data, labels, split_criterion):
                 
                 # Calculating the entropy contribution of the upper bound
                 for prob in probs_upper:
-                    if prob != 0:
+                    if prob != 0 and prob != 0.5: # PATCHWORK SOLUTION ASK PROFESSOR RAY ABOUT WHAT TO DO WHEN PROB = 0.5
                         entropy_contribution -= prob * np.log2(prob)
-                
+                        
+                #print("Upper Bound Entropy Contribution:", entropy_contribution)
+                #print(probs_is_upper)
                 entropy_value += probs_is_upper * entropy_contribution
+                #print("Total Entropy:", entropy_value)
                 
 
                 
