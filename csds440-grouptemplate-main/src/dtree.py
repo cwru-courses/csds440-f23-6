@@ -136,10 +136,10 @@ class DecisionTree(Classifier):
         # Calculating the information gain of each feature w.r.t the label
         #information_gain = util.information_gain(X[:, 0], y)
 
-        if n_one > n_zero:
-            self._majority_label = 1
-        else:
-            self._majority_label = 0
+        #if n_one > n_zero:
+            #self._majority_label = 1
+        #else:
+            #self._majority_label = 0
 
     def predict(self, X: np.ndarray) -> np.ndarray:
         """
