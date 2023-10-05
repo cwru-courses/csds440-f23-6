@@ -71,7 +71,7 @@ def entropy(schema, feature_index, data, labels, split_criterion):
         
         # Feature is Continuous
         if datatype == FeatureType.CONTINUOUS:
-            tests = split_criterion[feature_index]
+            feature_state, tests = list(split_criterion.items())[feature_index]
             #print(tests)
             
             

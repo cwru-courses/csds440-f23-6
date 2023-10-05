@@ -197,20 +197,30 @@ class DecisionTree(Classifier):
             #print a blank line
             print()
             
+            # Fix the case in which the root feature is continuous
+            #if self._schema[max_ig_index].ftype == FeatureType.CONTINUOUS:
+                
+            
+            # This only works for a discrete attribute root
             # Create masked data and labels for the current test
-            mask = X[:, max_ig_index] == test  
-             
+            mask = X[:, max_ig_index] == test 
             mask_X = X[mask]
             mask_y = y[mask]
             
-            masked_schema = np.delete(self._schema, max_ig_index) # Delete the root feature from the schema
-                        
+            # Delete the root feature from the schema
+            masked_schema = np.delete(self._schema, max_ig_index) 
+            
+            # Delete the root feature key value pair from the split_criterion dictionary
+            masked_split_criterion = split_criterion.copy()
+            del masked_split_criterion[max_ig_index]
+            
             mask_X = np.delete(mask_X, max_ig_index, axis=1) # Delete the column of the root feature
             
             #print(mask_y)
             
-            #entropy = util.entropy(masked_schema, 0, mask_y, mask_y, split_criterion) # Entropy of the ith feature w.r.t the label
-            #print('Entropy of Masked Label w.r.t Itself:', entropy)
+            test_entropy = util.entropy(masked_schema, 0, mask_y, mask_y, split_criterion) # Entropy of the ith feature w.r.t the label
+            print('Entropy of Masked Label w.r.t Itself:', test_entropy)
+            print('-------------------------') 
             
             
             #print(mask_X)
@@ -233,9 +243,19 @@ class DecisionTree(Classifier):
             
             #infogains = {}
             for i in range(0, len(mask_X[0])):
-                print(masked_schema[i].name)
-                entropy = util.entropy(masked_schema, i, mask_X[:, i], mask_y, split_criterion) # Entropy of the ith feature w.r.t the label
-                print('Entropy of Feature', i+1,':', entropy)
+                print("Current Feature:", masked_schema[i].name)
+                
+                # if feature is continuous
+                if masked_schema[i].ftype == FeatureType.CONTINUOUS:
+                    unmasked_X = np.delete(X, max_ig_index, axis=1)
+                    feature_entropy = util.entropy(self._schema, i, unmasked_X[:, i], y, split_criterion) # Entropy of the ith feature w.r.t the label
+                    
+                else:
+                    feature_entropy = util.entropy(masked_schema, i, mask_X[:, i], mask_y, masked_split_criterion) # Entropy of the ith feature w.r.t the label
+                    
+                test_wrt_feature_entropy = test_entropy - feature_entropy
+                print('Entropy of Feature', i+1,':', feature_entropy)
+                print('Entropy of test wrt feature', i+1,':', test_wrt_feature_entropy)
                 #print('Name:', self._schema[i].name)
                 #print('DType:', self._schema[i].ftype)
                 #information_gain = util.infogain(self._schema, i, X[:, i], y, split_criterion) # Information Gain of the ith feature w.r.t the label
