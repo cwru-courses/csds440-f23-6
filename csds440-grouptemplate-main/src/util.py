@@ -88,7 +88,7 @@ def entropy(schema, feature_index, data, labels, split_criterion):
                 probs_lower = []
                 # Find probabilites of each unique label within lower_bound_labels
                 for label in unique_labels:                    
-                    probs_lower.append((lower_bound_labels == label).sum() / len(lower_bound_labels))
+                    probs_lower.append((lower_bound_labels == label).sum() / len(lower_bound_labels))if len(lower_bound_labels) != 0 else 0
                     
                 #print(probs_lower)
                 
@@ -107,13 +107,14 @@ def entropy(schema, feature_index, data, labels, split_criterion):
                 
                 # Calculating upper bound entropy contribution
                 upper_bound_labels = labels[data > test]
-                probs_is_upper = len(upper_bound_labels) / len(labels)
+                probs_is_upper = len(upper_bound_labels) / len(labels) 
                 #print("Upper:", upper_bound_labels)
                 
                 probs_upper = []
                 # Find probabilites of each unique label within upper_bound_labels
                 for label in unique_labels:
-                    probs_upper.append((upper_bound_labels == label).sum() / len(upper_bound_labels))
+                    # ADD case for when upper_bound_labels is empty
+                    probs_upper.append((upper_bound_labels == label).sum() / len(upper_bound_labels)) if len(upper_bound_labels) != 0 else 0
                     
                 #print(probs_upper)
                 

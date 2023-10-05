@@ -207,6 +207,12 @@ class DecisionTree(Classifier):
                         
             mask_X = np.delete(mask_X, max_ig_index, axis=1) # Delete the column of the root feature
             
+            #print(mask_y)
+            
+            #entropy = util.entropy(masked_schema, 0, mask_y, mask_y, split_criterion) # Entropy of the ith feature w.r.t the label
+            #print('Entropy of Masked Label w.r.t Itself:', entropy)
+            
+            
             #print(mask_X)
             #print(mask_y)
             
@@ -220,11 +226,16 @@ class DecisionTree(Classifier):
             # I WILL REPLACE THIS WITH A RECURSIVE CALL TO FIT LATER 
             # Looping through all columns of masked data
             # Finding feature with the max info gain w.r.t the root feature
-            infogains = {}
+            
+            #entropy = util.entropy(masked_schema, 0, mask_y, mask_y, split_criterion) # Entropy of the ith feature w.r.t the label
+            #print('Entropy of Label w.r.t Itself:', entropy)
+            
+            
+            #infogains = {}
             for i in range(0, len(mask_X[0])):
                 print(masked_schema[i].name)
                 entropy = util.entropy(masked_schema, i, mask_X[:, i], mask_y, split_criterion) # Entropy of the ith feature w.r.t the label
-                #print('Entropy of Feature', i+1,':', entropy)
+                print('Entropy of Feature', i+1,':', entropy)
                 #print('Name:', self._schema[i].name)
                 #print('DType:', self._schema[i].ftype)
                 #information_gain = util.infogain(self._schema, i, X[:, i], y, split_criterion) # Information Gain of the ith feature w.r.t the label
@@ -232,10 +243,10 @@ class DecisionTree(Classifier):
                 #infogains[i] = information_gain
                 print('-------------------------') 
                 
-            print('+=============================+')
+            #print('+=============================+')
+            break
         
         
-
         #if n_one > n_zero:
             #self._majority_label = 1
         #else:
