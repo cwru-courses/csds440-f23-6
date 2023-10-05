@@ -193,22 +193,46 @@ class DecisionTree(Classifier):
         
         # Generate child nodes for root
         for test in root.get_tests():
-            print(test)
+            print("Current Test:", test)
+            #print a blank line
+            print()
+            
             # Create masked data and labels for the current test
             mask = X[:, max_ig_index] == test  
              
             mask_X = X[mask]
             mask_y = y[mask]
             
+            masked_schema = np.delete(self._schema, max_ig_index) # Delete the root feature from the schema
+                        
             mask_X = np.delete(mask_X, max_ig_index, axis=1) # Delete the column of the root feature
             
             #print(mask_X)
             #print(mask_y)
             
+            # Check if masked data is the same as original data array
+            if np.array_equal(mask_X, X):
+                return root # root is leaf node so return without children
             
-              
-            print('-------------------------')
-   
+ 
+                            
+            # THIS IS WHERE I AM TESTING THE CONSTRUCTION OF A CHILD NODE 
+            # I WILL REPLACE THIS WITH A RECURSIVE CALL TO FIT LATER 
+            # Looping through all columns of masked data
+            # Finding feature with the max info gain w.r.t the root feature
+            infogains = {}
+            for i in range(0, len(mask_X[0])):
+                print(masked_schema[i].name)
+                entropy = util.entropy(masked_schema, i, mask_X[:, i], mask_y, split_criterion) # Entropy of the ith feature w.r.t the label
+                #print('Entropy of Feature', i+1,':', entropy)
+                #print('Name:', self._schema[i].name)
+                #print('DType:', self._schema[i].ftype)
+                #information_gain = util.infogain(self._schema, i, X[:, i], y, split_criterion) # Information Gain of the ith feature w.r.t the label
+                #print('IG of Feature', i+1,':', information_gain)
+                #infogains[i] = information_gain
+                print('-------------------------') 
+                
+            print('+=============================+')
         
         
 
