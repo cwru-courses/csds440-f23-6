@@ -62,6 +62,10 @@ class DecisionTree(Classifier):
 
         self._schema = schema  # For some models (like a decision tree) it makes sense to keep track of the data schema
         self._majority_label = 0  # Protected attributes in Python have an underscore prefix
+        
+        self.root = None
+        
+        
 
     def fit(self, X: np.ndarray, y: np.ndarray, weights: Optional[np.ndarray] = None) -> None:
         """
@@ -86,201 +90,46 @@ class DecisionTree(Classifier):
         
         #print(split_criterion)
         
-        #for i in range(0, len(X)):
-            #print('Data:', X[i])
-            #print('Label:', y[i])
-            
-        #Steps for ID3 Algorithm Training
-        #Step 1. For Each Feature F, Calculate the Entropy of the Feature, and the Information Gain of the Feature
-        
-        #Step 2. Select the Feature with the Highest Information Gain
-        
-                
-
-        #n_zero, n_one = util.count_label_occurrences(y)
-        
-        #print('Total Labels: ', n_zero + n_one)
-        #print('Total Ones: ', n_one)
-        #print('Total Zeroes: ', n_zero)
-        
-        
-        # Entropy of Voting Label = 0.99139
-        # Entropy Calculation of the Label
-        #entropy = util.entropy(self._schema, 0, y, y, split_criterion) # Passing in the label vector for both inputs as I want the entropy of just the label
-        #print('Entropy of Label w.r.t Itself:', entropy)
-
-        
-
-        # Entropies of the toy features
-        #entropy = util.entropy(self._schema, 0, X[:, 0], y, split_criterion) # Passing in the first column of data and the label vector
-        #print('Entropy of Label w.r.t First Feature:', entropy)
-        #print("-------------------------")
-        
-        #entropy = util.entropy(self._schema, 1, X[:, 1], y, split_criterion) # Passing in the first column of data and the label vector
-        #print('Entropy of Label w.r.t Second Feature:', entropy)
-        #print("-------------------------")
-        
-        #entropy = util.entropy(self._schema, 2, X[:, 2], y, split_criterion) # Passing in the first column of data and the label vector
-        #print('Entropy of Label w.r.t Third Feature:', entropy)
-        #print("-------------------------")
-        
-        # Calculating the Information Gain of the First Feature w.r.t the label
-        #information_gain = util.infogain(X[:, 0], y)
-        #print('Information Gain of First Feature w.r.t the Labels:', information_gain)
-        
-        # Testing out faulty Entropy calculations for the 12th Feature in the volcano dataset
-        #entropy1 = util.entropy(X[:, 10], y)
-        #entropy2 = util.entropy(X[:, 11], y)
-        
-        #print('Entropy of Label w.r.t 11th Feature:', entropy1)
-        #print('Entropy of Label w.r.t 12th Feature:', entropy2)
-        
-        #infogain = util.infogain(X[:, 11], y)
-        #print('Information Gain of 12th Feature w.r.t the Labels:', infogain)
-        
-        
         entropies = util.calculate_column_entropy(self._schema, X, y, split_criterion)
-        print(entropies)
+        #print(entropies)
         
         infogains = util.infogain(self._schema, X, y, split_criterion)
-        print(infogains)
+        #print(infogains)
         
         max_ig_index = np.argmax(infogains)   
              
-        print('Max IG Name:', self._schema[max_ig_index].name)
+        #print('Max IG Name:', self._schema[max_ig_index].name)
         
         root = Node(self._schema[max_ig_index], split_criterion[max_ig_index]) # Passing the schema of the root feature only, not general schema
         
-        print("-------------------------")
+        if self.root is None:
+            self.root = root
+        
+        
+        #print("-------------------------")
         
         # Constructing children of root node
         # Testing construction of a child node manually first
         for test in root.get_tests():
+            #print("Current test:", test)
             # Create masked data and labels for the current test  
             # Create masked data and labels for the current test only have rows in which the root feature is equal to the test
             mask = X[:, max_ig_index] == test
             mask_X = X[mask]
             mask_y = y[mask]
             
-            if np.array_equal(mask_X, X):
+            
+            if (mask_X.size == 0) or (np.array_equal(mask_X, X)):
                 return root
             
-            entropies = util.calculate_column_entropy(self._schema, mask_X, mask_y, split_criterion)
+            #entropies = util.calculate_column_entropy(self._schema, mask_X, mask_y, split_criterion)
             
-            infogains = util.infogain(self._schema, mask_X, mask_y, split_criterion)
+            #infogains = util.infogain(self._schema, mask_X, mask_y, split_criterion)
             
-            print("Current test:", test)
+            child = self.fit(mask_X, mask_y)
+            root.add_child(test, child)
             
-            print(entropies)
-            print(infogains) 
-            print("-------------------------")
-      
-        
-        # Loop through each column of data, calculate the entropy and information gain of each feature w.r.t the label
-        # and select the feature with the highest information gain
-        #infogains = {}
-        #for i in range(0, len(X[0])):
-            #entropy = util.entropy(self._schema, i, X[:, i], y, split_criterion) # Entropy of the ith feature w.r.t the label
-            #print('Entropy of Feature', i+1,':', entropy)
-            #print('Name:', self._schema[i].name)
-            #print('DType:', self._schema[i].ftype)
-            #information_gain = util.infogain(self._schema, i, X[:, i], y, split_criterion) # Information Gain of the ith feature w.r.t the label
-            #print('IG of Feature', i+1,':', information_gain)
-            #infogains[i] = information_gain
-            #print('-------------------------')
-            
-        # Select the feature with the highest information gain
-        #max_ig_index = max(infogains, key=infogains.get) # returns the index of the feature with the highest information gain
-        #print('Max IG name:', self._schema[max_ig_index].name)
-        #print('Max IG:', infogains[max_ig_index])
-        
-        #print('+++++++++++++++++++++++++++++++')
-        
-        # Create root node
-        #root = Node(self._schema[max_ig_index], split_criterion[max_ig_index]) # Passing the schema of the root feature only, not general schema
-        #print('Root Schema:', root.get_schema().name)
-        #print('Root Tests:', root.get_tests())
-        
-        
-        
-        
-        '''
-        # Creating Children manually for now
-        # Generate child nodes for root
-        for test in root.get_tests():
-            print("Current Test:", test)
-            #print a blank line
-            print()
-            
-            # Fix the case in which the root feature is continuous
-            #if self._schema[max_ig_index].ftype == FeatureType.CONTINUOUS:
-                
-            
-            # This only works for a discrete attribute root
-            # Create masked data and labels for the current test
-            mask = X[:, max_ig_index] == test 
-            mask_X = X[mask]
-            mask_y = y[mask]
-            
-            # Delete the root feature from the schema
-            masked_schema = np.delete(self._schema, max_ig_index) 
-            
-            # Delete the root feature key value pair from the split_criterion dictionary
-            masked_split_criterion = split_criterion.copy()
-            del masked_split_criterion[max_ig_index]
-            
-            mask_X = np.delete(mask_X, max_ig_index, axis=1) # Delete the column of the root feature
-            
-            #print(mask_y)
-            
-            test_entropy = util.entropy(masked_schema, 0, mask_y, mask_y, split_criterion) # Entropy of the ith feature w.r.t the label
-            print('Entropy of Masked Label w.r.t Itself:', test_entropy)
-            print('-------------------------') 
-            
-            
-            #print(mask_X)
-            #print(mask_y)
-            
-            # Check if masked data is the same as original data array
-            if np.array_equal(mask_X, X):
-                return root # root is leaf node so return without children
-            
- 
-                            
-            # THIS IS WHERE I AM TESTING THE CONSTRUCTION OF A CHILD NODE 
-            # I WILL REPLACE THIS WITH A RECURSIVE CALL TO FIT LATER 
-            # Looping through all columns of masked data
-            # Finding feature with the max info gain w.r.t the root feature
-            
-            #entropy = util.entropy(masked_schema, 0, mask_y, mask_y, split_criterion) # Entropy of the ith feature w.r.t the label
-            #print('Entropy of Label w.r.t Itself:', entropy)
-            
-            
-            #infogains = {}
-            for i in range(0, len(mask_X[0])):
-                print("Current Feature:", masked_schema[i].name)
-                
-                # if feature is continuous
-                if masked_schema[i].ftype == FeatureType.CONTINUOUS:
-                    unmasked_X = np.delete(X, max_ig_index, axis=1)
-                    feature_entropy = util.entropy(self._schema, i, unmasked_X[:, i], y, split_criterion) # Entropy of the ith feature w.r.t the label
-                    
-                else:
-                    feature_entropy = util.entropy(masked_schema, i, mask_X[:, i], mask_y, masked_split_criterion) # Entropy of the ith feature w.r.t the label
-                    
-                test_wrt_feature_entropy = test_entropy - feature_entropy
-                print('Entropy of Feature', i+1,':', feature_entropy)
-                print('Entropy of test wrt feature', i+1,':', test_wrt_feature_entropy)
-                #print('Name:', self._schema[i].name)
-                #print('DType:', self._schema[i].ftype)
-                #information_gain = util.infogain(self._schema, i, X[:, i], y, split_criterion) # Information Gain of the ith feature w.r.t the label
-                #print('IG of Feature', i+1,':', information_gain)
-                #infogains[i] = information_gain
-                print('-------------------------') 
-                
-            #print('+=============================+')
-            break
-            '''
+        return root
         
         
         #if n_one > n_zero:
@@ -408,6 +257,18 @@ def dtree(data_path: str, tree_depth_limit: int, use_cross_validation: bool = Tr
     for X_train, y_train, X_test, y_test in datasets:
         decision_tree = DecisionTree(schema)
         decision_tree.fit(X_train, y_train)
+
+        print("Root:", decision_tree.root.get_schema().name)
+        print("Root tests:", decision_tree.root.get_tests())
+        
+        print('+------------------------+')
+        
+        for child in decision_tree.root.get_children():
+            print(child)
+            print("Child (branch,feature):", decision_tree.root.get_child(child).get_schema().name)
+            print("Child tests:", decision_tree.root.get_child(child).get_tests())
+            print('-------------------------')        
+        
         #evaluate_and_print_metrics(decision_tree, X_test, y_test)
 
     #raise NotImplementedError()
