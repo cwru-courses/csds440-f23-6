@@ -83,29 +83,9 @@ class DecisionTree(Classifier):
             split_criterion = self._determine_split_criterion(X, y)
         except NotImplementedError:
             warnings.warn('This is for demonstration purposes only.')
-            
+        
         #print(split_criterion)
         
-        
-        # Testing Split Criterion method
-        # Using toy data from lecture
-        # Expecting tests = [0.25, 0.35, 0.5]
-        #data_column = [[0.1, 0.2, 0.3, 0.3, 0.4, 0.4, 0.6, 0.7, 0.8],
-        #               [0.1, 0.2, 0.3, 0.3, 0.4, 0.4, 0.6, 0.7, 0.8],
-        #               [0.1, 0.2, 0.3, 0.3, 0.4, 0.4, 0.6, 0.7, 0.8],]
-        #label_column = [1, 1, 0, 0, 0, 1, 0, 0, 0]
-        # Convert the list to a NumPy array
-        #data_matrix = np.array(data_column, float).T
-        #data_matrix = np.array(data_column, float).reshape(-1, 1)
-        #label_vector = np.array(label_column, float)
-        #tests = self._determine_split_criterion(data_matrix, label_vector)
-
-            
-        #if(split_criterion):
-            # Implement split criterion of a continuous attribute
-            
-            
-            
         #for i in range(0, len(X)):
             #print('Data:', X[i])
             #print('Label:', y[i])
@@ -143,9 +123,6 @@ class DecisionTree(Classifier):
         #entropy = util.entropy(self._schema, 2, X[:, 2], y, split_criterion) # Passing in the first column of data and the label vector
         #print('Entropy of Label w.r.t Third Feature:', entropy)
         #print("-------------------------")
-
-        
-        
         
         # Calculating the Information Gain of the First Feature w.r.t the label
         #information_gain = util.infogain(X[:, 0], y)
@@ -160,37 +137,75 @@ class DecisionTree(Classifier):
         
         #infogain = util.infogain(X[:, 11], y)
         #print('Information Gain of 12th Feature w.r.t the Labels:', infogain)
-       
+        
+        
+        entropies = util.calculate_column_entropy(self._schema, X, y, split_criterion)
+        print(entropies)
+        
+        infogains = util.infogain(self._schema, X, y, split_criterion)
+        print(infogains)
+        
+        max_ig_index = np.argmax(infogains)   
+             
+        print('Max IG Name:', self._schema[max_ig_index].name)
+        
+        root = Node(self._schema[max_ig_index], split_criterion[max_ig_index]) # Passing the schema of the root feature only, not general schema
+        
+        print("-------------------------")
+        
+        # Constructing children of root node
+        # Testing construction of a child node manually first
+        for test in root.get_tests():
+            # Create masked data and labels for the current test  
+            # Create masked data and labels for the current test only have rows in which the root feature is equal to the test
+            mask = X[:, max_ig_index] == test
+            mask_X = X[mask]
+            mask_y = y[mask]
+            
+            if np.array_equal(mask_X, X):
+                return root
+            
+            entropies = util.calculate_column_entropy(self._schema, mask_X, mask_y, split_criterion)
+            
+            infogains = util.infogain(self._schema, mask_X, mask_y, split_criterion)
+            
+            print("Current test:", test)
+            
+            print(entropies)
+            print(infogains) 
+            print("-------------------------")
+      
         
         # Loop through each column of data, calculate the entropy and information gain of each feature w.r.t the label
         # and select the feature with the highest information gain
-        infogains = {}
-        for i in range(0, len(X[0])):
+        #infogains = {}
+        #for i in range(0, len(X[0])):
             #entropy = util.entropy(self._schema, i, X[:, i], y, split_criterion) # Entropy of the ith feature w.r.t the label
             #print('Entropy of Feature', i+1,':', entropy)
             #print('Name:', self._schema[i].name)
             #print('DType:', self._schema[i].ftype)
-            information_gain = util.infogain(self._schema, i, X[:, i], y, split_criterion) # Information Gain of the ith feature w.r.t the label
+            #information_gain = util.infogain(self._schema, i, X[:, i], y, split_criterion) # Information Gain of the ith feature w.r.t the label
             #print('IG of Feature', i+1,':', information_gain)
-            infogains[i] = information_gain
+            #infogains[i] = information_gain
             #print('-------------------------')
             
         # Select the feature with the highest information gain
-        max_ig_index = max(infogains, key=infogains.get) # returns the index of the feature with the highest information gain
-        print('Max IG name:', self._schema[max_ig_index].name)
-        print('Max IG:', infogains[max_ig_index])
+        #max_ig_index = max(infogains, key=infogains.get) # returns the index of the feature with the highest information gain
+        #print('Max IG name:', self._schema[max_ig_index].name)
+        #print('Max IG:', infogains[max_ig_index])
         
-        print('+++++++++++++++++++++++++++++++')
+        #print('+++++++++++++++++++++++++++++++')
         
         # Create root node
-        root = Node(self._schema[max_ig_index], split_criterion[max_ig_index]) # Passing the schema of the root feature only, not general schema
+        #root = Node(self._schema[max_ig_index], split_criterion[max_ig_index]) # Passing the schema of the root feature only, not general schema
         #print('Root Schema:', root.get_schema().name)
         #print('Root Tests:', root.get_tests())
         
         
         
-        # Creating Children manually for now
         
+        '''
+        # Creating Children manually for now
         # Generate child nodes for root
         for test in root.get_tests():
             print("Current Test:", test)
@@ -265,6 +280,7 @@ class DecisionTree(Classifier):
                 
             #print('+=============================+')
             break
+            '''
         
         
         #if n_one > n_zero:
