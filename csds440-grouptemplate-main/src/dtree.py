@@ -65,7 +65,11 @@ class DecisionTree(Classifier):
         
         self.root = None
         self.features_in_tree = []
-                
+        self.masked_indeces = []
+        
+        self.data = None
+        self.labels = None
+
         
 
     def fit(self, X: np.ndarray, y: np.ndarray, weights: Optional[np.ndarray] = None) -> None:
@@ -82,67 +86,70 @@ class DecisionTree(Classifier):
         # BEFORE running it. In Python, the dominant paradigm is EAFP (Easier to Ask Forgiveness than Permission), where
         # try/except blocks (like try/catch blocks) are commonly used to catch expected exceptions and deal with them.
         
+        if self.data is None:
+            self.data = X
+            self.labels = y
         
-        # Dynamically determine the current schema of the dataset
-        local_schema = self._schema.copy()
-        
-        
-        print('-------------------------')
+        #print('-------------------------')
         # print list of schema element names
-        print(self.features_in_tree)
-        
-        
-        # Delete all entries of the local schema that are in the tree already        
-        local_schema = [feature for feature in local_schema if feature.name not in self.features_in_tree]
-        
-        #print(X.shape)
+        #print(self.features_in_tree)
         
         # Check if the number of entries in the local_schema matches the number of columns in the dataset
-        if len(local_schema) != X.shape[1]:
-            print("TRUE")
-        
-        
-        print(local_schema)
-        
-                
-
-        
+        #if len(self._schema) != X.shape[1]:
+            #print("FALSE")
+            #print(X.shape)
+            #print("Schema Len:", len(self._schema))
+            #return 0
+        #else:
+            #print("TRUE")
         
         #return 0
         # Implement Split Criterion for Decision Tree
         try:
             split_criterion = self._determine_split_criterion(X, y, self._schema)
+            #split_criterion = self._determine_split_criterion(X, y, self._schema)
             #split_criterion = self._determine_split_criterion(X, y)
         except NotImplementedError:
             warnings.warn('This is for demonstration purposes only.')
         
         #print(split_criterion)
         
-        entropies = util.calculate_column_entropy(local_schema, X, y, split_criterion)
+        entropies = util.calculate_column_entropy(self._schema, X, y, split_criterion)
         #entropies = util.calculate_column_entropy(self._schema, X, y, split_criterion)
         #print(entropies)
         
-        infogains = util.infogain(local_schema, X, y, split_criterion)
+        infogains = util.infogain(self._schema, X, y, split_criterion)
         #infogains = util.infogain(self._schema, X, y, split_criterion)
         #print(infogains)
         
-        max_ig_index = np.argmax(infogains)   
+        masked_infogains = [infogains[i] for i in range(len(infogains)) if i not in self.masked_indeces]
+        
+        # Consider the indeces of the features that have not been used in the tree
+        
+        
+        max_ig_index = np.argmax(infogains)
+        
+        masked_max_ig_index = np.argmax(masked_infogains)
+        
+        print(self.masked_indeces)
+        print(self.features_in_tree)
+
+        
+        #print(self._schema[max_ig_index].name)
+        #print(self._schema[masked_max_ig_index].name)
              
         #print('Max IG Name:', self._schema[max_ig_index].name)
-        
-        # If the max infogain feature is not already part of the tree
-        #if self._schema[max_ig_index].name not in self.features_in_tree:
-        if local_schema[max_ig_index].name not in self.features_in_tree:
-            self.features_in_tree.append(local_schema[max_ig_index].name)
               
         
         #root = Node(self._schema[max_ig_index], split_criterion[max_ig_index]) # Passing the schema of the root feature only, not general schema
-        root = Node(local_schema[max_ig_index], split_criterion[max_ig_index]) # Passing the schema of the root feature only, not general schema
-
+        root = Node(self._schema[max_ig_index], split_criterion[max_ig_index]) # Passing the schema of the root feature only, not general schema
         
+        self.features_in_tree.append(self._schema[max_ig_index].name)
+        self.masked_indeces.append(max_ig_index)
         
         if self.root is None:
             self.root = root
+            
                     
         #print("-------------------------")
         
@@ -152,13 +159,19 @@ class DecisionTree(Classifier):
             #print("Current test:", test)
             # Create masked data and labels for the current test  
             # Create masked data and labels for the current test only have rows in which the root feature is equal to the test
+            # FIX FOR CONTINUOUS DATA
             mask = X[:, max_ig_index] == test
             mask_X = X[mask]
             mask_y = y[mask]
-                        
-            mask_X = np.delete(mask_X, max_ig_index, axis=1)            
+            
+            # if all label values are the same, then create a leaf node
+            if len(np.unique(mask_y)) == 1:
+                print("LEAF ACTIVATED")
+                root.add_child(test = mask_y[0], node = Node(None, None))
+                return root
             
             if (mask_X.size == 0) or (np.array_equal(mask_X, X)):
+                print("OUGNFJDSFEHIUBJONCWHUDEFBDJN")
                 return root
             
             #entropies = util.calculate_column_entropy(self._schema, mask_X, mask_y, split_criterion)
@@ -208,7 +221,7 @@ class DecisionTree(Classifier):
         # Dictionary to track the test list for each feature
         test_dic = {}
         # Loop through each column of data and calculate the tests for each feature
-        for i in range(0, len(X[0])):  
+        for i in range(X.shape[1]):  
             
             tests = []  # List to store test values for the current feature          
             datatype = schema[i] # Get the datatype of the current feature of the dataset
