@@ -59,6 +59,42 @@ Answer:
 2. Estimate how many functions satisfying Q1 (i) could exist over $n$ attributes, as a function of $n$. 
 
 Answer:
+
+- If for a given boolean function of $n$ attributes to have an $IG(Y|X=x_{i}) = 0$ $\forall X$ being any given attribute of the function. Each attribute $X$ must partition the set of attribute-value combinations into the same ratio of 0 and 1 labels as there are in the unpartitioned set of labels. 
+- Meaning that for any given attribute of the boolean function, the entropy of that attribute with respect to the labels must equal the entropy of the labels itself. $H(Y| X) = H(Y) \rightarrow IG(Y|X) = H(Y) - H(Y|X) = 0$ .
+- A relevant case in which the above statement can hold is when there is an exact $50/50$ split between all positive and negative labels. And the partitioning of the label set for each attribute $X$ also results in an exact $50/50$ split between positive and negative labels. 
+- Therefore: $H(Y) = 1$ and $H(Y|X) = 1 \rightarrow IG(Y|X) = 1-1 = 0$
+- From this case we can derive a method of generating functions that satisfy the requirements laid out in problem one. From this method we can extrapolate the number of possible functions over $n$ boolean attributes. 
+
+Consider this table from problem 1:
+
+| A | B | C | Value |
+|---|--- |---|---|
+| 0 | 0 | 0 | T |
+| 0 | 0 | 1 | F |
+| 0 | 1 | 0 | F |
+| 0 | 1 | 1 | T |
+| --|---|---|---|
+| 1 | 0 | 0 | T |
+| 1 | 0 | 1 | F |
+| 1 | 1 | 0 | F |
+| 1 | 1 | 1 | T |
+
+What stands out in this table is the symmetry between the set of labels at the top half of the table and the bottom half. A way of constructing such a table logically is to take the assigned label of each row and give the *complimentary row* the same assignment. 
+
+E.G: 
+$row \ 2 = {0, 0, 1}, \ label \ 2 = {F}$
+
+$(row \ 2)' = row \ 5 = {1, 1, 0}, \ label \ 5 = {F}$
+
+As you can see above, the two complimentary rows share the same label. Extend this constraint to all other rows in the table and you will have a dataset with an Information gain of $0$ for all boolean attributes. 
+
+Steps:
+- Create a table of all possible boolean attribute combinations this generates a table with $2^{n}$ number of rows.
+- Now divide your set in half such that for each row, the compliment of that row is not within the same half of the table. This results in two halves of size $\frac{2^{n}}{2} = 2^{n-1}$ 
+- For one of the two sets assign each row a label such that there is an equal number of positive and negative labels in the set. Then for each complimentary row in the second set assign the same label.
+- We only need to assign labels for half of our dataset, as the complimentary rows and their corresponding labels can be trivially inferred. Now the number of possible unique tables that can be made from this method is the number of unique ways we can assign our binary labels to the first half of the table. Therefore *No. of unique functions* = $2 ^ {2^{n-1}} = 2^{2n-2}$ 
+
  
 3.	Show that for a continuous attribute $X$, the only split values we need to check to determine a split with max $IG(X)$ lie between points with different labels. (Hint: consider the following setting for $X$: there is a candidate split point $S$ in the middle of $N$ examples with the same label. To the left of $S$ are $n$ such examples. To the left of $N$, there are $L_0$ examples with label negative and the $L_1$ positive, and likewise $(M_0, M_1)$ to the right. Express the information gain of $S$ as a function of $n$. Then show that this function is maximized either when $n=0$ or $n=N$ with all else constant.) (20 points)
 

@@ -64,7 +64,8 @@ class DecisionTree(Classifier):
         self._majority_label = 0  # Protected attributes in Python have an underscore prefix
         
         self.root = None
-        
+        self.features_in_tree = []
+                
         
 
     def fit(self, X: np.ndarray, y: np.ndarray, weights: Optional[np.ndarray] = None) -> None:
@@ -87,6 +88,7 @@ class DecisionTree(Classifier):
             split_criterion = self._determine_split_criterion(X, y)
         except NotImplementedError:
             warnings.warn('This is for demonstration purposes only.')
+            
         
         #print(split_criterion)
         
@@ -100,11 +102,17 @@ class DecisionTree(Classifier):
              
         #print('Max IG Name:', self._schema[max_ig_index].name)
         
+        # If the max infogain feature is not already part of the tree
+        if self._schema[max_ig_index].name not in self.features_in_tree:
+            self.features_in_tree.append(self._schema[max_ig_index].name)
+              
+        
         root = Node(self._schema[max_ig_index], split_criterion[max_ig_index]) # Passing the schema of the root feature only, not general schema
         
         if self.root is None:
             self.root = root
-        
+            
+        self._schema = np.delete(self._schema, max_ig_index)
         
         #print("-------------------------")
         
@@ -118,6 +126,9 @@ class DecisionTree(Classifier):
             mask_X = X[mask]
             mask_y = y[mask]
             
+            mask_X = np.delete(mask_X, max_ig_index, axis=1)
+            
+            #mask_X = np.delete(mask_X, max_ig_index, axis=1)            
             
             if (mask_X.size == 0) or (np.array_equal(mask_X, X)):
                 return root
@@ -267,7 +278,9 @@ def dtree(data_path: str, tree_depth_limit: int, use_cross_validation: bool = Tr
             print(child)
             print("Child (branch,feature):", decision_tree.root.get_child(child).get_schema().name)
             print("Child tests:", decision_tree.root.get_child(child).get_tests())
-            print('-------------------------')        
+            print('-------------------------')
+            
+        print(decision_tree.features_in_tree)
         
         #evaluate_and_print_metrics(decision_tree, X_test, y_test)
 
