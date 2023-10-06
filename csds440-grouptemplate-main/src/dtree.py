@@ -83,19 +83,47 @@ class DecisionTree(Classifier):
         # try/except blocks (like try/catch blocks) are commonly used to catch expected exceptions and deal with them.
         
         
+        # Dynamically determine the current schema of the dataset
+        local_schema = self._schema.copy()
+        
+        
+        print('-------------------------')
+        # print list of schema element names
+        print(self.features_in_tree)
+        
+        
+        # Delete all entries of the local schema that are in the tree already        
+        local_schema = [feature for feature in local_schema if feature.name not in self.features_in_tree]
+        
+        #print(X.shape)
+        
+        # Check if the number of entries in the local_schema matches the number of columns in the dataset
+        if len(local_schema) != X.shape[1]:
+            print("TRUE")
+        
+        
+        print(local_schema)
+        
+                
+
+        
+        
+        #return 0
         # Implement Split Criterion for Decision Tree
         try:
-            split_criterion = self._determine_split_criterion(X, y)
+            split_criterion = self._determine_split_criterion(X, y, self._schema)
+            #split_criterion = self._determine_split_criterion(X, y)
         except NotImplementedError:
             warnings.warn('This is for demonstration purposes only.')
-            
         
         #print(split_criterion)
         
-        entropies = util.calculate_column_entropy(self._schema, X, y, split_criterion)
+        entropies = util.calculate_column_entropy(local_schema, X, y, split_criterion)
+        #entropies = util.calculate_column_entropy(self._schema, X, y, split_criterion)
         #print(entropies)
         
-        infogains = util.infogain(self._schema, X, y, split_criterion)
+        infogains = util.infogain(local_schema, X, y, split_criterion)
+        #infogains = util.infogain(self._schema, X, y, split_criterion)
         #print(infogains)
         
         max_ig_index = np.argmax(infogains)   
@@ -103,17 +131,19 @@ class DecisionTree(Classifier):
         #print('Max IG Name:', self._schema[max_ig_index].name)
         
         # If the max infogain feature is not already part of the tree
-        if self._schema[max_ig_index].name not in self.features_in_tree:
-            self.features_in_tree.append(self._schema[max_ig_index].name)
+        #if self._schema[max_ig_index].name not in self.features_in_tree:
+        if local_schema[max_ig_index].name not in self.features_in_tree:
+            self.features_in_tree.append(local_schema[max_ig_index].name)
               
         
-        root = Node(self._schema[max_ig_index], split_criterion[max_ig_index]) # Passing the schema of the root feature only, not general schema
+        #root = Node(self._schema[max_ig_index], split_criterion[max_ig_index]) # Passing the schema of the root feature only, not general schema
+        root = Node(local_schema[max_ig_index], split_criterion[max_ig_index]) # Passing the schema of the root feature only, not general schema
+
+        
         
         if self.root is None:
             self.root = root
-            
-        self._schema = np.delete(self._schema, max_ig_index)
-        
+                    
         #print("-------------------------")
         
         # Constructing children of root node
@@ -125,10 +155,8 @@ class DecisionTree(Classifier):
             mask = X[:, max_ig_index] == test
             mask_X = X[mask]
             mask_y = y[mask]
-            
-            mask_X = np.delete(mask_X, max_ig_index, axis=1)
-            
-            #mask_X = np.delete(mask_X, max_ig_index, axis=1)            
+                        
+            mask_X = np.delete(mask_X, max_ig_index, axis=1)            
             
             if (mask_X.size == 0) or (np.array_equal(mask_X, X)):
                 return root
@@ -170,7 +198,7 @@ class DecisionTree(Classifier):
         return self._schema
 
     # It is standard practice to prepend helper methods with an underscore "_" to mark them as protected.
-    def _determine_split_criterion(self, X: np.ndarray, y: np.ndarray):
+    def _determine_split_criterion(self, X: np.ndarray, y: np.ndarray, schema: List[Feature]):
         """
         Determine decision tree split criterion. This is just an example to encourage you to use helper methods.
         Implement this however you like!
@@ -183,7 +211,7 @@ class DecisionTree(Classifier):
         for i in range(0, len(X[0])):  
             
             tests = []  # List to store test values for the current feature          
-            datatype = self._schema[i] # Get the datatype of the current feature of the dataset
+            datatype = schema[i] # Get the datatype of the current feature of the dataset
             
             # If the feature is continuous
             if datatype.ftype == FeatureType.CONTINUOUS:
@@ -268,19 +296,22 @@ def dtree(data_path: str, tree_depth_limit: int, use_cross_validation: bool = Tr
     for X_train, y_train, X_test, y_test in datasets:
         decision_tree = DecisionTree(schema)
         decision_tree.fit(X_train, y_train)
-
-        print("Root:", decision_tree.root.get_schema().name)
-        print("Root tests:", decision_tree.root.get_tests())
         
-        print('+------------------------+')
         
-        for child in decision_tree.root.get_children():
-            print(child)
-            print("Child (branch,feature):", decision_tree.root.get_child(child).get_schema().name)
-            print("Child tests:", decision_tree.root.get_child(child).get_tests())
-            print('-------------------------')
+        #print('-------------------------')
+        
+        #print("Root:", decision_tree.root.get_schema().name)
+        #print("Root tests:", decision_tree.root.get_tests())
+        
+        #print('+------------------------+')
+        
+        #for child in decision_tree.root.get_children():
+            #print(child)
+            #print("Child (branch,feature):", decision_tree.root.get_child(child).get_schema().name)
+            #print("Child tests:", decision_tree.root.get_child(child).get_tests())
+            #print('-------------------------')
             
-        print(decision_tree.features_in_tree)
+        #print(decision_tree.features_in_tree)
         
         #evaluate_and_print_metrics(decision_tree, X_test, y_test)
 
