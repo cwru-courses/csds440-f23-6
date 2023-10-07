@@ -109,36 +109,46 @@ Since $H(Y)$ remains constant for any value of $n$ we can state that the $IG(Y|X
 If we want to maximize the $IG(Y|X)$ we will want to minimize $H(Y|X)$.
 
 Entropy equation of the continuous attribute $X$
+
 $$
 H(Y|X) = P(X \leq S)H(Y|X \leq S) + P(X > S)H(Y|X > S)
 $$
+
 Break down of terms and their dependencies
 
 Probability attribute is less than or equal to split $S$
+
 $P(X \leq S) = \frac{L_{0} + L_{1} + n}{L_{0} + L_{1} + N + M_{0} + M_{1}}$ 
 
 Probability attribute is greater than split $S$
+
 $P(X > S) = \frac{M_{0} + M_{1} + N-n}{L_{0} + L_{1} + N + M_{0} + M_{1}}$ 
 
 Probabilities for whether the label is positive or negative given the attribute is less than or equal to the split
+
 $P^{-}_{X \leq S}(\frac{L_{0}}{L_{0} + L_{1} + n})$
 $P^{+}_{X \leq S}(\frac{L_{1}}{L_{0} + L_{1} + n})$
 
 Entropy of the label w.r.t the attributes less than or equal to split $S$
+
 $H(Y|X \leq S) = -P^{-}_{X \leq S}\log_{2}(-P^{-}_{X \leq S}) - P^{+}_{X \leq S} \log_{2}(P^{+}_{X \leq S})$  
 $\rightarrow \frac{L_0}{n+L_0+L_1} log_2(\frac{n+L_0+L_1}{L_0}) + \frac{n+L_1}{n+L_0+L_1} log_2(\frac{n+L_0+L_1}{n+L_1})$
 
 Probabilities for whether the label is positive or negative given the attribute is greater than the split
+
 $P^{-}_{X > S}(\frac{M_{0}}{M_{0} + M_{1} + N-n})$
 $P^{+}_{X > S}(\frac{M_{1}}{M_{0} + M_{1} + N-n})$
 
 Entropy of the label w.r.t the attributes greater than split $S$
+
 $H(Y|X > S) = -P^{-}_{X > S}\log_{2}(-P^{-}_{X > S}) - P^{+}_{X > S} \log_{2}(P^{+}_{X > S})$  
 $\rightarrow \frac{M_0}{N-n+M_0+M_1} log_2(\frac{N-n+M_0+M_1}{M_0}) + \frac{N-n+M_1}{N-n+M_0+M_1} log_2(\frac{N-n+M_0+M_1}{N-n+M_1})$
 
-
 In order to calculate total entropy we need the following two terms for the equation:
-$P(X \leq S)H(Y|X \leq S) = \frac{L_{0} + L_{1} + n}{L_{0} + L_{1} + N + M_{0} + M_{1}} \times [\frac{L_0}{n+L_0+L_1} log_2(\frac{n+L_0+L_1}{L_0}) + \frac{n+L_1}{n+L_0+L_1} log_2(\frac{n+L_0+L_1}{n+L_1})]$and$P(X > S)H(Y|X > S) = \frac{M_{0} + M_{1} + N-n}{L_{0} + L_{1} + N + M_{0} + M_{1}} \times [\frac{M_0}{N-n+M_0+M_1} log_2(\frac{N-n+M_0+M_1}{M_0}) + \frac{N-n+M_1}{N-n+M_0+M_1} log_2(\frac{N-n+M_0+M_1}{N-n+M_1})]$
+$P(X \leq S)H(Y|X \leq S) = \frac{L_{0} + L_{1} + n}{L_{0} + L_{1} + N + M_{0} + M_{1}} \times [\frac{L_0}{n+L_0+L_1} log_2(\frac{n+L_0+L_1}{L_0}) + \frac{n+L_1}{n+L_0+L_1} log_2(\frac{n+L_0+L_1}{n+L_1})]$
+and
+$P(X > S)H(Y|X > S) = \frac{M_{0} + M_{1} + N-n}{L_{0} + L_{1} + N + M_{0} + M_{1}} \times [\frac{M_0}{N-n+M_0+M_1} log_2(\frac{N-n+M_0+M_1}{M_0}) + \frac{N-n+M_1}{N-n+M_0+M_1} log_2(\frac{N-n+M_0+M_1}{N-n+M_1})]$
+
 Since we want to minimize $H(Y|X)$ in order to maximize $IG(Y|X)$ we will need the derivative of this function to perform any sort of optimization. 
 
 $\frac{d}{dn}H(Y|X) = \frac{d}{dn}P(X \leq S)H(Y|X \leq S) + \frac{d}{dn}P(X > S)H(Y|X > S)$
