@@ -127,21 +127,25 @@ $P(X > S) = \frac{M_{0} + M_{1} + N-n}{L_{0} + L_{1} + N + M_{0} + M_{1}}$
 Probabilities for whether the label is positive or negative given the attribute is less than or equal to the split
 
 $P^{-}_{X \leq S}(\frac{L_{0}}{L_{0} + L_{1} + n})$
+
 $P^{+}_{X \leq S}(\frac{L_{1}}{L_{0} + L_{1} + n})$
 
 Entropy of the label w.r.t the attributes less than or equal to split $S$
 
-$H(Y|X \leq S) = -P^{-}_{X \leq S}\log_{2}(-P^{-}_{X \leq S}) - P^{+}_{X \leq S} \log_{2}(P^{+}_{X \leq S})$  
+$H(Y|X \leq S) = -P^{-}_{X \leq S}\log_{2}(-P^{-}_{X \leq S}) - P^{+}_{X \leq S} \log_{2}(P^{+}_{X \leq S})$
+
 $\rightarrow \frac{L_0}{n+L_0+L_1} log_2(\frac{n+L_0+L_1}{L_0}) + \frac{n+L_1}{n+L_0+L_1} log_2(\frac{n+L_0+L_1}{n+L_1})$
 
 Probabilities for whether the label is positive or negative given the attribute is greater than the split
 
 $P^{-}_{X > S}(\frac{M_{0}}{M_{0} + M_{1} + N-n})$
+
 $P^{+}_{X > S}(\frac{M_{1}}{M_{0} + M_{1} + N-n})$
 
 Entropy of the label w.r.t the attributes greater than split $S$
 
-$H(Y|X > S) = -P^{-}_{X > S}\log_{2}(-P^{-}_{X > S}) - P^{+}_{X > S} \log_{2}(P^{+}_{X > S})$  
+$H(Y|X > S) = -P^{-}_{X > S}\log_{2}(-P^{-}_{X > S}) - P^{+}_{X > S} \log_{2}(P^{+}_{X > S})$
+
 $\rightarrow \frac{M_0}{N-n+M_0+M_1} log_2(\frac{N-n+M_0+M_1}{M_0}) + \frac{N-n+M_1}{N-n+M_0+M_1} log_2(\frac{N-n+M_0+M_1}{N-n+M_1})$
 
 In order to calculate total entropy we need the following two terms for the equation:
@@ -159,6 +163,7 @@ $\frac{d}{dn}P(X > S)H(Y|X > S) = -\frac{ln(\frac{-n+N+M_1+M_0}{-n+N+M_1})}{ln(2
 
 
 $\frac{d}{dn}H(Y|X) = \frac{ln(\frac{n+L_{1}+L_{0}}{n+L_{1}})}{ln(2)(N+M_{1}+M_{0}+L_{1}+L_{0})} - \frac{ln(\frac{-n+N+M_1+M_0}{-n+N+M_1})}{ln(2)(N+M_1+M_0+L_1+L_0)}$
+
 $\rightarrow \frac{ln(\frac{n+L_{1}+L_{0}}{n+L_{1}}) - ln(\frac{-n+N+M_1+M_0}{-n+N+M_1})}{ln(2)(N+M_1+M_0+L_1+L_0)}$
 
 To determine local maxima and minima of a function the second derivative of that function is required. 
