@@ -156,7 +156,7 @@ Probabilities for whether the label is positive or negative given the attribute 
 
 $P^{-}_{X \leq S}(\frac{L_{0}}{L_{0} + L_{1} + n})$
 
-and
+This is working now for whatever reason
 
 $P^{+}_{X \leq S}(\frac{L_{1}}{L_{0} + L_{1} + n})$
 
@@ -177,7 +177,7 @@ Probabilities for whether the label is positive or negative given the attribute 
 
 $P^{-}_{X > S}(\frac{M_{0}}{M_{0} + M_{1} + N-n})$
 
-and
+This is working now for whatever reason
 
 $P^{+}_{X > S}(\frac{M_{1}}{M_{0} + M_{1} + N-n})$
 
