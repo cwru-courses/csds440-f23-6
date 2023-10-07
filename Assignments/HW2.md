@@ -164,14 +164,11 @@ $P^{+}(X \leq S) = (\frac{L_{1}}{L_{0} + L_{1} + n})$
 Entropy of the label w.r.t the attributes less than or equal to split $S$
 
 $$
-\begin{align*}\\
+H(Y|X \leq S) = -P^{-}(X \leq S)\log_{2}(-P^{-}(X \leq S)) - P^{+}(X \leq S) \log_{2}(P^{+}(X \leq S))
 
-&H(Y|X \leq S) = -P^{-}(X \leq S)\log_{2}(-P^{-}(X \leq S)) - P^{+}(X \leq S) \log_{2}(P^{+}(X \leq S)) \\ 
-
-&\rightarrow \frac{L_0}{n+L_0+L_1} log_2(\frac{n+L_0+L_1}{L_0}) + \frac{n+L_1}{n+L_0+L_1} log_2(\frac{n+L_0+L_1}{n+L_1})\\
-
-\end{align*}
+\rightarrow \frac{L_0}{n+L_0+L_1} log_2(\frac{n+L_0+L_1}{L_0}) + \frac{n+L_1}{n+L_0+L_1} log_2(\frac{n+L_0+L_1}{n+L_1})
 $$
+
 
 Probabilities for whether the label is positive or negative given the attribute is greater than the split
 
@@ -184,13 +181,8 @@ $P^{+}(X > S) = (\frac{M_{1}}{M_{0} + M_{1} + N-n})$
 Entropy of the label w.r.t the attributes greater than split $S$
 
 $$
-\begin{align*}\\
-
-&H(Y|X > S) = -P^{-}(X > S)\log_{2}(-P^{-}(X > S)) - P^{+}(X > S) \log_{2}(P^{+}(X > S)) \\ 
-
-&\rightarrow \frac{M_0}{N-n+M_0+M_1} log_2(\frac{N-n+M_0+M_1}{M_0}) + \frac{N-n+M_1}{N-n+M_0+M_1} log_2(\frac{N-n+M_0+M_1}{N-n+M_1})\\
-
-\end{align*}
+H(Y|X > S) = -P^{-}(X > S)\log_{2}(-P^{-}(X > S)) - P^{+}(X > S) \log_{2}(P^{+}(X > S)) 
+\rightarrow \frac{M_0}{N-n+M_0+M_1} log_2(\frac{N-n+M_0+M_1}{M_0}) + \frac{N-n+M_1}{N-n+M_0+M_1} log_2(\frac{N-n+M_0+M_1}{N-n+M_1})
 $$
 
 In order to calculate total entropy we need the following two terms for the equation:
