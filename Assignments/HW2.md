@@ -3,70 +3,66 @@
 
 When working as a group, only one answer to each question is needed unless otherwise specified. Each person in each group must commit and push their own work. **You will not get credit for work committed/pushed by someone else even if done by you.** Commits should be clearly associated with your name or CWRU ID (abc123). Each person is expected to do an approximately equal share of the work, as shown by the git logs. **If we do not see evidence of equal contribution from the logs for someone, their individual grade will be reduced.** 
 
-
 1.	(i) Give an example of a nontrivial (nonconstant) Boolean function over $3$ Boolean attributes where $IG(X)$ would return zero for *all* attributes at the root. (ii) Explain the significance of this observation. 
 
 Answer:
 (i) Let us consider a Boolean function where,
-     F(A,B,C) = (A AND B) OR (NOT A AND NOT B) OR (NOT C)
+    $F(A,B,C) = (A \ AND \ B) \ OR \ (NOT \ A \ AND \ NOT \ B) \ OR \ (NOT \ C)$
      Here in this function OR computes three terms, one where A and B are true, while in the next one both are not true and in the last C is not true. In this function we have deliberately designed it so that the information gain for attributes B and C will be 0 when used as a root attribute.
-     1. Information Gain for A:
-          First, we are getting an original dataset (D) and since each attribute can take 2 values(T or F), there rae 2^3 = 8 combinations. Also, the dataset is divided into two, D1 and D2 where A is true and false respectively.
-     Entropy of the original dataset H(D),
-     H(D) = -P(0/D)log2(P(0/D))-P(1/D)log2(P(1/D))
-          = -4/8 log2(4/8) - 4/8 log2(4/8)
-          = -0.5(-1) -0.5(-1)
-          = 0.5+0.5 = 1
+     1. Information Gain for $A$:
+          First, we are getting an original dataset (D) and since each attribute can take 2 values(T or F), there are $2^{3} = 8$ combinations. Also, the dataset is divided in two, D1 and D2 where $A$ is true and false respectively.
+     Entropy of the original dataset $H(D)$,
+     $H(D) = -P(\frac{0}{D})log_{2}(P(\frac{0}{D}))-P(\frac{1}{D})log_{2}(P(\frac{1}{D}))$
+          $= \frac{-4}{8} log_{2}(\frac{4}{8}) - \frac{4}{8} log_{2}(\frac{4}{8})$
+          $= -0.5(-1) -0.5(-1)$
+          $= 0.5+0.5 = 1$
      So, D1 contains (1,1,0),(1,0,0),(1,1,1),(1,0,1).
-     P(0/D1) = 1/4
-     P(1/D1) = 3/4
+     $P(\frac{0}{D1}) = \frac{1}{4}$
+     $P(\frac{1}{D1}) = \frac{3}{4}$
      Entropy for D1: 
-          H(D1) = -1/4 log2 (1/4) - 3/4 log2 (3/4) ≈ 0.8113
+          $H(D1) = \frac{-1}{4} log_{2} (\frac{1}{4}) - \frac{3}{4} log_{2} (\frac{3}{4}) ≈ 0.8113$
      now, D2 contains (0,1,0),(0,0,0),(0,1,1),(0,0,1).
-     P(0/D2) = 1/4
-     P(1/D2) = 3/4
+     $P(\frac{0}{D2}) = \frac{1}{4}$
+     $P(\frac{1}{D2}) = \frac{3}{4}$
      Entropy for D2:
-          H(D2) = -1/4 log2(1/4) - 3/4log2(3/4) ≈ 0.8113
-     Now, information gain for A is,
-     IG(A) = H(D) - (4/8*0.8113 + 4/8*0.8113)
-           = 1 - 0.8113 ≈ 0
-     2. Information Gain for B:
-        Here the entropy for D1 and D2 are the same as when calculating IG(A).
-        So, H(D1) ≈ 0.8113
-            H(D2) ≈ 0.8113
-        Therefore, IG(B) = H(D) - (4/8*0.8113 + 4/8*0.8113) ≈ 0
-     3. Information Gain for C:
+          $H(D2) = \frac{-1}{4} log_{2}(\frac{1}{4}) - \frac{3}{4}log_{2}(\frac{3}{4}) ≈ 0.8113$
+     Now, information gain for $A$ is,
+     $IG(A) = H(D) - (\frac{4}{8}*0.8113 + \frac{4}{8}*0.8113)$
+           $= 1 - 0.8113 ≈ 0$
+     2. Information Gain for $B$:
+        Here the entropy for D1 and D2 are the same as when calculating $IG(A)$.
+        So, $H(D1) ≈ 0.8113$
+            $H(D2) ≈ 0.8113$
+        Therefore, $IG(B) = H(D) - (\frac{4}{8}*0.8113 + \frac{4}{8}*0.8113) ≈ 0$
+     3. Information Gain for $C$:
         Here, D1 contains (0, 0, 1), (1, 1, 1), (0, 1, 1), (1, 0, 1). 
-        P(0/D1) = 1/2
-        P(1/D1) = 1/2
+        $P(\frac{0}{D1}) = \frac{1}{2}$
+        $P(\frac{1}{D1}) = \frac{1}{2}$
         Entropy for D1: 
-          H(D1) = -1/2 log2 (1/2) - 1/2 log2 (1/2) = 1
+          $H(D1) = \frac{-1}{2} log_{2} (\frac{1}{2}) - \frac{1}{2} log_{2} (\frac{1}{2}) = 1$
         now, D2 contains (1, 1, 0), (0, 0, 0), (1, 0, 0), (0, 1, 0).
         Entropy for D2:
-          P(0/D2) = 1/2
-          P(1/D2) = 1/2
+          $P(\frac{0}{D2}) = \frac{1}{2}$
+          $P(\frac{1}{D2}) = \frac{1}{2}$
           Entropy for D2: 
-            H(D2) = -1/2 log2 (1/2) - 1/2 log2 (1/2) = 1
+            $H(D2) = \frac{-1}{2} log_{2} (\frac{1}{2}) - \frac{1}{2} log_{2} (\frac{1}{2}) = 1$
           Now, information gain for C is,
-            IG(C) = H(D) - (4/8*1 + 4/8*1)
-                  = 1 - (0.5+0.5) = 0
-                  
+            $IG(C) = H(D) - (\frac{4}{8}*1 + \frac{4}{8}*1)$
+                 $= 1 - (0.5+0.5) = 0$
 (ii)
      The significance of the observation is that for the given Boolean function and dataset, attributes A,B and C have IG(X) = 0 when used as root attributes for a decision tree. So in this specific context, none of these attributes provide any advantage in reducing uncertainty of separating data. The balanced distribution of the outcomes in the dataset H(D) =1 makes all attributes equally ineffective as root attributes for decision tree split.
-          
-     
 
-2. Estimate how many functions satisfying Q1 (i) could exist over $n$ attributes, as a function of $n$. 
+
+1. Estimate how many functions satisfying Q1 (i) could exist over $n$ attributes, as a function of $n$. 
 
 Answer:
-
 - If for a given boolean function of $n$ attributes to have an $IG(Y|X=x_{i}) = 0$ $\forall X$ being any given attribute of the function. Each attribute $X$ must partition the set of attribute-value combinations into the same ratio of 0 and 1 labels as there are in the unpartitioned set of labels. 
 - Meaning that for any given attribute of the boolean function, the entropy of that attribute with respect to the labels must equal the entropy of the labels itself. $H(Y| X) = H(Y) \rightarrow IG(Y|X) = H(Y) - H(Y|X) = 0$ .
 - A relevant case in which the above statement can hold is when there is an exact $50/50$ split between all positive and negative labels. And the partitioning of the label set for each attribute $X$ also results in an exact $50/50$ split between positive and negative labels. 
 - Therefore: $H(Y) = 1$ and $H(Y|X) = 1 \rightarrow IG(Y|X) = 1-1 = 0$
 - From this case we can derive a method of generating functions that satisfy the requirements laid out in problem one. From this method we can extrapolate the number of possible functions over $n$ boolean attributes. 
 
-Consider this table from problem 1:
+Consider this table of boolean attributes:
 
 | A | B | C | Value |
 |---|--- |---|---|
@@ -126,8 +122,8 @@ $P(X > S) = \frac{M_{0} + M_{1} + N-n}{L_{0} + L_{1} + N + M_{0} + M_{1}}$
 
 Probabilities for whether the label is positive or negative given the attribute is less than or equal to the split
 
-$P^{-}_{X \leq S}(\frac{L_{0}}{L_{0} + L_{1} + n})$
-$P^{+}_{X \leq S}(\frac{L_{1}}{L_{0} + L_{1} + n})$
+$$P^{-}_{X \leq S}(\frac{L_{0}}{L_{0} + L_{1} + n}), \
+P^{+}_{X \leq S}(\frac{L_{1}}{L_{0} + L_{1} + n})$$
 
 Entropy of the label w.r.t the attributes less than or equal to split $S$
 
@@ -137,8 +133,8 @@ $\rightarrow \frac{L_0}{n+L_0+L_1} log_2(\frac{n+L_0+L_1}{L_0}) + \frac{n+L_1}{n
 
 Probabilities for whether the label is positive or negative given the attribute is greater than the split
 
-$P^{-}_{X > S}(\frac{M_{0}}{M_{0} + M_{1} + N-n})$ 
-$P^{+}_{X > S}(\frac{M_{1}}{M_{0} + M_{1} + N-n})$
+$$P^{-}_{X > S}(\frac{M_{0}}{M_{0} + M_{1} + N-n}), \  
+P^{+}_{X > S}(\frac{M_{1}}{M_{0} + M_{1} + N-n})$$
 
 Entropy of the label w.r.t the attributes greater than split $S$
 
@@ -220,6 +216,7 @@ Observations:
 - *Overfitting* is evident in the second image. There are regions where our boundary jumps suddenly to seemingly cater towards certain specific datapoints. Overfitting is a problem that we encounter with high depth trees. 
 
 6.	Under what circumstances might it be beneficial to overfit? 
+
 Answer:
  Since it results in poor generalization, overfitting is typically viewed as a concern in statistical modeling and machine learning. Overfitting, however, may be advantageous or at the very least acceptable when you want the model to be susceptible to rare and unusual patterns or to help with anomaly detection.
  Secondly, when we have a very small dataset, it will be challenging to train a model that generalizes well, so in those cases, some level of overfitting may help the model capture the limited information available.
