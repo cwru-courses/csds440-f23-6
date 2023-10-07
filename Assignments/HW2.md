@@ -154,11 +154,10 @@ $P(X > S) = \frac{M_{0} + M_{1} + N-n}{L_{0} + L_{1} + N + M_{0} + M_{1}}$
 
 Probabilities for whether the label is positive or negative given the attribute is less than or equal to the split
 
-$$
+$P^{-}_{X \leq S}(\frac{L_{0}}{L_{0} + L_{1} + n})$
 
-P^{-}_{X \leq S}(\frac{L_{0}}{L_{0} + L_{1} + n}), \ P^{+}_{X \leq S}(\frac{L_{1}}{L_{0} + L_{1} + n})
+$P^{+}_{X \leq S}(\frac{L_{1}}{L_{0} + L_{1} + n})$
 
-$$
 
 Entropy of the label w.r.t the attributes less than or equal to split $S$
 
@@ -174,11 +173,9 @@ $$
 
 Probabilities for whether the label is positive or negative given the attribute is greater than the split
 
-$$
+$P^{-}_{X > S}(\frac{M_{0}}{M_{0} + M_{1} + N-n})$
 
-P^{-}_{X > S}(\frac{M_{0}}{M_{0} + M_{1} + N-n}), \ P^{+}_{X > S}(\frac{M_{1}}{M_{0} + M_{1} + N-n})
-
-$$
+$P^{+}_{X > S}(\frac{M_{1}}{M_{0} + M_{1} + N-n})$
 
 Entropy of the label w.r.t the attributes greater than split $S$
 
