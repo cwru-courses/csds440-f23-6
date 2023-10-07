@@ -199,7 +199,7 @@ So in order to minimize the entropy $H(Y|X)$ and therefore maximize the informat
 
 4.	Write a program to sample a set of $N$ points from $(−1,1)^2$. Label the points using the classifier $y=sign(0.5x_1+0.5x_2)$. Generate datasets from your program and use your ID3 code from Programming 1 to learn trees on this data (there is no need to do cross validation or hold out a test set). Plot a graph where the $x$-axis is the value of $N$, over $N={50, 100, 500, 1000, 5000}$, and the $y$-axis is the depth of the tree learned by ID3. Explain your observations. (20 points)
 
-Answer: ![[Depth_Plot.png]]
+Answer: ![DTree Depth Plot](./HW2_Images/Depth_Plot.png)
 
 Observations: 
 - As the size of the dataset we are training on increases the depth of our tree generally increases as well. This is due to the increase in the number of splits available for our tree to adopt. 
@@ -208,11 +208,7 @@ Observations:
 
 5.	Show the decision boundaries learned by ID3 in Q4 for $N=50$ and $N=5000$ by generating an independent test set of size 100,000, plotting all the points and coloring them according to the predicted label from the $N=50$ and $N=5000$ trees. Explain what you see relative to the true decision boundary. What does this tell you about the suitability of trees for such datasets? (20 points)
 
-Answer: ![[Decision_Boundary.png]]
-
-![Image Description](./HW2_Images/Decision_Boundary.png)
-
-
+Answer: ![Decision Boundary Graphs](./HW2_Images/Decision_Boundary.png)
 
 Observations: 
 - The true decision boundary (from the classifier $y=sign(0.5x_{1}+0.5x{2}$) is a straight line passing through the origin with a slope of 1. This is essentially the line $x_{1}=x_{2}$​.
