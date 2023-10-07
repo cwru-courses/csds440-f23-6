@@ -209,6 +209,11 @@ Observations:
 5.	Show the decision boundaries learned by ID3 in Q4 for $N=50$ and $N=5000$ by generating an independent test set of size 100,000, plotting all the points and coloring them according to the predicted label from the $N=50$ and $N=5000$ trees. Explain what you see relative to the true decision boundary. What does this tell you about the suitability of trees for such datasets? (20 points)
 
 Answer: ![[Decision_Boundary.png]]
+
+![Image Description](./HW2_Images/Decision_Boundary.png)
+
+
+
 Observations: 
 - The true decision boundary (from the classifier $y=sign(0.5x_{1}+0.5x{2}$) is a straight line passing through the origin with a slope of 1. This is essentially the line $x_{1}=x_{2}$​.
 - *N = 50*: The decision boundary appears to be a piecewise constant approximation of the true decision boundary. This is typical for decision trees, especially when the dataset size is small. The tree makes axis-aligned splits, resulting in these rectangular regions.
