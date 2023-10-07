@@ -28,8 +28,8 @@ First, we are getting an original dataset (D) and since each attribute can take 
  
  Entropy for D1: 
  
-	  $H(D1) = \frac{-1}{4} log_{2} (\frac{1}{4}) - \frac{3}{4} log_{2} (\frac{3}{4}) ≈ 0.8113$
-	  
+$H(D1) = \frac{-1}{4} log_{2} (\frac{1}{4}) - \frac{3}{4} log_{2} (\frac{3}{4}) ≈ 0.8113$
+
  now, D2 contains (0,1,0),(0,0,0),(0,1,1),(0,0,1).
  
  $P(\frac{0}{D2}) = \frac{1}{4}$
