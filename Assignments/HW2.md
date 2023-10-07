@@ -155,20 +155,29 @@ $P(X > S) = \frac{M_{0} + M_{1} + N-n}{L_{0} + L_{1} + N + M_{0} + M_{1}}$
 Probabilities for whether the label is positive or negative given the attribute is less than or equal to the split
 
 $$
-P^{-}_{X \leq S}(\frac{L_{0}}{L_{0} + L_{1} + n}),\ P^{+}_{X \leq S}(\frac{L_{1}}{L_{0} + L_{1} + n})
+
+P^{-}_{X \leq S}(\frac{L_{0}}{L_{0} + L_{1} + n}), \ P^{+}_{X \leq S}(\frac{L_{1}}{L_{0} + L_{1} + n})
+
 $$
 
 Entropy of the label w.r.t the attributes less than or equal to split $S$
 
 $$
-H(Y|X \leq S) = -P^{-}_{X \leq S}\log_{2}(-P^{-}_{X \leq S}) - P^{+}_{X \leq S} \log_{2}(P^{+}_{X \leq S})
+\begin{align*}\\
+
+&H(Y|X \leq S) = -P^{-}_{X \leq S}\log_{2}(-P^{-}_{X \leq S}) - P^{+}_{X \leq S} \log_{2}(P^{+}_{X \leq S}) \\ 
+
+&\rightarrow \frac{L_0}{n+L_0+L_1} log_2(\frac{n+L_0+L_1}{L_0}) + \frac{n+L_1}{n+L_0+L_1} log_2(\frac{n+L_0+L_1}{n+L_1})\\
+
+\end{align*}
 $$
-$\rightarrow \frac{L_0}{n+L_0+L_1} log_2(\frac{n+L_0+L_1}{L_0}) + \frac{n+L_1}{n+L_0+L_1} log_2(\frac{n+L_0+L_1}{n+L_1})$
 
 Probabilities for whether the label is positive or negative given the attribute is greater than the split
 
 $$
+
 P^{-}_{X > S}(\frac{M_{0}}{M_{0} + M_{1} + N-n}), \ P^{+}_{X > S}(\frac{M_{1}}{M_{0} + M_{1} + N-n})
+
 $$
 
 Entropy of the label w.r.t the attributes greater than split $S$
