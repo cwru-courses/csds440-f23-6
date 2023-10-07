@@ -151,7 +151,7 @@ $P(X \leq S)H(Y|X \leq S) = \frac{L_{0} + L_{1} + n}{L_{0} + L_{1} + N + M_{0} +
 and
 $P(X > S)H(Y|X > S) = \frac{M_{0} + M_{1} + N-n}{L_{0} + L_{1} + N + M_{0} + M_{1}} \times [\frac{M_0}{N-n+M_0+M_1} log_2(\frac{N-n+M_0+M_1}{M_0}) + \frac{N-n+M_1}{N-n+M_0+M_1} log_2(\frac{N-n+M_0+M_1}{N-n+M_1})]$
 
-Since we want to minimize $H(Y|X)$ in order to maximize $IG(Y|X)$ we will need the derivative of this function to perform any sort of optimization. 
+Since we want to minimize $H(Y|X)$ in order to maximize $IG(Y|X)$ we will need the first and second derivative of this function to perform any sort of optimization. 
 
 $\frac{d}{dn}H(Y|X) = \frac{d}{dn}P(X \leq S)H(Y|X \leq S) + \frac{d}{dn}P(X > S)H(Y|X > S)$
 
@@ -164,10 +164,9 @@ $\frac{d}{dn}H(Y|X) = \frac{ln(\frac{n+L_{1}+L_{0}}{n+L_{1}})}{ln(2)(N+M_{1}+M_{
 
 $\rightarrow \frac{ln(\frac{n+L_{1}+L_{0}}{n+L_{1}}) - ln(\frac{-n+N+M_1+M_0}{-n+N+M_1})}{ln(2)(N+M_1+M_0+L_1+L_0)}$
 
-To determine local maxima and minima of a function the second derivative of that function is required. 
+To determine local maxima and minima of a function the second derivative of our entropy function is required. 
 
-$\frac{d^{2}}{dn^{2}}H(Y|X)$
-
+$\frac{d^{2}}{dn^{2}}H(Y|X) = \frac{\frac{(n+L_1)(\frac{1}{n+L_1}-\frac{n+L_1+L_0}{(n+L_1)^2})}{n+L_1+L_0}-\frac{(N-n+M_1)(\frac{N-n+M_1+M_0}{(N-n+M_1)^2}-\frac{1}{N-n+M_1})}{N-n+M_1+M_0}}{ln(2)(N+M_1+M_0+L_1+L_0)}$
 
 
 
