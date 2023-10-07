@@ -197,22 +197,30 @@ Since the second derivative of $H(Y|X)$ is always negative our entropy function 
 
 So in order to minimize the entropy $H(Y|X)$ and therefore maximize the information gain $IG(Y|X)$, $n$ would need to be either $n = 0 \ or \ n = N$. This means that *we have shown that the best possible place to split the dataset is when the label changes* which occurs at $n = 0$ or $n = N$.
 
-
-
 4.	Write a program to sample a set of $N$ points from $(−1,1)^2$. Label the points using the classifier $y=sign(0.5x_1+0.5x_2)$. Generate datasets from your program and use your ID3 code from Programming 1 to learn trees on this data (there is no need to do cross validation or hold out a test set). Plot a graph where the $x$-axis is the value of $N$, over $N={50, 100, 500, 1000, 5000}$, and the $y$-axis is the depth of the tree learned by ID3. Explain your observations. (20 points)
 
-Answer: 
+Answer: ![[Depth_Plot.png]]
+
+Observations: 
+- As the size of the dataset we are training on increases the depth of our tree generally increases as well. This is due to the increase in the number of splits available for our tree to adopt. 
+- However the relationship between the size of our dataset and the depth of our tree does not appear to be linear. Rather the relationship appears to be more logarithmic. 
+- A supporting observation for the above claim is that the increase in tree depth between $N = 500$ and $N = 1000$ is relatively small compared to the increase $N = 100$ and $N = 500$. 
 
 5.	Show the decision boundaries learned by ID3 in Q4 for $N=50$ and $N=5000$ by generating an independent test set of size 100,000, plotting all the points and coloring them according to the predicted label from the $N=50$ and $N=5000$ trees. Explain what you see relative to the true decision boundary. What does this tell you about the suitability of trees for such datasets? (20 points)
 
-Answer:
+Answer: ![[Decision_Boundary.png]]
+Observations: 
+- The true decision boundary (from the classifier $y=sign(0.5x_{1}+0.5x{2}$) is a straight line passing through the origin with a slope of 1. This is essentially the line $x_{1}=x_{2}$​.
+- *N = 50*: The decision boundary appears to be a piecewise constant approximation of the true decision boundary. This is typical for decision trees, especially when the dataset size is small. The tree makes axis-aligned splits, resulting in these rectangular regions.
+- *N=5000*: With more data, the decision tree's boundary seems to approximate the true boundary more closely, but it's still a piecewise constant approximation. If you look closely you can see how jagged the 'line' dividing the two region of points is. 
+
+*What this tells us about Decision Trees*:
+- Decision trees produce *axis-aligned* splits. This is evident from the rectangular region of the low depth trees, trained boundary. For datasets where the boundaries aren't axis-aligned like the one above, decision trees won't be the most efficient model. 
+- *Overfitting* is evident in the second image. There are regions where our boundary jumps suddenly to seemingly cater towards certain specific datapoints. Overfitting is a problem that we encounter with high depth trees. 
 
 6.	Under what circumstances might it be beneficial to overfit? 
-
 Answer:
-     Since it results in poor generalization, overfitting is typically viewed as a concern in statistical modeling and machine learning. Overfitting, however, may be advantageous or at the very least acceptable when you want the model to be susceptible to rare and unusual patterns or it helps with anomaly detection.
-     Secondly, when we have a very small dataset, it will be challenging to train a model that generalizes well, so in those cases, some level of overfitting may help the model capture the limited information available.
-     Third, when your data contains a high level of noise or measurement errors then a more complex model with some level of overfitting may capture both the signal and noise. Though this might not help with generalization, it might provide better results with noisy data.
-     
-     
+ Since it results in poor generalization, overfitting is typically viewed as a concern in statistical modeling and machine learning. Overfitting, however, may be advantageous or at the very least acceptable when you want the model to be susceptible to rare and unusual patterns or to help with anomaly detection.
+ Secondly, when we have a very small dataset, it will be challenging to train a model that generalizes well, so in those cases, some level of overfitting may help the model capture the limited information available.
+ Third, when your data contains a high level of noise or measurement errors then a more complex model with some level of overfitting may capture both the signal and noise. Though this might not help with generalization, it might provide better results with noisy data.
 
