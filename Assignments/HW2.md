@@ -94,11 +94,79 @@ Steps:
 - Now divide your set in half such that for each row, the compliment of that row is not within the same half of the table. This results in two halves of size $\frac{2^{n}}{2} = 2^{n-1}$ 
 - For one of the two sets assign each row a label such that there is an equal number of positive and negative labels in the set. Then for each complimentary row in the second set assign the same label.
 - We only need to assign labels for half of our dataset, as the complimentary rows and their corresponding labels can be trivially inferred. Now the number of possible unique tables that can be made from this method is the number of unique ways we can assign our binary labels to the first half of the table. Therefore *No. of unique functions* = $2 ^ {2^{n-1}} = 2^{2n-2}$ 
-
  
 3.	Show that for a continuous attribute $X$, the only split values we need to check to determine a split with max $IG(X)$ lie between points with different labels. (Hint: consider the following setting for $X$: there is a candidate split point $S$ in the middle of $N$ examples with the same label. To the left of $S$ are $n$ such examples. To the left of $N$, there are $L_0$ examples with label negative and the $L_1$ positive, and likewise $(M_0, M_1)$ to the right. Express the information gain of $S$ as a function of $n$. Then show that this function is maximized either when $n=0$ or $n=N$ with all else constant.) (20 points)
 
 Answer:
+Visualization of label set
+|-----|-----|-----|-----|-----|-----|-----|
+$L_{0}$    $L_{1}$      $n$       $S$   $N-n$   $M_{0}$   $M_{1}$
+
+It is known that $IG(Y|X) = H(Y) - H(Y|X)$
+
+Since $H(Y)$ remains constant for any value of $n$ we can state that the $IG(Y|X)$ increases as $H(Y|X)$ increases.
+
+If we want to maximize the $IG(Y|X)$ we will want to minimize $H(Y|X)$.
+
+Entropy equation of the continuous attribute $X$
+$$
+H(Y|X) = P(X \leq S)H(Y|X \leq S) + P(X > S)H(Y|X > S)
+$$
+Break down of terms and their dependencies
+
+Probability attribute is less than or equal to split $S$
+$P(X \leq S) = \frac{L_{0} + L_{1} + n}{L_{0} + L_{1} + N + M_{0} + M_{1}}$ 
+
+Probability attribute is greater than split $S$
+$P(X > S) = \frac{M_{0} + M_{1} + N-n}{L_{0} + L_{1} + N + M_{0} + M_{1}}$ 
+
+Probabilities for whether the label is positive or negative given the attribute is less than or equal to the split
+$P^{-}_{X \leq S}(\frac{L_{0}}{L_{0} + L_{1} + n})$
+$P^{+}_{X \leq S}(\frac{L_{1}}{L_{0} + L_{1} + n})$
+
+Entropy of the label w.r.t the attributes less than or equal to split $S$
+$H(Y|X \leq S) = -P^{-}_{X \leq S}\log_{2}(-P^{-}_{X \leq S}) - P^{+}_{X \leq S} \log_{2}(P^{+}_{X \leq S})$  
+$\rightarrow \frac{L_0}{n+L_0+L_1} log_2(\frac{n+L_0+L_1}{L_0}) + \frac{n+L_1}{n+L_0+L_1} log_2(\frac{n+L_0+L_1}{n+L_1})$
+
+Probabilities for whether the label is positive or negative given the attribute is greater than the split
+$P^{-}_{X > S}(\frac{M_{0}}{M_{0} + M_{1} + N-n})$
+$P^{+}_{X > S}(\frac{M_{1}}{M_{0} + M_{1} + N-n})$
+
+Entropy of the label w.r.t the attributes greater than split $S$
+$H(Y|X > S) = -P^{-}_{X > S}\log_{2}(-P^{-}_{X > S}) - P^{+}_{X > S} \log_{2}(P^{+}_{X > S})$  
+$\rightarrow \frac{M_0}{N-n+M_0+M_1} log_2(\frac{N-n+M_0+M_1}{M_0}) + \frac{N-n+M_1}{N-n+M_0+M_1} log_2(\frac{N-n+M_0+M_1}{N-n+M_1})$
+
+
+In order to calculate total entropy we need the following two terms for the equation:
+$P(X \leq S)H(Y|X \leq S) = \frac{L_{0} + L_{1} + n}{L_{0} + L_{1} + N + M_{0} + M_{1}} \times [\frac{L_0}{n+L_0+L_1} log_2(\frac{n+L_0+L_1}{L_0}) + \frac{n+L_1}{n+L_0+L_1} log_2(\frac{n+L_0+L_1}{n+L_1})]$and$P(X > S)H(Y|X > S) = \frac{M_{0} + M_{1} + N-n}{L_{0} + L_{1} + N + M_{0} + M_{1}} \times [\frac{M_0}{N-n+M_0+M_1} log_2(\frac{N-n+M_0+M_1}{M_0}) + \frac{N-n+M_1}{N-n+M_0+M_1} log_2(\frac{N-n+M_0+M_1}{N-n+M_1})]$
+Since we want to minimize $H(Y|X)$ in order to maximize $IG(Y|X)$ we will need the derivative of this function to perform any sort of optimization. 
+
+$\frac{d}{dn}H(Y|X) = \frac{d}{dn}P(X \leq S)H(Y|X \leq S) + \frac{d}{dn}P(X > S)H(Y|X > S)$
+
+$\frac{d}{dn}P(X \leq S)H(Y|X \leq S) = \frac{ln(\frac{n+L_1+L_0}{n+L_1})}{ln(2)(N+M_1+M_0+L_1+L_0)}$
+
+$\frac{d}{dn}P(X > S)H(Y|X > S) = -\frac{ln(\frac{-n+N+M_1+M_0}{-n+N+M_1})}{ln(2)(N+M_1+M_0+L_1+L_0)}$
+
+
+$\frac{d}{dn}H(Y|X) = \frac{ln(\frac{n+L_{1}+L_{0}}{n+L_{1}})}{ln(2)(N+M_{1}+M_{0}+L_{1}+L_{0})} - \frac{ln(\frac{-n+N+M_1+M_0}{-n+N+M_1})}{ln(2)(N+M_1+M_0+L_1+L_0)}$
+$\rightarrow \frac{ln(\frac{n+L_{1}+L_{0}}{n+L_{1}}) - ln(\frac{-n+N+M_1+M_0}{-n+N+M_1})}{ln(2)(N+M_1+M_0+L_1+L_0)}$
+
+To determine local maxima and minima of a function the second derivative of that function is required. 
+
+$\frac{d^{2}}{dn^{2}}H(Y|X)$
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 4.	Write a program to sample a set of $N$ points from $(−1,1)^2$. Label the points using the classifier $y=sign(0.5x_1+0.5x_2)$. Generate datasets from your program and use your ID3 code from Programming 1 to learn trees on this data (there is no need to do cross validation or hold out a test set). Plot a graph where the $x$-axis is the value of $N$, over $N={50, 100, 500, 1000, 5000}$, and the $y$-axis is the depth of the tree learned by ID3. Explain your observations. (20 points)
 

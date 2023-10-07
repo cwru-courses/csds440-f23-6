@@ -106,6 +106,9 @@ def calculate_entropy(labels):
     entropy_value = -np.sum(probabilities * np.log2(probabilities))
     return entropy_value
 
+def majority_label(labels):
+    unique_values, counts = np.unique(labels, return_counts=True)
+    return unique_values[np.argmax(counts)]
 
 def infogain(schema, data, labels, split_criterion):
     # Get the entropy of the labels w.r.t themself

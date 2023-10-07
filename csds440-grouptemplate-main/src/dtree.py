@@ -127,12 +127,20 @@ class DecisionTree(Classifier):
         # Consider the indeces of the features that have not been used in the tree
         
         
-        max_ig_index = np.argmax(infogains)
+        #max_ig_index = np.argmax(infogains)
         
-        masked_max_ig_index = np.argmax(masked_infogains)
+        max_ig_index = np.where(infogains == masked_infogains[np.argmax(masked_infogains)])[0][0]
         
-        print(self.masked_indeces)
-        print(self.features_in_tree)
+        #print(max_ig_index)
+        
+        #print(type(infogains))
+        
+        #np.where(np.array(my_list) == value)
+        
+        
+        #print(self.masked_indeces)
+        #print(masked_infogains)
+        #print(self.features_in_tree)
 
         
         #print(self._schema[max_ig_index].name)
@@ -156,7 +164,7 @@ class DecisionTree(Classifier):
         # Constructing children of root node
         # Testing construction of a child node manually first
         for test in root.get_tests():
-            #print("Current test:", test)
+            print("Current test:", test)
             # Create masked data and labels for the current test  
             # Create masked data and labels for the current test only have rows in which the root feature is equal to the test
             # FIX FOR CONTINUOUS DATA
@@ -167,12 +175,19 @@ class DecisionTree(Classifier):
             # if all label values are the same, then create a leaf node
             if len(np.unique(mask_y)) == 1:
                 print("LEAF ACTIVATED")
-                root.add_child(test = mask_y[0], node = Node(None, None))
-                return root
+                #print("Leaf Name:", root.get_schema().name)
+                return root# DONT RERTURN ROOT, ADD A LEAF TO ROOT
             
-            if (mask_X.size == 0) or (np.array_equal(mask_X, X)):
-                print("OUGNFJDSFEHIUBJONCWHUDEFBDJN")
-                return root
+            if len(self.masked_indeces) == len(self._schema): # no more attributes to test
+                print("LEAF ACTIVATED")
+                #print("Leaf Name:", root.get_schema().name)
+                return root# DONT RERTURN ROOT, ADD A LEAF TO ROOT
+            
+            # recursive call to fit covered by else case
+            #else:
+            #if (mask_X.size == 0) or (np.array_equal(mask_X, X)):
+                #print("OUGNFJDSFEHIUBJONCWHUDEFBDJN")
+                #return root
             
             #entropies = util.calculate_column_entropy(self._schema, mask_X, mask_y, split_criterion)
             
@@ -311,19 +326,19 @@ def dtree(data_path: str, tree_depth_limit: int, use_cross_validation: bool = Tr
         decision_tree.fit(X_train, y_train)
         
         
-        #print('-------------------------')
+        print('-------------------------')
         
-        #print("Root:", decision_tree.root.get_schema().name)
-        #print("Root tests:", decision_tree.root.get_tests())
+        print("Root:", decision_tree.root.get_schema().name)
+        print("Root tests:", decision_tree.root.get_tests())
         
-        #print('+------------------------+')
+        print('+------------------------+')
         
-        #for child in decision_tree.root.get_children():
-            #print(child)
-            #print("Child (branch,feature):", decision_tree.root.get_child(child).get_schema().name)
+        for test, child in decision_tree.root.get_children().items():
+            print("Test:", test, "Name:", child.get_schema().name)
+            #print("Child (branch,feature):", decision_tree.root.get_child())
             #print("Child tests:", decision_tree.root.get_child(child).get_tests())
             #print('-------------------------')
-            
+        
         #print(decision_tree.features_in_tree)
         
         #evaluate_and_print_metrics(decision_tree, X_test, y_test)
