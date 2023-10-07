@@ -168,15 +168,34 @@ To determine local maxima and minima of a function the second derivative of our 
 
 $\frac{d^{2}}{dn^{2}}H(Y|X) = \frac{\frac{(n+L_1)(\frac{1}{n+L_1}-\frac{n+L_1+L_0}{(n+L_1)^2})}{n+L_1+L_0}-\frac{(N-n+M_1)(\frac{N-n+M_1+M_0}{(N-n+M_1)^2}-\frac{1}{N-n+M_1})}{N-n+M_1+M_0}}{ln(2)(N+M_1+M_0+L_1+L_0)}$
 
+The above function can be 'simplified' to the function below
+
+$\rightarrow \frac{d^{2}}{dn^{2}}H(Y|X) = \frac{\frac{1-\frac{n+L_1+L_0}{n+L_1}}{N+L_1+L_0} - \frac{\frac{N-n+M_1+M_0}{N-n+M_1}-1}{N-n+M_1+M_0}}{ln(2)(N+M_1+M_0+L_1+L_0)}$
+
+The two terms in the numerator of the above function can tell us quite a lot about the behavior of $n \in [0, N]$.
+
+FIRST TERM:
+$$\frac{1-\frac{n+L_1+L_0}{n+L_1}}{N+L_1+L_0}$$
+This component:
+
+$\frac{n+L_1+L_0}{n+L_{1}} < 1$
+
+So the above term *will always be a negative number* for any $n \in [0,N]$
 
 
+SECOND TERM:
+$$\frac{\frac{N-n+M_1+M_0}{N-n+M_1}-1}{N-n+M_1+M_0}$$
+This component:
 
+$\frac{N-n+M_1+M_0}{N-n+M_1} > 1$
 
+So the above term *will always be a positive number* for any $n \in [0,N]$
 
+Since the first term of the numerator in our equation for $\frac{d^{2}}{dn^{2}}H(Y|X)$ is always positive and the second term is always positive. The numerator of our function will always be a negative number for all $n \in [0,N]$. The denominator of our function will always be positive as $\ln(2)(N + M_{1} + M_{0} + L_{1} + L_{0}) > 0$. So our whole secondary derivative function *will always be negative*.
 
+Since the second derivative of $H(Y|X)$ is always negative our entropy function is *concave down*. Our values for $n \in [0, N]$ will all be local minima. And one of the endpoints $n = 0 \ or \ n = N$ will be the *global minimum* of the whole function. 
 
-
-
+So in order to minimize the entropy $H(Y|X)$ and therefore maximize the information gain $IG(Y|X)$, $n$ would need to be either $n = 0 \ or \ n = N$. This means that *we have shown that the best possible place to split the dataset is when the label changes* which occurs at $n = 0$ or $n = N$.
 
 
 
