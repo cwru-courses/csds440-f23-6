@@ -7,53 +7,85 @@ When working as a group, only one answer to each question is needed unless other
 
 Answer:
 (i) Let us consider a Boolean function where,
-    $F(A,B,C) = (A \ AND \ B) \ OR \ (NOT \ A \ AND \ NOT \ B) \ OR \ (NOT \ C)$
-     Here in this function OR computes three terms, one where A and B are true, while in the next one both are not true and in the last C is not true. In this function we have deliberately designed it so that the information gain for attributes B and C will be 0 when used as a root attribute.
-     1. Information Gain for $A$:
-          First, we are getting an original dataset (D) and since each attribute can take 2 values(T or F), there are $2^{3} = 8$ combinations. Also, the dataset is divided in two, D1 and D2 where $A$ is true and false respectively.
-     Entropy of the original dataset $H(D)$,
-     $H(D) = -P(\frac{0}{D})log_{2}(P(\frac{0}{D}))-P(\frac{1}{D})log_{2}(P(\frac{1}{D}))$
-          $= \frac{-4}{8} log_{2}(\frac{4}{8}) - \frac{4}{8} log_{2}(\frac{4}{8})$
-          $= -0.5(-1) -0.5(-1)$
-          $= 0.5+0.5 = 1$
-     So, D1 contains (1,1,0),(1,0,0),(1,1,1),(1,0,1).
-     $P(\frac{0}{D1}) = \frac{1}{4}$
-     $P(\frac{1}{D1}) = \frac{3}{4}$
-     Entropy for D1: 
-          $H(D1) = \frac{-1}{4} log_{2} (\frac{1}{4}) - \frac{3}{4} log_{2} (\frac{3}{4}) ≈ 0.8113$
-     now, D2 contains (0,1,0),(0,0,0),(0,1,1),(0,0,1).
-     $P(\frac{0}{D2}) = \frac{1}{4}$
-     $P(\frac{1}{D2}) = \frac{3}{4}$
-     Entropy for D2:
-          $H(D2) = \frac{-1}{4} log_{2}(\frac{1}{4}) - \frac{3}{4}log_{2}(\frac{3}{4}) ≈ 0.8113$
-     Now, information gain for $A$ is,
-     $IG(A) = H(D) - (\frac{4}{8}*0.8113 + \frac{4}{8}*0.8113)$
-           $= 1 - 0.8113 ≈ 0$
-     2. Information Gain for $B$:
-        Here the entropy for D1 and D2 are the same as when calculating $IG(A)$.
-        So, $H(D1) ≈ 0.8113$
-            $H(D2) ≈ 0.8113$
-        Therefore, $IG(B) = H(D) - (\frac{4}{8}*0.8113 + \frac{4}{8}*0.8113) ≈ 0$
-     3. Information Gain for $C$:
-        Here, D1 contains (0, 0, 1), (1, 1, 1), (0, 1, 1), (1, 0, 1). 
-        $P(\frac{0}{D1}) = \frac{1}{2}$
-        $P(\frac{1}{D1}) = \frac{1}{2}$
-        Entropy for D1: 
-          $H(D1) = \frac{-1}{2} log_{2} (\frac{1}{2}) - \frac{1}{2} log_{2} (\frac{1}{2}) = 1$
-        now, D2 contains (1, 1, 0), (0, 0, 0), (1, 0, 0), (0, 1, 0).
-        Entropy for D2:
-          $P(\frac{0}{D2}) = \frac{1}{2}$
-          $P(\frac{1}{D2}) = \frac{1}{2}$
-          Entropy for D2: 
-            $H(D2) = \frac{-1}{2} log_{2} (\frac{1}{2}) - \frac{1}{2} log_{2} (\frac{1}{2}) = 1$
-          Now, information gain for C is,
-            $IG(C) = H(D) - (\frac{4}{8}*1 + \frac{4}{8}*1)$
-                 $= 1 - (0.5+0.5) = 0$
+$F(A,B,C) = (A \ AND \ B) \ OR \ (NOT \ A \ AND \ NOT \ B) \ OR \ (NOT \ C)$
+ Here in this function OR computes three terms, one where A and B are true, while in the next one both are not true and in the last C is not true. In this function we have deliberately designed it so that the information gain for attributes B and C will be 0 when used as a root attribute.
+ 
+ 1. Information Gain for $A$:
+First, we are getting an original dataset (D) and since each attribute can take 2 values(T or F), there are $2^{3} = 8$ combinations. Also, the dataset is divided in two, D1 and D2 where $A$ is true and false respectively.
+
+ Entropy of the original dataset $H(D)$,
+ 
+ $H(D) = -P(\frac{0}{D})log_{2}(P(\frac{0}{D}))-P(\frac{1}{D})log_{2}(P(\frac{1}{D}))$
+ $= \frac{-4}{8} log_{2}(\frac{4}{8}) - \frac{4}{8} log_{2}(\frac{4}{8})$
+ $= -0.5(-1) -0.5(-1)$
+ $= 0.5+0.5 = 1$
+ 
+ So, D1 contains (1,1,0),(1,0,0),(1,1,1),(1,0,1).
+ 
+ $P(\frac{0}{D1}) = \frac{1}{4}$
+ 
+ $P(\frac{1}{D1}) = \frac{3}{4}$
+ 
+ Entropy for D1: 
+ 
+	  $H(D1) = \frac{-1}{4} log_{2} (\frac{1}{4}) - \frac{3}{4} log_{2} (\frac{3}{4}) ≈ 0.8113$
+	  
+ now, D2 contains (0,1,0),(0,0,0),(0,1,1),(0,0,1).
+ 
+ $P(\frac{0}{D2}) = \frac{1}{4}$
+ 
+ $P(\frac{1}{D2}) = \frac{3}{4}$
+ 
+ Entropy for D2:
+ 
+ $H(D2) = \frac{-1}{4} log_{2}(\frac{1}{4}) - \frac{3}{4}log_{2}(\frac{3}{4}) ≈ 0.8113$
+	  
+ Now, information gain for $A$ is,
+ 
+ $IG(A) = H(D) - (\frac{4}{8}*0.8113 + \frac{4}{8}*0.8113)$
+ $= 1 - 0.8113 ≈ 0$
+
+
+ 2. Information Gain for $B$:
+Here the entropy for D1 and D2 are the same as when calculating $IG(A)$.
+
+So, $H(D1) ≈ 0.8113$
+$H(D2) ≈ 0.8113$
+
+Therefore, $IG(B) = H(D) - (\frac{4}{8}*0.8113 + \frac{4}{8}*0.8113) ≈ 0$
+
+ 3. Information Gain for $C$:
+Here, D1 contains (0, 0, 1), (1, 1, 1), (0, 1, 1), (1, 0, 1). 
+
+$P(\frac{0}{D1}) = \frac{1}{2}$
+
+$P(\frac{1}{D1}) = \frac{1}{2}$
+
+Entropy for D1: 
+
+$H(D1) = \frac{-1}{2} log_{2} (\frac{1}{2}) - \frac{1}{2} log_{2} (\frac{1}{2}) = 1$
+
+now, D2 contains (1, 1, 0), (0, 0, 0), (1, 0, 0), (0, 1, 0).
+Entropy for D2:
+
+$P(\frac{0}{D2}) = \frac{1}{2}$
+
+$P(\frac{1}{D2}) = \frac{1}{2}$
+
+Entropy for D2: 
+
+$H(D2) = \frac{-1}{2} log_{2} (\frac{1}{2}) - \frac{1}{2} log_{2} (\frac{1}{2}) = 1$
+
+Now, information gain for C is,
+
+$IG(C) = H(D) - (\frac{4}{8}*1 + \frac{4}{8}*1)$
+$= 1 - (0.5+0.5) = 0$
+
 (ii)
-     The significance of the observation is that for the given Boolean function and dataset, attributes A,B and C have IG(X) = 0 when used as root attributes for a decision tree. So in this specific context, none of these attributes provide any advantage in reducing uncertainty of separating data. The balanced distribution of the outcomes in the dataset H(D) =1 makes all attributes equally ineffective as root attributes for decision tree split.
+ The significance of the observation is that for the given Boolean function and dataset, attributes A,B and C have IG(X) = 0 when used as root attributes for a decision tree. So in this specific context, none of these attributes provide any advantage in reducing uncertainty of separating data. The balanced distribution of the outcomes in the dataset H(D) =1 makes all attributes equally ineffective as root attributes for decision tree split.
 
 
-1. Estimate how many functions satisfying Q1 (i) could exist over $n$ attributes, as a function of $n$. 
+2. Estimate how many functions satisfying Q1 (i) could exist over $n$ attributes, as a function of $n$. 
 
 Answer:
 - If for a given boolean function of $n$ attributes to have an $IG(Y|X=x_{i}) = 0$ $\forall X$ being any given attribute of the function. Each attribute $X$ must partition the set of attribute-value combinations into the same ratio of 0 and 1 labels as there are in the unpartitioned set of labels. 
