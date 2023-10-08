@@ -14,10 +14,11 @@ from decimal import Decimal
 import util
 
 class Node():
-    def __init__(self, schema, tests):
+    def __init__(self, schema = None, tests = None, class_label = None):
         self.schema = schema
         self.tests = tests
         self.children = {} # Empty dictionary, Every child key will be a test and the value will be a node
+        self.class_label = class_label
         
     # Adds a child node to the current node given a certain test
     # all children will have an associated test, from the parent node
@@ -43,7 +44,17 @@ class Node():
     # Returns whether node is a leaf or not
     def is_leaf(self):
         return len(self.children) == 0
-      
+    
+    # Method to set a node as a leaf with a particular class label
+    def set_as_leaf(self, class_label):
+        self.class_label = class_label
+        self.schema = None
+        self.tests = []
+        self.children = {}
+    
+    # Method to get the class label of the leaf node
+    def get_class_label(self):
+        return self.class_label
 
 
 # In Python, the convention for class names is CamelCase, just like in Java! However, the convention for method and
@@ -56,10 +67,7 @@ class DecisionTree(Classifier):
         to use all the good programming skills you learned in 132 and utilize numpy optimizations wherever possible.
         Good luck!
         """
-
-        #warnings.warn('The DecisionTree class is currently running dummy Majority Classifier code. ' +
-                      #'Once you start implementing your decision tree delete this warning message.')
-
+        
         self._schema = schema  # For some models (like a decision tree) it makes sense to keep track of the data schema
         self._majority_label = 0  # Protected attributes in Python have an underscore prefix
         
@@ -82,28 +90,6 @@ class DecisionTree(Classifier):
             weights: Weights for each example. Will become relevant later in the course, ignore for now.
         """
 
-        # In Java, it is the best practice to LBYL (Look Before You Leap), i.e. check to see if code will throw an exception
-        # BEFORE running it. In Python, the dominant paradigm is EAFP (Easier to Ask Forgiveness than Permission), where
-        # try/except blocks (like try/catch blocks) are commonly used to catch expected exceptions and deal with them.
-        
-        if self.data is None:
-            self.data = X
-            self.labels = y
-        
-        #print('-------------------------')
-        # print list of schema element names
-        #print(self.features_in_tree)
-        
-        # Check if the number of entries in the local_schema matches the number of columns in the dataset
-        #if len(self._schema) != X.shape[1]:
-            #print("FALSE")
-            #print(X.shape)
-            #print("Schema Len:", len(self._schema))
-            #return 0
-        #else:
-            #print("TRUE")
-        
-        #return 0
         # Implement Split Criterion for Decision Tree
         try:
             split_criterion = self._determine_split_criterion(X, y, self._schema)
@@ -112,60 +98,43 @@ class DecisionTree(Classifier):
         except NotImplementedError:
             warnings.warn('This is for demonstration purposes only.')
         
-        #print(split_criterion)
-        
-        entropies = util.calculate_column_entropy(self._schema, X, y, split_criterion)
         #entropies = util.calculate_column_entropy(self._schema, X, y, split_criterion)
-        #print(entropies)
         
         infogains = util.infogain(self._schema, X, y, split_criterion)
-        #infogains = util.infogain(self._schema, X, y, split_criterion)
-        #print(infogains)
         
-        masked_infogains = [infogains[i] for i in range(len(infogains)) if i not in self.masked_indeces]
-        
-        # Consider the indeces of the features that have not been used in the tree
-        
+        # Masked infogains is the list of infogains that have not been used in the tree
+        masked_infogains = [infogains[i] for i in range(len(infogains)) if i not in self.masked_indeces]        
         
         #max_ig_index = np.argmax(infogains)
-        
+        # Masked ig index is the index of the feature with the highest infogain that has not been used in the tree
         max_ig_index = np.where(infogains == masked_infogains[np.argmax(masked_infogains)])[0][0]
         
-        #print(max_ig_index)
-        
-        #print(type(infogains))
-        
-        #np.where(np.array(my_list) == value)
-        
-        
-        #print(self.masked_indeces)
-        #print(masked_infogains)
-        #print(self.features_in_tree)
-
-        
-        #print(self._schema[max_ig_index].name)
-        #print(self._schema[masked_max_ig_index].name)
-             
-        #print('Max IG Name:', self._schema[max_ig_index].name)
-              
+        if infogains[max_ig_index] == 0:
+            #print("LEAF ACTIVATED")
+            #print("Leaf Name:", self._schema[max_ig_index].name)
+            majority_label = util.majority_label(y)
+            # returns leafe node
+            return Node(schema = self._schema[max_ig_index], tests=None, class_label=majority_label)
         
         #root = Node(self._schema[max_ig_index], split_criterion[max_ig_index]) # Passing the schema of the root feature only, not general schema
-        root = Node(self._schema[max_ig_index], split_criterion[max_ig_index]) # Passing the schema of the root feature only, not general schema
+        root = Node(schema = self._schema[max_ig_index], tests = split_criterion[max_ig_index], class_label = None) # Passing the schema of the root feature only, not general schema
         
-        self.features_in_tree.append(self._schema[max_ig_index].name)
+        #self.features_in_tree.append(self._schema[max_ig_index].name)
         self.masked_indeces.append(max_ig_index)
         
+        # If the main root of the tree has yet been initialized, set it to the current root
         if self.root is None:
             self.root = root
+        
+        # Break point for debugging
+        return 0
             
-                    
         #print("-------------------------")
         
         # Constructing children of root node
         # Testing construction of a child node manually first
         for test in root.get_tests():
             print("Current test:", test)
-            # Create masked data and labels for the current test  
             # Create masked data and labels for the current test only have rows in which the root feature is equal to the test
             # FIX FOR CONTINUOUS DATA
             mask = X[:, max_ig_index] == test
@@ -174,17 +143,19 @@ class DecisionTree(Classifier):
             
             # if all label values are the same, then create a leaf node
             if len(np.unique(mask_y)) == 1:
-                print("LEAF ACTIVATED")
-                #print("Leaf Name:", root.get_schema().name)
-                return root# DONT RERTURN ROOT, ADD A LEAF TO ROOT
+                #print("LEAF ACTIVATED")
+                return root.set_as_leaf(util.majority_label(mask_y))
+
             
             if len(self.masked_indeces) == len(self._schema): # no more attributes to test
-                print("LEAF ACTIVATED")
-                #print("Leaf Name:", root.get_schema().name)
-                return root# DONT RERTURN ROOT, ADD A LEAF TO ROOT
+                #print("LEAF ACTIVATED")
+                return root.set_as_leaf(util.majority_label(mask_y))
+
             
             # recursive call to fit covered by else case
-            #else:
+            else:
+                child = self.fit(mask_X, mask_y)
+                root.add_child(test, child)
             #if (mask_X.size == 0) or (np.array_equal(mask_X, X)):
                 #print("OUGNFJDSFEHIUBJONCWHUDEFBDJN")
                 #return root
@@ -192,10 +163,6 @@ class DecisionTree(Classifier):
             #entropies = util.calculate_column_entropy(self._schema, mask_X, mask_y, split_criterion)
             
             #infogains = util.infogain(self._schema, mask_X, mask_y, split_criterion)
-            
-            child = self.fit(mask_X, mask_y)
-            root.add_child(test, child)
-            
         return root
         
         
@@ -326,15 +293,15 @@ def dtree(data_path: str, tree_depth_limit: int, use_cross_validation: bool = Tr
         decision_tree.fit(X_train, y_train)
         
         
-        print('-------------------------')
+        #print('-------------------------')
         
-        print("Root:", decision_tree.root.get_schema().name)
-        print("Root tests:", decision_tree.root.get_tests())
+        #print("Root:", decision_tree.root.get_schema().name)
+        #print("Root tests:", decision_tree.root.get_tests())
         
-        print('+------------------------+')
+        #print('+------------------------+')
         
-        for test, child in decision_tree.root.get_children().items():
-            print("Test:", test, "Name:", child.get_schema().name)
+        #for test, child in decision_tree.root.get_children().items():
+            #print("Test:", test, "Name:", child.get_schema().name)
             #print("Child (branch,feature):", decision_tree.root.get_child())
             #print("Child tests:", decision_tree.root.get_child(child).get_tests())
             #print('-------------------------')

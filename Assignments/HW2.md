@@ -6,7 +6,7 @@ When working as a group, only one answer to each question is needed unless other
 1.	(i) Give an example of a nontrivial (nonconstant) Boolean function over $3$ Boolean attributes where $IG(X)$ would return zero for *all* attributes at the root. (ii) Explain the significance of this observation. 
 
 Answer:
-(i) Let us consider a Boolean function where
+(i) Let us consider a Boolean function where2
 $F(A,B,C) = (A \ AND \ B) \ OR \ (NOT \ A \ AND \ NOT \ B) \ OR \ (NOT \ C)$
  Here in this function OR computes three terms, one where A and B are true, while in the next one both are not true and in the last C is not true. In this function we have deliberately designed it so that the information gain for attributes B and C will be 0 when used as a root attribute.
  

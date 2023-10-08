@@ -143,7 +143,11 @@ When you're learning, a good example representation to present or explain anythi
 8. Consider a learning problem where the examples are described by $n$ Boolean attributes. Prove that the number of *distinct* decision trees that can be constructed in this setting is $2^{2^n}$. *Distinct* means that each tree must represent a different hypothesis in the space. \[Hint: Show that there is a bijection between the set of all Boolean functions over $n$ Boolean attributes and the set of all distinct trees.\] (20 points)
 
 Answer: 
-For every set of $n$ attributes, there are $2^{n}$ possible combinations available to us. This means that if we were to construct a set of all possible functions that take in up to $n$ boolean we could feed up to $2^{n}$ possible inputs. For each input combination in the set of $2^{n}$ possible inputs we can create two functions, one that outputs $true$ and another that outputs $false$. This means that there are $2^{2^{n}}$ possible boolean functions that can be created from a set of $n$ boolean attributes. 
+For every set of $n$ attributes, there are $2^{n}$ possible combinations available to us. This means that if we were to construct a set of all possible functions that take in up to $n$ boolean we could feed up to $2^{n}$ possible inputs. For each input combination in the set of $2^{n}$ possible inputs we can create two functions, one that outputs $true$ and another that outputs $false$. 
+
+$$f: S_{2^{n}} = \{0,1,...,2^{n}\} \rightarrow \{0,1\}$$
+ 
+This means that there are $2^{2^{n}}$ possible boolean functions that can be created from a set of $n$ boolean attributes. 
 
 When considering the set of all possible distinct decision trees we must first take into account the fact that each tree contains $n$ nodes as each attribute can be tested with a single node. Each node will branch two ways, either $true$ or $false$. The number of leaf nodes that arises from the construction of a tree should be $2^{n}$ as the number of nodes in the tree doubles each layer. On top of this we must also consider the distinct trees that can arise from the specific layering of all terminal and leaf nodes. Taking this into account we can have up to $2^{2^{n}}$ number of distinct decision trees. 
 
