@@ -81,6 +81,7 @@ class DecisionTree(Classifier):
         
 
     def fit(self, X: np.ndarray, y: np.ndarray, weights: Optional[np.ndarray] = None) -> None:
+        print('+------------------------+')
         """
         This is the method where the training algorithm will run.
 
@@ -125,16 +126,30 @@ class DecisionTree(Classifier):
         # If the main root of the tree has yet been initialized, set it to the current root
         if self.root is None:
             self.root = root
-        
-        # Break point for debugging
-        return 0
             
+        # Printing the schema of each masked feature
+        print('Masked Features:')
+        for i in range(len(self._schema)):
+            if i in self.masked_indeces:
+                print(self._schema[i].name)
+                print(self._schema[i].ftype)
+                
+        print('-------------------------')
+        
+        # Printing the schema of each unnmasked feature
+        print('Unmasked Features:')
+        for i in range(len(self._schema)):
+            if i not in self.masked_indeces:
+                print(self._schema[i].name)
+                print(self._schema[i].ftype)
+        
+        
         #print("-------------------------")
         
         # Constructing children of root node
         # Testing construction of a child node manually first
         for test in root.get_tests():
-            print("Current test:", test)
+            #print("Current test:", test)
             # Create masked data and labels for the current test only have rows in which the root feature is equal to the test
             # FIX FOR CONTINUOUS DATA
             mask = X[:, max_ig_index] == test
@@ -156,20 +171,12 @@ class DecisionTree(Classifier):
             else:
                 child = self.fit(mask_X, mask_y)
                 root.add_child(test, child)
-            #if (mask_X.size == 0) or (np.array_equal(mask_X, X)):
-                #print("OUGNFJDSFEHIUBJONCWHUDEFBDJN")
-                #return root
             
             #entropies = util.calculate_column_entropy(self._schema, mask_X, mask_y, split_criterion)
             
             #infogains = util.infogain(self._schema, mask_X, mask_y, split_criterion)
         return root
-        
-        
-        #if n_one > n_zero:
-            #self._majority_label = 1
-        #else:
-            #self._majority_label = 0
+    
 
     def predict(self, X: np.ndarray) -> np.ndarray:
         """
