@@ -20,6 +20,11 @@ class Node():
         self.children = {} # Empty dictionary, Every child key will be a test and the value will be a node
         self.class_label = class_label
         
+        if class_label is not None:
+            self.is_leaf = True
+        else:
+            self.is_leaf = False
+        
     # Adds a child node to the current node given a certain test
     # all children will have an associated test, from the parent node
     def add_child(self, test, node):
@@ -41,16 +46,12 @@ class Node():
     def get_child(self, test):
         return self.children[test]
     
-    # Returns whether node is a leaf or not
-    def is_leaf(self):
-        return len(self.children) == 0
-    
     # Method to set a node as a leaf with a particular class label
     def set_as_leaf(self, class_label):
         self.class_label = class_label
-        self.schema = None
         self.tests = []
         self.children = {}
+        self.is_leaf = True
     
     # Method to get the class label of the leaf node
     def get_class_label(self):
@@ -81,7 +82,7 @@ class DecisionTree(Classifier):
         
 
     def fit(self, X: np.ndarray, y: np.ndarray, weights: Optional[np.ndarray] = None) -> None:
-        print('+------------------------+')
+        #print('+------------------------+')
         """
         This is the method where the training algorithm will run.
 
@@ -93,7 +94,8 @@ class DecisionTree(Classifier):
 
         # Implement Split Criterion for Decision Tree
         try:
-            split_criterion = self._determine_split_criterion(X, y, self._schema)
+            #split_criterion = self._determine_split_criterion(X, y, self._schema)
+            split_criterion = self.other_determine_split_criterion(X, y, self._schema)
             #split_criterion = self._determine_split_criterion(X, y, self._schema)
             #split_criterion = self._determine_split_criterion(X, y)
         except NotImplementedError:
@@ -117,6 +119,15 @@ class DecisionTree(Classifier):
             # returns leafe node
             return Node(schema = self._schema[max_ig_index], tests=None, class_label=majority_label)
         
+        # if all labels are positive or negative, then create a leaf node
+        if len(np.unique(y)) == 1:
+            #print("LEAF ACTIVATED")
+            #print("Leaf Name:", self._schema[max_ig_index].name)
+            majority_label = util.majority_label(y)
+            # returns leafe node
+            return Node(schema = self._schema[max_ig_index], tests=None, class_label=majority_label)
+        
+        # Create root node
         #root = Node(self._schema[max_ig_index], split_criterion[max_ig_index]) # Passing the schema of the root feature only, not general schema
         root = Node(schema = self._schema[max_ig_index], tests = split_criterion[max_ig_index], class_label = None) # Passing the schema of the root feature only, not general schema
         
@@ -126,45 +137,65 @@ class DecisionTree(Classifier):
         # If the main root of the tree has yet been initialized, set it to the current root
         if self.root is None:
             self.root = root
+        
+        # if there are no more attributes to test, return the single node tree root, with label = most common value of the target attribute in the examples
+        if len(self.masked_indeces) == len(self._schema):
+            #print("LEAF ACTIVATED")
+            #print("Leaf Name:", self._schema[max_ig_index].name)
+            majority_label = util.majority_label(y)
+            # returns leafe node
+            return Node(schema = self._schema[max_ig_index], tests=None, class_label=majority_label)
+        
             
         # Printing the schema of each masked feature
-        print('Masked Features:')
-        for i in range(len(self._schema)):
-            if i in self.masked_indeces:
-                print(self._schema[i].name)
-                print(self._schema[i].ftype)
+        #print('Masked Features:')
+        #for i in range(len(self._schema)):
+            #if i in self.masked_indeces:
+                #print(self._schema[i].name)
+                #print(self._schema[i].ftype)
                 
-        print('-------------------------')
+        #print('-------------------------')
         
         # Printing the schema of each unnmasked feature
-        print('Unmasked Features:')
-        for i in range(len(self._schema)):
-            if i not in self.masked_indeces:
-                print(self._schema[i].name)
-                print(self._schema[i].ftype)
-        
+        #print('Unmasked Features:')
+        #for i in range(len(self._schema)):
+            #if i not in self.masked_indeces:
+                #print(self._schema[i].name)
+                #print(self._schema[i].ftype)
         
         #print("-------------------------")
-        
         # Constructing children of root node
         # Testing construction of a child node manually first
         for test in root.get_tests():
             #print("Current test:", test)
             # Create masked data and labels for the current test only have rows in which the root feature is equal to the test
             # FIX FOR CONTINUOUS DATA
-            mask = X[:, max_ig_index] == test
+        
+            # If the feature is continuous 
+            if self._schema[max_ig_index].ftype == FeatureType.CONTINUOUS:
+                # For continuous attributes, split based on threshold
+                mask = X[:, max_ig_index] <= test
+            
+            # If the feature is discrete
+            else:
+                # For discrete attributes, split based on equality
+                mask = X[:, max_ig_index] == test
+            
             mask_X = X[mask]
             mask_y = y[mask]
             
             # if all label values are the same, then create a leaf node
             if len(np.unique(mask_y)) == 1:
                 #print("LEAF ACTIVATED")
-                return root.set_as_leaf(util.majority_label(mask_y))
-
+                #root.set_as_leaf(util.majority_label(mask_y))
+                # Create a leaf node
+                child = Node(schema = None, tests = None, class_label = util.majority_label(mask_y))
+                root.add_child(test, child)
             
             if len(self.masked_indeces) == len(self._schema): # no more attributes to test
                 #print("LEAF ACTIVATED")
-                return root.set_as_leaf(util.majority_label(mask_y))
+                child = Node(schema = None, tests = None, class_label = util.majority_label(mask_y))
+                root.add_child(test, child)
 
             
             # recursive call to fit covered by else case
@@ -253,7 +284,63 @@ class DecisionTree(Classifier):
                 test_dic[i] = tests
                 
                     
-        return test_dic  
+        return test_dic
+    
+    
+    def other_determine_split_criterion(self, X: np.ndarray, y: np.ndarray, schema: List[Feature]):
+        """
+        Determine decision tree split criterion.
+        """
+        # Dictionary to track the test list for each feature
+        test_dic = {}
+
+        # Loop through each column of data to calculate the tests for each feature
+        for i in range(X.shape[1]):
+            feature = X[:, i]
+            tests = []
+
+            # If the feature is continuous
+            if schema[i].ftype == FeatureType.CONTINUOUS:
+                # Combine and sort feature values and labels based on feature values
+                combined = sorted(list(zip(feature, y)), key=lambda x: x[0])
+
+                for j in range(1, len(combined)):
+                    # If the label changes between two adjacent sorted values
+                    if combined[j][1] != combined[j - 1][1]:
+                        midpoint = (combined[j][0] + combined[j - 1][0]) / 2.0
+                        tests.append(midpoint)
+
+            # If the feature is discrete
+            else:
+                tests = list(np.unique(feature))
+
+            test_dic[i] = tests
+
+        return test_dic
+
+
+
+def print_tree(node, depth=0):
+    """
+    Recursive function to print the structure of the decision tree.
+    
+    Args:
+        node: The current node to print.
+        depth: Current depth of the tree (used for indentation).
+    """
+    # Base case: If the node is a leaf
+    if node.is_leaf:
+        print("  " * depth + f"Leaf: Class label = {node.get_class_label()}")
+        return
+    
+    # If the node is not a leaf
+    print("  " * depth + f"Node: Schema = {node.get_schema().name}, Tests = {node.get_tests()}")
+    
+    # Recursively print children
+    for test, child_node in node.get_children().items():
+        print("  " * (depth + 1) + f"Test = {test}")
+        print_tree(child_node, depth + 2)
+
                                                 
 
 def evaluate_and_print_metrics(dtree: DecisionTree, X: np.ndarray, y: np.ndarray):
@@ -298,6 +385,8 @@ def dtree(data_path: str, tree_depth_limit: int, use_cross_validation: bool = Tr
     for X_train, y_train, X_test, y_test in datasets:
         decision_tree = DecisionTree(schema)
         decision_tree.fit(X_train, y_train)
+    
+    print_tree(decision_tree.root)
         
         
         #print('-------------------------')
@@ -352,9 +441,3 @@ if __name__ == '__main__':
     use_information_gain = not args.gain_ratio
 
     dtree(data_path, tree_depth_limit, use_cross_validation, use_information_gain)
-    
-    
-    
-    
-    
-
