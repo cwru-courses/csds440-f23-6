@@ -99,6 +99,7 @@ class DecisionTree(Classifier):
             #split_criterion = self._determine_split_criterion(X, y)
         except NotImplementedError:
             warnings.warn('This is for demonstration purposes only.')
+            
         
         
         
@@ -245,6 +246,39 @@ class DecisionTree(Classifier):
 
         Returns: Predictions of shape (n_examples,), either 0 or 1
         """
+        
+        # Some GPT Pseudo code
+        '''
+        function predict(tree, example):
+            current_node = tree.root
+            while not current_node.is_leaf:
+                feature_value = example[current_node.schema]
+
+                # If the feature is discrete
+                if current_node.schema.ftype == DISCRETE:
+                    if feature_value in current_node.children:
+                        current_node = current_node.children[feature_value]
+                    else:
+                        # Handle case where feature value is not in any child (e.g., return majority class or backtrack)
+                        return some_default_class_label
+
+                # If the feature is continuous
+                else:
+                    found = False
+                    for threshold in current_node.tests:
+                        if feature_value <= threshold:
+                            current_node = current_node.children[threshold]
+                            found = True
+                            break
+
+                    if not found:
+                        # Handle case where feature value is greater than all thresholds
+                        return some_default_class_label
+
+            return current_node.class_label
+        '''
+        
+        
 
         # Returns either all 1s or all 0s, depending on _majority_label.
         return np.ones(X.shape[0], dtype=int) * self._majority_label
@@ -388,7 +422,7 @@ def dtree(data_path: str, tree_depth_limit: int, use_cross_validation: bool = Tr
         decision_tree = DecisionTree(schema)
         decision_tree.fit(X_train, y_train)
     
-    print_tree(decision_tree.root)
+    #print_tree(decision_tree.root)
 
 
 
