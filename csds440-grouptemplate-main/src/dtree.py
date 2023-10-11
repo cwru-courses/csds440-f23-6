@@ -103,6 +103,8 @@ class DecisionTree(Classifier):
         
         #entropies = util.calculate_column_entropy(self._schema, X, y, split_criterion)
         
+        #print("\n".join([f"{i+1}. {entropy}" for i, entropy in enumerate(entropies)]))
+                
         infogains = util.infogain(self._schema, X, y, split_criterion)
         
         # Masked infogains is the list of infogains that have not been used in the tree
@@ -145,7 +147,6 @@ class DecisionTree(Classifier):
             majority_label = util.majority_label(y)
             # returns leafe node
             return Node(schema = self._schema[max_ig_index], tests=None, class_label=majority_label)
-        
             
         # Printing the schema of each masked feature
         #print('Masked Features:')
@@ -162,16 +163,20 @@ class DecisionTree(Classifier):
             #if i not in self.masked_indeces:
                 #print(self._schema[i].name)
                 #print(self._schema[i].ftype)
-        
+                
+        #print(root.get_schema().name) 
+                
+        #return 0
+    
         #print("-------------------------")
         # Constructing children of root node
         # Testing construction of a child node manually first
         for test in root.get_tests():
             #print("Current test:", test)
+            
             # Create masked data and labels for the current test only have rows in which the root feature is equal to the test
-            # FIX FOR CONTINUOUS DATA
-        
-            # If the feature is continuous 
+                    
+            # If the root feature is continuous 
             if self._schema[max_ig_index].ftype == FeatureType.CONTINUOUS:
                 # For continuous attributes, split based on threshold
                 mask = X[:, max_ig_index] <= test
@@ -192,7 +197,7 @@ class DecisionTree(Classifier):
                 child = Node(schema = None, tests = None, class_label = util.majority_label(mask_y))
                 root.add_child(test, child)
             
-            if len(self.masked_indeces) == len(self._schema): # no more attributes to test
+            elif len(self.masked_indeces) == len(self._schema): # no more attributes to test
                 #print("LEAF ACTIVATED")
                 child = Node(schema = None, tests = None, class_label = util.majority_label(mask_y))
                 root.add_child(test, child)
@@ -200,6 +205,7 @@ class DecisionTree(Classifier):
             
             # recursive call to fit covered by else case
             else:
+                #print("RECURSIVE CALL")
                 child = self.fit(mask_X, mask_y)
                 root.add_child(test, child)
             
@@ -303,20 +309,23 @@ class DecisionTree(Classifier):
             if schema[i].ftype == FeatureType.CONTINUOUS:
                 # Combine and sort feature values and labels based on feature values
                 combined = sorted(list(zip(feature, y)), key=lambda x: x[0])
-
+                
                 for j in range(1, len(combined)):
                     # If the label changes between two adjacent sorted values
-                    if combined[j][1] != combined[j - 1][1]:
+                    # or if the feature value changes and the next different feature value has a different label
+                    if (combined[j][1] != combined[j - 1][1]) or \
+                    (combined[j][0] != combined[j - 1][0] and
+                        any(val > combined[j - 1][0] and lab != combined[j - 1][1] for val, lab in combined[j:])):
                         midpoint = (combined[j][0] + combined[j - 1][0]) / 2.0
                         tests.append(midpoint)
-
+                            
             # If the feature is discrete
             else:
                 tests = list(np.unique(feature))
 
             test_dic[i] = tests
 
-        return test_dic
+        return test_dic   
 
 
 
