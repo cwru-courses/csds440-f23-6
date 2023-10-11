@@ -37,11 +37,18 @@ def calculate_column_entropy(schema, X, y, split_criterion):
     # Iterate through each column
     for i in range(X.shape[1]):
         column = X[:, i]
-        
         # Check if the column is continuous or discrete
         if schema[i].ftype == FeatureType.CONTINUOUS:
+            
+            #print(i)
             # If the column is continuous, calculate the entropy of the column
-            print(schema[i].name)
+            #print(schema[i].name)
+            #print(column)
+            #print('Passing in Tests:', split_criterion[i])
+            #print('Passing in Labels:', y)
+            #print('Passing in Column:', column)
+            
+            
             entropy = entropy_continuous(column, y, split_criterion[i])
             entropies.append(entropy)
             
@@ -57,11 +64,23 @@ def entropy_continuous(column, labels, tests):
     
     #print('Tests: ', tests)
     for test in tests:
-        print(test)
+        #print(test)
         
         # Split column data based on the test
         left_indices = column <= test
         right_indices = column > test
+        
+        
+        # Something is wrong with the split creation here, I havent pinned down what about this feature specifically causes the bug
+        #print('Test:', test)
+        #print('Column:', column)
+        #print('left:', left_indices)
+        #print('right:', right_indices)
+        
+        #print('Column:', column)
+        #print('Labels:', labels)
+        #print('Test:', test)
+        
         
         # Calculate the left and right entropies
         #left_entropy = 0 if calculate_entropy(labels[left_indices]) == 1.0 else calculate_entropy(labels[left_indices])
@@ -88,6 +107,8 @@ def entropy_continuous(column, labels, tests):
         weighted_entropy = prob_left * left_entropy + prob_right * right_entropy
         entropies.append(weighted_entropy)
         
+        
+    #print('Entropies:', entropies)
     return min(entropies) 
 
 

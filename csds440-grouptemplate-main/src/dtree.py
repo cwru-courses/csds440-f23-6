@@ -91,15 +91,36 @@ class DecisionTree(Classifier):
             y: The labels. The shape is (n_examples,)
             weights: Weights for each example. Will become relevant later in the course, ignore for now.
         """
-
         # Implement Split Criterion for Decision Tree
         try:
-            #split_criterion = self._determine_split_criterion(X, y, self._schema)
-            split_criterion = self.other_determine_split_criterion(X, y, self._schema)
+            split_criterion = self._determine_split_criterion(X, y, self._schema)
+            #split_criterion = self.other_determine_split_criterion(X, y, self._schema)
             #split_criterion = self._determine_split_criterion(X, y, self._schema)
             #split_criterion = self._determine_split_criterion(X, y)
         except NotImplementedError:
             warnings.warn('This is for demonstration purposes only.')
+        
+        
+        
+        #print(len(split_criterion))
+        #print(split_criterion[13])
+        #print(X[:, 13])
+        # [100. 114. 110. ...  85. 107.  80.]
+        
+        #entropy_13 = util.entropy_continuous(X[:, 13], y, split_criterion[13])
+        
+        #print(split_criterion[13])
+        
+        #return 0
+        
+            
+        #for i in range(len(split_criterion)):
+            #print(self._schema[i].name)
+            #print(i, split_criterion[i])
+            
+            
+        #chip_13_ 1
+            
         
         #entropies = util.calculate_column_entropy(self._schema, X, y, split_criterion)
         
@@ -188,7 +209,7 @@ class DecisionTree(Classifier):
             
             mask_X = X[mask]
             mask_y = y[mask]
-            
+                        
             # if all label values are the same, then create a leaf node
             if len(np.unique(mask_y)) == 1:
                 #print("LEAF ACTIVATED")
@@ -243,39 +264,37 @@ class DecisionTree(Classifier):
         Implement this however you like!
         """
         # Dictionary that associates each feature with a list of tests
-        
-        # Dictionary to track the test list for each feature
         test_dic = {}
         # Loop through each column of data and calculate the tests for each feature
-        for i in range(X.shape[1]):  
+        for i in range(X.shape[1]):
             
             tests = []  # List to store test values for the current feature          
             datatype = schema[i] # Get the datatype of the current feature of the dataset
             
+            # Sort the current column and labels based on the column values
+            sorted_indices = np.argsort(X[:, i])
+            sorted_column = X[:, i][sorted_indices]
+            sorted_labels = y[sorted_indices]
+                        
+            
             # If the feature is continuous
             if datatype.ftype == FeatureType.CONTINUOUS:
-            #if True:
+                lastValChange = 0
 
-                # Construct Testing List
-                lastValChange = None # Index of the last value change
-                # Loop through each entry of the current column of data, and the label vector
-                for index, (value, label) in enumerate(zip(X[:, i], y)):
-                    
-                    prevValue = X[:, i][index - 1] if index > 0 else None  # Get the previous value
-                    prevLabel = y[index - 1] if index > 0 else None  # Get the previous label
-                    #print(f"Index {index}: Value: {value}, Label: {label}, Previous Label: {prevLabel}")
-                    
-                    
-                    if prevValue != value and index > 0:
-                        lastValChange = index-1 # Get the index of the last value change
-                        
-                    if prevLabel != label and index > 0:
-                        newTest = ((value + X[:, i][lastValChange]) / 2.0)
-                        tests.append(newTest)                         
-                        
-                        #print(value, X[:, i][lastValChange])
-                        #print(newTest)
-                        #print('-------------------------')
+                # Loop through the sorted data
+                for index in range(1, len(sorted_column)):
+                    current_value = sorted_column[index]
+                    prev_value = sorted_column[index - 1]
+
+                    current_label = sorted_labels[index]
+                    prev_label = sorted_labels[index - 1]
+
+                    if prev_value != current_value:
+                        lastValChange = index-1
+
+                    if prev_label != current_label:
+                        newTest = (current_value + sorted_column[lastValChange]) / 2.0
+                        tests.append(newTest)
                 
                 test_dic[i] = tests
             
@@ -289,43 +308,17 @@ class DecisionTree(Classifier):
                 
                 test_dic[i] = tests
                 
-                    
-        return test_dic
-    
-    
-    def other_determine_split_criterion(self, X: np.ndarray, y: np.ndarray, schema: List[Feature]):
-        """
-        Determine decision tree split criterion.
-        """
-        # Dictionary to track the test list for each feature
-        test_dic = {}
-
-        # Loop through each column of data to calculate the tests for each feature
-        for i in range(X.shape[1]):
-            feature = X[:, i]
-            tests = []
-
-            # If the feature is continuous
-            if schema[i].ftype == FeatureType.CONTINUOUS:
-                # Combine and sort feature values and labels based on feature values
-                combined = sorted(list(zip(feature, y)), key=lambda x: x[0])
+        
+        #if len(tests) == 0:
+            # Print feature name
+            #print("Feature Name:", schema[i].name)
+            # Print feature data
+            #print("Feature Data:", X[:, i])
+            # Print feature labels
+            #print("Feature Labels:", y)
                 
-                for j in range(1, len(combined)):
-                    # If the label changes between two adjacent sorted values
-                    # or if the feature value changes and the next different feature value has a different label
-                    if (combined[j][1] != combined[j - 1][1]) or \
-                    (combined[j][0] != combined[j - 1][0] and
-                        any(val > combined[j - 1][0] and lab != combined[j - 1][1] for val, lab in combined[j:])):
-                        midpoint = (combined[j][0] + combined[j - 1][0]) / 2.0
-                        tests.append(midpoint)
-                            
-            # If the feature is discrete
-            else:
-                tests = list(np.unique(feature))
-
-            test_dic[i] = tests
-
-        return test_dic   
+                    
+        return test_dic 
 
 
 
@@ -396,29 +389,7 @@ def dtree(data_path: str, tree_depth_limit: int, use_cross_validation: bool = Tr
         decision_tree.fit(X_train, y_train)
     
     print_tree(decision_tree.root)
-        
-        
-        #print('-------------------------')
-        
-        #print("Root:", decision_tree.root.get_schema().name)
-        #print("Root tests:", decision_tree.root.get_tests())
-        
-        #print('+------------------------+')
-        
-        #for test, child in decision_tree.root.get_children().items():
-            #print("Test:", test, "Name:", child.get_schema().name)
-            #print("Child (branch,feature):", decision_tree.root.get_child())
-            #print("Child tests:", decision_tree.root.get_child(child).get_tests())
-            #print('-------------------------')
-        
-        #print(decision_tree.features_in_tree)
-        
-        #evaluate_and_print_metrics(decision_tree, X_test, y_test)
 
-    #raise NotImplementedError()
-    
-    #print(schema[1].attribute[0])
-    #print(schema[1].ftype) # gives us whether the second feature of the dataset is continuous or discrete
 
 
 if __name__ == '__main__':
