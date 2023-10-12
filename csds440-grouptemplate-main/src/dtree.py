@@ -236,53 +236,53 @@ class DecisionTree(Classifier):
             #infogains = util.infogain(self._schema, mask_X, mask_y, split_criterion)
         return root
     
-def predict(self, X: np.ndarray) -> np.ndarray:
-    """
-    Predicts class labels for a set of input examples using the trained decision tree.
-
-    Args:
-        X: The testing data with shape (n_examples, n_features).
-
-    Returns:
-        Predicted class labels as a NumPy array of shape (n_examples,).
-    """
-    n_examples = X.shape[0]
-    # Initializing a NumPy array to store the predicted class labels for each example.
-    predictions = np.empty(n_examples, dtype=int)
-
-    for i in range(n_examples):
-        current_node = self.root
-        while not current_node.is_leaf:
-            # Get the value of the feature specified by the current node's schema.
-            feature_value = X[i, current_node.get_schema().index]
-
-            if current_node.get_schema().ftype == FeatureType.DISCRETE:
-                # If the feature is discrete
-                if feature_value in current_node.get_children():
-                    current_node = current_node.get_child(feature_value)
-                else:
-                    # Handle the case where the feature value is not in any child node
-                    # (e.g., return the majority class label or backtrack).
-                    predictions[i] = self._majority_label  # Use the majority label as a default
-                    break
-
-            else:  # Assuming it's a continuous feature
-                found = False
-                for threshold in current_node.get_tests():
-                    if feature_value <= threshold:
-                        current_node = current_node.get_child(threshold)
-                        found = True
+    def predict(self, X: np.ndarray) -> np.ndarray:
+        """
+        Predicts class labels for a set of input examples using the trained decision tree.
+    
+        Args:
+            X: The testing data with shape (n_examples, n_features).
+    
+        Returns:
+            Predicted class labels as a NumPy array of shape (n_examples,).
+        """
+        n_examples = X.shape[0]
+        # Initializing a NumPy array to store the predicted class labels for each example.
+        predictions = np.empty(n_examples, dtype=int)
+    
+        for i in range(n_examples):
+            current_node = self.root
+            while not current_node.is_leaf:
+                # Get the value of the feature specified by the current node's schema.
+                feature_value = X[i, current_node.get_schema().index]
+    
+                if current_node.get_schema().ftype == FeatureType.DISCRETE:
+                    # If the feature is discrete
+                    if feature_value in current_node.get_children():
+                        current_node = current_node.get_child(feature_value)
+                    else:
+                        # Handle the case where the feature value is not in any child node
+                        # (e.g., return the majority class label or backtrack).
+                        predictions[i] = self._majority_label  # Use the majority label as a default
                         break
-
-                if not found:
-                    # Handle the case where the feature value exceeds all thresholds.
-                    predictions[i] = self._majority_label  # Use the majority label as a default
-                    break
-
-        # Assign the final class label predicted by the decision tree.
-        predictions[i] = current_node.get_class_label()
-
-    return predictions
+    
+                else:  # Assuming it's a continuous feature
+                    found = False
+                    for threshold in current_node.get_tests():
+                        if feature_value <= threshold:
+                            current_node = current_node.get_child(threshold)
+                            found = True
+                            break
+    
+                    if not found:
+                        # Handle the case where the feature value exceeds all thresholds.
+                        predictions[i] = self._majority_label  # Use the majority label as a default
+                        break
+    
+            # Assign the final class label predicted by the decision tree.
+            predictions[i] = current_node.get_class_label()
+    
+        return predictions
 
         
         
