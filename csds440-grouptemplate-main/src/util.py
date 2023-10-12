@@ -37,10 +37,18 @@ def calculate_column_entropy(schema, X, y, split_criterion):
     # Iterate through each column
     for i in range(X.shape[1]):
         column = X[:, i]
-        
         # Check if the column is continuous or discrete
         if schema[i].ftype == FeatureType.CONTINUOUS:
+            
+            #print(i)
             # If the column is continuous, calculate the entropy of the column
+            #print(schema[i].name)
+            #print(column)
+            #print('Passing in Tests:', split_criterion[i])
+            #print('Passing in Labels:', y)
+            #print('Passing in Column:', column)
+            
+            
             entropy = entropy_continuous(column, y, split_criterion[i])
             entropies.append(entropy)
             
@@ -52,30 +60,56 @@ def calculate_column_entropy(schema, X, y, split_criterion):
     return entropies
             
 def entropy_continuous(column, labels, tests):    
-    total_entropy = 0.0
+    entropies = []
     
+    #print('Tests: ', tests)
     for test in tests:
+        #print(test)
+        
         # Split column data based on the test
         left_indices = column <= test
         right_indices = column > test
         
-        # Calculate the left and right entropies
-        left_entropy = 0 if calculate_entropy(labels[left_indices]) == 1.0 else calculate_entropy(labels[left_indices])
         
-        right_entropy = 0 if calculate_entropy(labels[right_indices]) == 1.0 else calculate_entropy(labels[right_indices])
-                
-        # Get the number of total label samples
-        total_samples = len(labels)
+        # Something is wrong with the split creation here, I havent pinned down what about this feature specifically causes the bug
+        #print('Test:', test)
+        #print('Column:', column)
+        #print('left:', left_indices)
+        #print('right:', right_indices)
+        
+        #print('Column:', column)
+        #print('Labels:', labels)
+        #print('Test:', test)
+        
+        
+        # Calculate the left and right entropies
+        #left_entropy = 0 if calculate_entropy(labels[left_indices]) == 1.0 else calculate_entropy(labels[left_indices])
+        left_entropy = calculate_entropy(labels[left_indices])
+
+        
+        #right_entropy = 0 if calculate_entropy(labels[right_indices]) == 1.0 else calculate_entropy(labels[right_indices])
+        right_entropy = calculate_entropy(labels[right_indices])
+
+        
+        # Print the labeled left and right entropies
+        #print("left entropy: ", left_entropy)
+        #print("right entropy: ", right_entropy)
         
         #probability of left test
-        prob_left = len(labels[left_indices]) / total_samples
+        prob_left = len(labels[left_indices]) / len(labels)
         #probability of right test
-        prob_right = len(labels[right_indices]) / total_samples
+        prob_right = len(labels[right_indices]) / len(labels)
         
         # Calculate the total entropy
-        total_entropy += prob_left * left_entropy + prob_right * right_entropy
+        #total_entropy += prob_left * left_entropy + prob_right * right_entropy
         
-    return total_entropy  
+        # Calculate the weighted entropy for this test value
+        weighted_entropy = prob_left * left_entropy + prob_right * right_entropy
+        entropies.append(weighted_entropy)
+        
+        
+    #print('Entropies:', entropies)
+    return min(entropies) 
 
 
 def entropy_discrete(column, labels, tests):    
@@ -88,11 +122,8 @@ def entropy_discrete(column, labels, tests):
         # Calculate the test entropy
         test_entropy = calculate_entropy(labels[test_indeces])
         
-        # Get the number of total label samples
-        total_samples = len(labels)
-        
         #probability of test
-        prob_test = len(labels[test_indeces]) / total_samples
+        prob_test = len(labels[test_indeces]) / len(labels)
         
         # Calculate the total entropy
         total_entropy += prob_test * test_entropy
