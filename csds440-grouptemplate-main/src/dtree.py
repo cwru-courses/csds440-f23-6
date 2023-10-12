@@ -140,7 +140,7 @@ class DecisionTree(Classifier):
             #print("LEAF ACTIVATED")
             #print("Leaf Name:", self._schema[max_ig_index].name)
             majority_label = util.majority_label(y)
-            # returns leafe node
+            # returns leaf node
             return Node(schema = self._schema[max_ig_index], tests=None, class_label=majority_label)
         
         # if all labels are positive or negative, then create a leaf node
@@ -249,7 +249,60 @@ class DecisionTree(Classifier):
         n_examples = X.shape[0]
         # Initializing a NumPy array to store the predicted class labels for each example.
         predictions = np.empty(n_examples, dtype=int)
+        
+        #print(self._schema)
+        #print(self.root.get_schema().name)
+        
+        #index = self._schema.index(self.root.get_schema())
+        
+        #print(self._schema[index].name)
+        
+        
+        for i in range (n_examples):
+            current_node = self.root
+            while not current_node.is_leaf:
+                # get the value of the feature specified by the current node's schema
+                feature_value = X[i, self._schema.index(current_node.get_schema())]
+                
+                if current_node.get_schema().ftype == FeatureType.NOMINAL:
+                    # if the feature is discrete
+                    if feature_value in current_node.get_children():
+                        current_node = current_node.get_child(feature_value)
+                    else:
+                        # handle the case where the feature value is not in any child node
+                        # (e.g., return the majority class label or backtrack)
+                        predictions[i] = self._majority_label # Currently returning majority label as default
+                        break
+                    
+                else: # assuming it's a continuous feature
+                    found = False
+                    for threshold in current_node.get_tests():
+                        # Our feature value satisfies the threshold on one of the child node tests
+                        if feature_value <= threshold:
+                            # Update the current node
+                            current_node = current_node.get_child(threshold)
+                            found = True
+                            break
+                        
+                    if not found:
+                        # handle the case where the feature value exceeds all thresholds
+                        predictions[i] = self._majority_label # Currently returning majority label as default
+                        break
+            
+            #predictions[i] = current_node.get_class_label()
+            #print(current_node.get_class_label())
+            
+            if current_node.is_leaf:
+                predictions[i] = current_node.get_class_label()
+                        
+        return predictions 
     
+                
+        
+        # This '.index' attribute does not work. It is not a list. It is a Feature object
+        #index = self.root.get_schema().index
+        
+        '''
         for i in range(n_examples):
             current_node = self.root
             while not current_node.is_leaf:
@@ -283,12 +336,12 @@ class DecisionTree(Classifier):
             predictions[i] = current_node.get_class_label()
     
         return predictions
+        '''
 
         
         
 
-        # Returns either all 1s or all 0s, depending on _majority_label.
-        return np.ones(X.shape[0], dtype=int) * self._majority_label
+
 
     # In Python, instead of getters and setters we have properties: docs.python.org/3/library/functions.html#property
     @property
@@ -430,6 +483,12 @@ def dtree(data_path: str, tree_depth_limit: int, use_cross_validation: bool = Tr
         decision_tree.fit(X_train, y_train)
     
     #print_tree(decision_tree.root)
+    y_hat = decision_tree.predict(X_test)
+    print(X_test)
+    
+    print(y_test)
+    
+    print(y_hat)
 
 
 
