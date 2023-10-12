@@ -422,7 +422,7 @@ def dtree(data_path: str, tree_depth_limit: int, use_cross_validation: bool = Tr
         decision_tree = DecisionTree(schema)
         decision_tree.fit(X_train, y_train)
     
-    #print_tree(decision_tree.root)
+    print_tree(decision_tree.root)
 
 
 
