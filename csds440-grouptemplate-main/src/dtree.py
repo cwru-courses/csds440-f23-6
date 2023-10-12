@@ -236,47 +236,54 @@ class DecisionTree(Classifier):
             #infogains = util.infogain(self._schema, mask_X, mask_y, split_criterion)
         return root
     
+def predict(self, X: np.ndarray) -> np.ndarray:
+    """
+    Predicts class labels for a set of input examples using the trained decision tree.
 
-    def predict(self, X: np.ndarray) -> np.ndarray:
-        """
-        This is the method where the decision tree is evaluated.
+    Args:
+        X: The testing data with shape (n_examples, n_features).
 
-        Args:
-            X: The testing data of shape (n_examples, n_features).
+    Returns:
+        Predicted class labels as a NumPy array of shape (n_examples,).
+    """
+    n_examples = X.shape[0]
+    # Initializing a NumPy array to store the predicted class labels for each example.
+    predictions = np.empty(n_examples, dtype=int)
 
-        Returns: Predictions of shape (n_examples,), either 0 or 1
-        """
-        
-        # Some GPT Pseudo code
-        '''
-        function predict(tree, example):
-            current_node = tree.root
-            while not current_node.is_leaf:
-                feature_value = example[current_node.schema]
+    for i in range(n_examples):
+        current_node = self.root
+        while not current_node.is_leaf:
+            # Get the value of the feature specified by the current node's schema.
+            feature_value = X[i, current_node.get_schema().index]
 
+            if current_node.get_schema().ftype == FeatureType.DISCRETE:
                 # If the feature is discrete
-                if current_node.schema.ftype == DISCRETE:
-                    if feature_value in current_node.children:
-                        current_node = current_node.children[feature_value]
-                    else:
-                        # Handle case where feature value is not in any child (e.g., return majority class or backtrack)
-                        return some_default_class_label
-
-                # If the feature is continuous
+                if feature_value in current_node.get_children():
+                    current_node = current_node.get_child(feature_value)
                 else:
-                    found = False
-                    for threshold in current_node.tests:
-                        if feature_value <= threshold:
-                            current_node = current_node.children[threshold]
-                            found = True
-                            break
+                    # Handle the case where the feature value is not in any child node
+                    # (e.g., return the majority class label or backtrack).
+                    predictions[i] = self._majority_label  # Use the majority label as a default
+                    break
 
-                    if not found:
-                        # Handle case where feature value is greater than all thresholds
-                        return some_default_class_label
+            else:  # Assuming it's a continuous feature
+                found = False
+                for threshold in current_node.get_tests():
+                    if feature_value <= threshold:
+                        current_node = current_node.get_child(threshold)
+                        found = True
+                        break
 
-            return current_node.class_label
-        '''
+                if not found:
+                    # Handle the case where the feature value exceeds all thresholds.
+                    predictions[i] = self._majority_label  # Use the majority label as a default
+                    break
+
+        # Assign the final class label predicted by the decision tree.
+        predictions[i] = current_node.get_class_label()
+
+    return predictions
+
         
         
 
