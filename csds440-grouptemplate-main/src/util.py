@@ -202,13 +202,11 @@ def accuracy(y: np.ndarray, y_hat: np.ndarray) -> float:
 
     Returns: Accuracy
     """
-
-    if y.size != y_hat.size:
-        raise ValueError('y and y_hat must be the same shape/size!')
-
-    n = y.size
-
-    return (y == y_hat).sum() / n
+    
+    correct_predictions = np.sum(y == y_hat)
+    total_predictions = len(y)
+    
+    return correct_predictions / total_predictions
 
 
 def precision(y: np.ndarray, y_hat: np.ndarray) -> float:
