@@ -55,7 +55,7 @@ Answer:
 Answer: 
 An ROC curve is constructed using two metrics: True Positive Rate $(TPR$) and False Positive Rate $(FPR)$
 
-Y-Axis: $TPR$
+Y-Axis: $TPR$, 
 X-Axis: $FPR$
 
 Each new point along the curve is $(TPR_{n}, FPR_{n})$.
@@ -80,3 +80,37 @@ Therefore, the ROC curve is monotonically increasing, as it is impossible for a 
 
 Answer: 
 
+Outputs of a random binary classifier: 
+$$
+\hat{Y} = \begin{bmatrix} \hat{y}_1 \\ \hat{y}_2 \\ \vdots \\ \hat{y}_n \end{bmatrix} 
+$$
+$$P(\hat{Y}=\hat{y}) = 
+\begin{cases} 
+0.5 & \text{if } \ \hat{y} = 1, \\
+0.5 & \text{if } \ \hat{y} = 0.
+\end{cases}
+$$
+
+It is a coin flip whether $\hat{y}$, the label assigned to some example will be positive or negative. 
+
+The two metrics that we use to construct an ROC curve are: 
+
+True Positive Rate $(TPR$) = $\frac{TP}{TP+FN}$
+False Positive Rate $(FPR)$ = $\frac{FP}{FP + TN}$
+
+If the distribution of labels for a given set of $n$ examples is perfectly random. Both the metrics $(TPR, FPR) \rightarrow (0.5, 0.5)$
+
+|Examples|	True Label|	Confidence|	$TPR$|	$FPR$|
+|---|---|---|---|---|
+|$x_{1}$|-/+|$c_{1}$|0.5|0.5|
+|$x_{2}$|-/+|$c_{2} = c_{1}-\epsilon$|0.5|0.5|	
+|$\vdots$|-/+|$c_{i} = c_{i-1}-\epsilon$|0.5|0.5|
+|$x_{n}$|-/+|$c_{n} = c_{n-1}-\epsilon$|0.5|0.5|
+
+
+$TPR$ Metric Analysis: Probability of guessing a label correctly is 0.5 therefore all true positive instances $TP = \frac{1}{2}(AllPos)$ and the rest of the positive labels will be missed, $FN = \frac{1}{2}(AllPos)$ meaning $TPR = 0.5$ in all possible examples
+
+$FPR$ Metric Analysis: Probability of guessing a label correctly is 0.5 therefore all true negative instances $TN = \frac{1}{2}(AllNeg)$ and the rest of the negative labels will be missed, $FP = \frac{1}{2}(AllPos)$ meaning $FPR = 0.5$ in all possible examples
+
+This gives our ROC curve a constant slope of $\frac{\frac{1}{2}}{\frac{1}{2}}= 1$
+A constant slope of equal $x$ and $y$ axis growth gives us a diagonal line. 
