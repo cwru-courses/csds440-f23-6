@@ -40,6 +40,7 @@ $H(L| A1) = P(A1=F)H(L|A1=F) + P(A1=T)H(L|A1=T)$
 
 $H(L| A1) = \frac{1}{2}(-\frac{1}{2}log_{2}(\frac{1}{2}) -\frac{1}{2}log_{2}(\frac{1}{2})) +  \frac{1}{2}(-\frac{1}{2}log_{2}(\frac{1}{2}) -\frac{1}{2}log_{2}(\frac{1}{2})) = 1.0$
 
+
 $IG(L| A1) = H(L) - H(L|A1) = 0$
 
 $-------------------------------$
@@ -47,6 +48,7 @@ $-------------------------------$
 $H(L| A2) = P(A2=F)H(L|A2=F) + P(A2=T)H(L|A2=T)$
 
 $H(L| A2) = \frac{1}{2}(-\frac{1}{2}log_{2}(\frac{1}{2}) -\frac{1}{2}log_{2}(\frac{1}{2})) +  \frac{1}{2}(-\frac{1}{2}log_{2}(\frac{1}{2}) -\frac{1}{2}log_{2}(\frac{1}{2})) = 1.0$
+
 
 $IG(L| A2) = H(L) - H(L|A2) = 0$
 
@@ -56,6 +58,7 @@ $H(L| A3) = P(A3=F)H(L|A3=F) + P(A3=T)H(L|A3=T)$
 
 $H(L| A3) = \frac{1}{2}(-\frac{1}{2}log_{2}(\frac{1}{2}) -\frac{1}{2}log_{2}(\frac{1}{2})) +  \frac{1}{2}(-\frac{1}{2}log_{2}(\frac{1}{2}) -\frac{1}{2}log_{2}(\frac{1}{2})) = 1.0$
 
+
 $IG(L| A3) = H(L) - H(L|A3) = 0$
 
 $-------------------------------$
@@ -64,14 +67,75 @@ $H(L| A4) = P(A4=F)H(L|A4=F) + P(A4=T)H(L|A4=T)$
 
 $H(L| A4) = \frac{1}{2}(-\frac{1}{2}log_{2}(\frac{1}{2}) -\frac{1}{2}log_{2}(\frac{1}{2})) +  \frac{1}{2}(-\frac{1}{2}log_{2}(\frac{1}{2}) -\frac{1}{2}log_{2}(\frac{1}{2})) = 1.0$
 
+
 $IG(L| A4) = H(L) - H(L|A4) = 0$
 
-
+$-------------------------------$
+There is no split possible when using probability based entropy to calculate information gain for this dataset. The information gain of all attributes is 0 so no root for the decision tree can be assigned. 
 
 
 2.	Now from the same table, find another split using "weighted" information gain. In this case, instead of counting the examples for each label in the information gain calculation, add the numbers in the Weight column for each example. You can use your code/a numerical package like Matlab to do this, and just report the final result. (10 points)
 
 Answer:
+There is no split all info gains are 0.
+
+Label Weighted Entropy:
+$H(L) = -\frac{112}{256}log_{2}(\frac{112}{256}) -\frac{144}{256}log_{2}(\frac{144}{256}) = 0.989$
+
+Attribute Weighted Entropies:
+
+$W(A1=F) = \frac{64}{256}$, $W(A1=T) = \frac{192}{256}$ 
+
+$H(L| A1) = W(A1=F)H(L|A1=F) + W(A1=T)H(L|A1=T)$
+
+$H(L| A1) = \frac{64}{256}(-\frac{40}{64}log_{2}(\frac{40}{64}) -\frac{24}{64}log_{2}(\frac{24}{64})) +  \frac{192}{256}(-\frac{72}{192}log_{2}(\frac{72}{192}) -\frac{120}{192}log_{2}(\frac{120}{192})) = 0.954$
+
+$IG(L| A1) = H(L) - H(L|A1) = 0.989 - 0.954 = 0.0346$
+
+$-------------------------------$
+
+$W(A2=F) = \frac{64}{256}$, $W(A2=T) = \frac{192}{256}$ 
+
+$H(L| A2) = W(A2=F)H(L|A2=F) + W(A2=T)H(L|A2=T)$
+
+$H(L| A2) = \frac{64}{256}(-\frac{40}{64}log_{2}(\frac{40}{64}) -\frac{24}{64}log_{2}(\frac{24}{64})) +  \frac{192}{256}(-\frac{72}{192}log_{2}(\frac{72}{192}) -\frac{120}{192}log_{2}(\frac{120}{192})) = 0.954$
+
+$IG(L| A2) = H(L) - H(L|A2) = 0.989 - 0.954 = 0.0346$
+
+$-------------------------------$
+
+$W(A3=F) = \frac{64}{256}$, $W(A3=T) = \frac{192}{256}$ 
+
+$H(L| A3) = W(A3=F)H(L|A3=F) + W(A3=T)H(L|A3=T)$
+
+$H(L| A3) = \frac{64}{256}(-\frac{40}{64}log_{2}(\frac{40}{64}) -\frac{24}{64}log_{2}(\frac{24}{64})) +  \frac{192}{256}(-\frac{72}{192}log_{2}(\frac{72}{192}) -\frac{120}{192}log_{2}(\frac{120}{192})) = 0.954$
+
+$IG(L| A3) = H(L) - H(L|A3) = 0.989 - 0.954 = 0.0346$
+
+$-------------------------------$
+
+$W(A4=F) = \frac{64}{256}$, $W(A4=T) = \frac{192}{256}$ 
+
+$H(L| A4) = W(A4=F)H(L|A4=F) + W(A4=T)H(L|A4=T)$
+
+$H(L| A2) = \frac{64}{256}(-\frac{28}{64}log_{2}(\frac{28}{64}) -\frac{36}{64}log_{2}(\frac{36}{64})) +  \frac{192}{256}(-\frac{84}{192}log_{2}(\frac{84}{192}) -\frac{108}{192}log_{2}(\frac{108}{192})) = 0.989$
+
+$IG(L| A2) = H(L) - H(L|A2) = 0.989 - 0.954 = 0$
+
+$-------------------------------$
+Three of the above attributes have equal information gain and one has 0. Technically our algorithm can pick any one of the three as a split. For the sake of simplicity I will say that the decision tree will have its root node split on attribute $A1$.
+
+
+
+
+
+
+
+
+
+
+
+
 
 3.	There is a difference between the splits for Q1 and Q2. Can you explain what is happening? (10 points)
 
