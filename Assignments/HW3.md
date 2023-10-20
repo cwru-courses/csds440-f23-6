@@ -127,7 +127,6 @@ $-------------------------------$
 
 Three of the above attributes have equal information gain and one has 0. Technically our algorithm can pick any one of the three as a split. For the sake of simplicity I will say that the decision tree will have its root node split on attribute $A1$.
 
-
 3.	There is a difference between the splits for Q1 and Q2. Can you explain what is happening? (10 points)
 
 Answer:
@@ -175,28 +174,15 @@ In conclusion, there are distinct trade-offs between preference bias and restric
 5.	Person X wishes to evaluate the performance of a learning algorithm on a set of $n$ examples ( $n$ large). X employs the following strategy:  Divide the $n$ examples randomly into two equal-sized disjoint sets, A and B. Then train the algorithm on A and evaluate it on B. Repeat the previous two steps for $N$ iterations ( $N$ large), then average the $N$ performance measures obtained. Is this sound empirical methodology? Explain why or why not. (10 points)
 
 Answer: 
+Person X is employing a cross-validation methodology most probably Repeated Random Subsampling Validation. This method's main idea is to repeatedly and arbitrarily partition the dataset into two equal halves, using one for testing and training over a lengthy number of iterations (N). The idea is to get a more robust and generalised evaluation of the learning process by averaging the performance measures over these iterations. This methodology excels in terms of adaptability since it provides a multitude of train-test combinations, which can capture a broad range of dataset dynamics and strive to stabilise the performance evaluation with increased N times around.
+   However, There are concerns, nonetheless, when assessing its validity as an empirical methodology. The main issue is the underutilization of the data: only half of the data is used for training during each iteration, potentially resulting in the loss of important patterns. It's also possible that several iterations of test sets will portray some data points differently due to the splits' randomness. Although the goal of the many assessments is to average out differences, biases may be introduced because not all examples are assessed equally. Moreover, the methodology assumes independent and identical distribution of data points, which may not apply to all datasets, especially structured ones such as time series. In conclusion, the approach has limitations even though it offers several evaluations and can provide information about the algorithm's performance. There may be different approaches that are more empirically sound, such as k-fold cross-validation, depending on the evaluation precision that is needed and the dataset.
 
 
 6.	Two classifiers A and B are evaluated on a sample with P positive examples and N negative examples and their ROC graphs are plotted. It is found that the ROC of A dominates that of B, i.e. for every FP rate, TP rate(A) $\geq$ TP rate(B). What is the relationship between the precision-recall graphs of A and B on the same sample? (10 points)
 
 Answer: 
-<<<<<<< HEAD
-The precision-recall graph is constructed using two metrics: True Positive Rate $(TPR)$ and Precision
-
-Y-Axis: Precision = $\frac{TP}{TP+FP}$
-X-Axis: $TPR = \frac{TP}{TP+FN}$
-
-For the ROC Graph we use $TPR$ and $FPR$
-$FPR  = \frac{FP}{FP+TN}$
-
-If for each decrease in the confidence threshold of our learning model the $TPR(A) \geq TPR(B)$ this means that the model A has a higher number of correctly predicted positive values than model B.  
-This should imply that the False Positive value for model A is also less than the False Positive value for model B.
-Knowing this we can say that the Precision of model A dominates that of model B: $Precision(A) \geq Precision(B)$ 
-
-=======
    There is a consistent and positive association between the precision-recall curves of the two classifiers when classifier A's ROC curve dominates classifier B's. To be more precise, on the same sample, classifier A's precision-recall curve will constantly perform better than classifier B's. This implies that classifier A will usually provide greater precision values for equivalent recall levels or that classifier A will attain higher recall values than classifier B for equivalent precision levels.
    Essentially, classifier A's dominance in the ROC space and its stronger ability to distinguish between positive and negative instances across a range of threshold values translate into a consistently improved precision-recall curve. This connection supports classifier A's overall superiority in classification performance on the provided sample by highlighting how well it detects true positives while minimizing false positives.
->>>>>>> 9e26453896bde0b65ac8e7072908f583ac6d7c13
 
 7.	Prove that an ROC graph must be monotonically increasing. (10 points)
 
@@ -221,6 +207,7 @@ Either case, causes the curve to move up, to the right, or both.
 The only case in which the curve moves downwards, is if $TPR$ decreased while $FPR$ increased. Given that $TPR$ only ever increases with a decreasing confidence threshold, this case is impossible. 
 
 Therefore, the ROC curve is monotonically increasing, as it is impossible for a decrease in the confidence threshold to cause a decrease in $TPR$.
+
 
 
 8.	Prove that the ROC graph of a random classifier that ignores attributes and guesses each class with equal probability is a diagonal line. (10 points)
