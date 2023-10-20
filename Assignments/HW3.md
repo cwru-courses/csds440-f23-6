@@ -29,6 +29,26 @@ Names and github IDs (if your github ID is not your name or Case ID):
 |T	|T	|T	|T	|1	|81/256|
 
 Answer:
+There is no split all info gains are 0.
+
+Label Entropy:
+$H(L) = -\frac{1}{2}log_{2}(\frac{1}{2}) -\frac{1}{2}log_{2}(\frac{1}{2}) = 1.0$
+
+Attribute Entropies:
+$H(L| A1) = P(A1=F)H(L|A1=F) + P(A1=T)H(L|A1=T)$
+$H(L| A1) = \frac{1}{2}(-\frac{1}{2}log_{2}(\frac{1}{2}) -\frac{1}{2}log_{2}(\frac{1}{2})) +  \frac{1}{2}(-\frac{1}{2}log_{2}(\frac{1}{2}) -\frac{1}{2}log_{2}(\frac{1}{2})) = 1.0$
+$-------------------------------$
+$H(L| A2) = P(A2=F)H(L|A2=F) + P(A2=T)H(L|A2=T)$
+$H(L| A2) = \frac{1}{2}(-\frac{1}{2}log_{2}(\frac{1}{2}) -\frac{1}{2}log_{2}(\frac{1}{2})) +  \frac{1}{2}(-\frac{1}{2}log_{2}(\frac{1}{2}) -\frac{1}{2}log_{2}(\frac{1}{2})) = 1.0$
+$-------------------------------$
+$H(L| A3) = P(A3=F)H(L|A3=F) + P(A3=T)H(L|A3=T)$
+$H(L| A3) = \frac{1}{2}(-\frac{1}{2}log_{2}(\frac{1}{2}) -\frac{1}{2}log_{2}(\frac{1}{2})) +  \frac{1}{2}(-\frac{1}{2}log_{2}(\frac{1}{2}) -\frac{1}{2}log_{2}(\frac{1}{2})) = 1.0$
+$-------------------------------$
+$H(L| A4) = P(A4=F)H(L|A4=F) + P(A4=T)H(L|A4=T)$
+$H(L| A4) = \frac{1}{2}(-\frac{1}{2}log_{2}(\frac{1}{2}) -\frac{1}{2}log_{2}(\frac{1}{2})) +  \frac{1}{2}(-\frac{1}{2}log_{2}(\frac{1}{2}) -\frac{1}{2}log_{2}(\frac{1}{2})) = 1.0$
+
+
+
 
 2.	Now from the same table, find another split using "weighted" information gain. In this case, instead of counting the examples for each label in the information gain calculation, add the numbers in the Weight column for each example. You can use your code/a numerical package like Matlab to do this, and just report the final result. (10 points)
 
