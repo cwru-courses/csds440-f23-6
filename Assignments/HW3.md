@@ -223,15 +223,18 @@ Therefore, the ROC curve is monotonically increasing, as it is impossible for a 
 Answer: 
 
 Outputs of a random binary classifier: 
+
 $$
 \hat{Y} = \begin{bmatrix} \hat{y}_1 \\ \hat{y}_2 \\ \vdots \\ \hat{y}_n \end{bmatrix} 
 $$
+
 $$P(\hat{Y}=\hat{y}) = 
 \begin{cases} 
 0.5 & \text{if } \ \hat{y} = 1, \\
 0.5 & \text{if } \ \hat{y} = 0.
 \end{cases}
 $$
+
 
 It is a coin flip whether $\hat{y}$, the label assigned to some example will be positive or negative. 
 
