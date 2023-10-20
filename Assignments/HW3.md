@@ -71,6 +71,7 @@ $H(L| A4) = \frac{1}{2}(-\frac{1}{2}log_{2}(\frac{1}{2}) -\frac{1}{2}log_{2}(\fr
 $IG(L| A4) = H(L) - H(L|A4) = 0$
 
 $-------------------------------$
+
 There is no split possible when using probability based entropy to calculate information gain for this dataset. The information gain of all attributes is 0 so no root for the decision tree can be assigned. 
 
 
@@ -123,19 +124,8 @@ $H(L| A2) = \frac{64}{256}(-\frac{28}{64}log_{2}(\frac{28}{64}) -\frac{36}{64}lo
 $IG(L| A2) = H(L) - H(L|A2) = 0.989 - 0.954 = 0$
 
 $-------------------------------$
+
 Three of the above attributes have equal information gain and one has 0. Technically our algorithm can pick any one of the three as a split. For the sake of simplicity I will say that the decision tree will have its root node split on attribute $A1$.
-
-
-
-
-
-
-
-
-
-
-
-
 
 3.	There is a difference between the splits for Q1 and Q2. Can you explain what is happening? (10 points)
 
