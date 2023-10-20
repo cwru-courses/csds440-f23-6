@@ -235,7 +235,6 @@ $$P(\hat{Y}=\hat{y}) =
 \end{cases}
 $$
 
-
 It is a coin flip whether $\hat{y}$, the label assigned to some example will be positive or negative. 
 
 The two metrics that we use to construct an ROC curve are: 
