@@ -78,7 +78,7 @@ There is no split possible when using probability based entropy to calculate inf
 2.	Now from the same table, find another split using "weighted" information gain. In this case, instead of counting the examples for each label in the information gain calculation, add the numbers in the Weight column for each example. You can use your code/a numerical package like Matlab to do this, and just report the final result. (10 points)
 
 Answer:
-There is no split all info gains are 0.
+There is a split available when considering weighted entropies.
 
 Label Weighted Entropy:
 $H(L) = -\frac{112}{256}log_{2}(\frac{112}{256}) -\frac{144}{256}log_{2}(\frac{144}{256}) = 0.989$
@@ -130,6 +130,12 @@ Three of the above attributes have equal information gain and one has 0. Technic
 3.	There is a difference between the splits for Q1 and Q2. Can you explain what is happening? (10 points)
 
 Answer:
+The difference between the splits found in Q1 and Q2 is simply that in Q2 there are splits possible whereas in Q1 no split is possible. 
+
+In Q1 we calculate splits based off of the standard entropy of each attribute. Given the specific distribution of the label and attribute values our entropies all come out to be the same value as our total label entropy. This leads to a value of 0 for the information gain of every attribute. This means we cannot choose a split when trying to find a root for our decision tree. 
+
+In Q2 we use weighted entropies. This value takes into account the 'importance' of each example. This 'importance' value takes the place of the probability of each state in our entropy calculations. The introduction of this weight allows us to ignore the perfectly random distribution of our labels. The resulting entropies give us a non-zero Information Gain for some of our attributes which allows us to choose a split. 
+
 
 4.	Restriction biases of learning algorithms prevent overfitting by restricting the hypothesis space, while preference biases prevent overfitting by preferring simpler concepts but not necessarily restricting the hypothesis space. Discuss the pros and cons of preference vs restriction biases. (10 points)
 
