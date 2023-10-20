@@ -151,19 +151,16 @@ Preference Bias: Since it leaves up all possibilities, it provides greater flexi
 Restriction Bias: It prevents overfitting to noise by explicitly capping the number of hypotheses the algorithm can produce, which adds resilience. If patterns are truly complicated and outside of the constrained domain, it may not be able to adjust to them.
 
 **Computational Complexity:**
-
 Preference Bias: can require more computing power because it may need to examine a larger space of hypotheses.
 
 Restriction Bias: Due to the limited space, implementations are typically easier to implement and may require less computing power.
 
 **Risk of Overfitting:**
-
 Preference Bias: Even while it usually favours simpler models, overfitting can nevertheless occur if an overly complicated model is erroneously chosen.
 
 Restriction Bias: If the real hypothesis, or a close approximation, is outside the confined space, there is a greater chance of underfitting.
 
 **Adaptability to Availability of Data:**
-
 Preference Bias: More adaptable. Preference biases have the ability to move towards more complicated models as additional data become available.
 
 Restriction Bias: Less adaptable. The algorithm may not be able to identify complicated patterns in the data if they are not included in the narrow hypothesis space.
@@ -174,7 +171,9 @@ In conclusion, there are distinct trade-offs between preference bias and restric
 5.	Person X wishes to evaluate the performance of a learning algorithm on a set of $n$ examples ( $n$ large). X employs the following strategy:  Divide the $n$ examples randomly into two equal-sized disjoint sets, A and B. Then train the algorithm on A and evaluate it on B. Repeat the previous two steps for $N$ iterations ( $N$ large), then average the $N$ performance measures obtained. Is this sound empirical methodology? Explain why or why not. (10 points)
 
 Answer: 
+This methodology is generally sound. For each training and validation run, we are training a new concept off of the set A and then testing that concept on B. To make the methodology even more robust we are reshuffling the data between sets A and B for each training and validation split. This means that we are training and testing a new concept each time allowing us to grasp the performance of our training method. 
 
+There are some possible issues that ought to be considered. The methodology described above randomly generates subsets of data for training and validation. During the generation of these subsets nothing is seemingly done to ensure that they are representative of the data in our superset. This could mean our learned concept in each test and validation run may score well, but fail to generalize when applied to data not found in sets A and B. What would be better possibly would be to partition $k$ number of equal sized subsets. Train our model on set A and then test on each of the $k$ subsets. This way, each little subset is brand new and unseen data unmixed with our training set. 
 
 
 6.	Two classifiers A and B are evaluated on a sample with P positive examples and N negative examples and their ROC graphs are plotted. It is found that the ROC of A dominates that of B, i.e. for every FP rate, TP rate(A) $\geq$ TP rate(B). What is the relationship between the precision-recall graphs of A and B on the same sample? (10 points)
