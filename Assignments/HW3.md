@@ -225,7 +225,7 @@ Answer:
 Outputs of a random binary classifier: 
 
 $$
-\hat{Y} = \begin{bmatrix} \hat{y}_1 \\ \hat{y}_2 \\ \vdots \\ \hat{y}_n \end{bmatrix} 
+\hat{Y} = \begin{bmatrix} \hat{y}_1 \\ \hat{y}_2 \\ \dots \\ \hat{y}_n \end{bmatrix} 
 $$
 
 $$P(\hat{Y}=\hat{y}) = 
