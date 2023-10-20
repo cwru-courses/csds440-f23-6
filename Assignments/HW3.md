@@ -53,11 +53,26 @@ Answer:
 7.	Prove that an ROC graph must be monotonically increasing. (10 points)
 
 Answer: 
-An ROC curve is constructed using two metrics: True Positive Rate (TPR) and False Positive Rate (FPR)
+An ROC curve is constructed using two metrics: True Positive Rate $(TPR$) and False Positive Rate $(FPR)$
 
-Each new point along the curve is ($TPR, FPR)$.
+Y-Axis: $TPR$
+X-Axis: $FPR$
 
-We go from 
+Each new point along the curve is $(TPR_{n}, FPR_{n})$.
+
+We go from $(TPR_{n}, FPR_{n}) \rightarrow (TPR_{n+1}, FPR_{n+1})$ by decreasing the confidence threshold between examples $n$ and $n+1$ .
+
+As the threshold decreases along the examples, instances that were previously classified as negative may now be classified as positive. 
+
+Some of these new positives may be true: increasing $TPR$
+
+Some of these new positives may be false: increasing $FPR$
+
+Either case, causes the curve to move up, to the right, or both. 
+
+The only case in which the curve moves downwards, is if $TPR$ decreased while $FPR$ increased. Given that $TPR$ only ever increases with a decreasing confidence threshold, this case is impossible. 
+
+Therefore, the ROC curve is monotonically increasing, as it is impossible for a decrease in the confidence threshold to cause a decrease in $TPR$.
 
 
 
