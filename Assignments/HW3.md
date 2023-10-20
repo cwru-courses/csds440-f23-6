@@ -180,6 +180,7 @@ Answer:
 6.	Two classifiers A and B are evaluated on a sample with P positive examples and N negative examples and their ROC graphs are plotted. It is found that the ROC of A dominates that of B, i.e. for every FP rate, TP rate(A) $\geq$ TP rate(B). What is the relationship between the precision-recall graphs of A and B on the same sample? (10 points)
 
 Answer: 
+<<<<<<< HEAD
 The precision-recall graph is constructed using two metrics: True Positive Rate $(TPR)$ and Precision
 
 Y-Axis: Precision = $\frac{TP}{TP+FP}$
@@ -192,6 +193,10 @@ If for each decrease in the confidence threshold of our learning model the $TPR(
 This should imply that the False Positive value for model A is also less than the False Positive value for model B.
 Knowing this we can say that the Precision of model A dominates that of model B: $Precision(A) \geq Precision(B)$ 
 
+=======
+   There is a consistent and positive association between the precision-recall curves of the two classifiers when classifier A's ROC curve dominates classifier B's. To be more precise, on the same sample, classifier A's precision-recall curve will constantly perform better than classifier B's. This implies that classifier A will usually provide greater precision values for equivalent recall levels or that classifier A will attain higher recall values than classifier B for equivalent precision levels.
+   Essentially, classifier A's dominance in the ROC space and its stronger ability to distinguish between positive and negative instances across a range of threshold values translate into a consistently improved precision-recall curve. This connection supports classifier A's overall superiority in classification performance on the provided sample by highlighting how well it detects true positives while minimizing false positives.
+>>>>>>> 9e26453896bde0b65ac8e7072908f583ac6d7c13
 
 7.	Prove that an ROC graph must be monotonically increasing. (10 points)
 
