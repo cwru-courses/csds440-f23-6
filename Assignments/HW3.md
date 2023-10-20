@@ -108,9 +108,9 @@ If the distribution of labels for a given set of $n$ examples is perfectly rando
 |$x_{n}$|-/+|$c_{n} = c_{n-1}-\epsilon$|0.5|0.5|
 
 
-$TPR$ Metric Analysis: Probability of guessing a label correctly is 0.5 therefore all true positive instances $TP = \frac{1}{2}(AllPos)$ and the rest of the positive labels will be missed, $FN = \frac{1}{2}(AllPos)$ meaning $TPR = 0.5$ in all possible examples
+$TPR$ Metric Analysis: Probability of guessing a label correctly is 0.5 therefore all true positive instances $TP = \frac{1}{2}(AllPos)$ and the rest of the positive labels will be missed, $FN = \frac{1}{2}(AllPos)$ meaning $TPR = \frac{0.5}{0.5+0.5} = 0.5$ in all possible examples
 
-$FPR$ Metric Analysis: Probability of guessing a label correctly is 0.5 therefore all true negative instances $TN = \frac{1}{2}(AllNeg)$ and the rest of the negative labels will be missed, $FP = \frac{1}{2}(AllPos)$ meaning $FPR = 0.5$ in all possible examples
+$FPR$ Metric Analysis: Probability of guessing a label correctly is 0.5 therefore all true negative instances $TN = \frac{1}{2}(AllNeg)$ and the rest of the negative labels will be missed, $FP = \frac{1}{2}(AllPos)$ meaning $FPR = \frac{0.5}{0.5+0.5} = 0.5$ in all possible examples
 
 This gives our ROC curve a constant slope of $\frac{\frac{1}{2}}{\frac{1}{2}}= 1$
 A constant slope of equal $x$ and $y$ axis growth gives us a diagonal line. 
