@@ -127,6 +127,7 @@ $-------------------------------$
 
 Three of the above attributes have equal information gain and one has 0. Technically our algorithm can pick any one of the three as a split. For the sake of simplicity I will say that the decision tree will have its root node split on attribute $A1$.
 
+
 3.	There is a difference between the splits for Q1 and Q2. Can you explain what is happening? (10 points)
 
 Answer:
@@ -174,10 +175,26 @@ In conclusion, there are distinct trade-offs between preference bias and restric
 5.	Person X wishes to evaluate the performance of a learning algorithm on a set of $n$ examples ( $n$ large). X employs the following strategy:  Divide the $n$ examples randomly into two equal-sized disjoint sets, A and B. Then train the algorithm on A and evaluate it on B. Repeat the previous two steps for $N$ iterations ( $N$ large), then average the $N$ performance measures obtained. Is this sound empirical methodology? Explain why or why not. (10 points)
 
 Answer: 
+This methodology is generally sound. For each training and validation run, we are training a new concept off of the set A and then testing that concept on B. This allows us to test our training methodology in discrete segments. 
+
+There are some possible issues that ought to be considered. The methodology described above randomly generates subsets of data for training and validation. During the generation of these subsets nothing is seemingly done to ensure that they are representative of the data in our superset. This could mean our learned concept in each test and validation run may score well, but fail to generalize when applied to data not found in sets A and B. What would be better possibly would be to partition $k$ number of equal sized subsets. Train our model on set A and then test on each of the $k$ subsets. This way, each little subset is brand new and unseen data unmixed with our training set. 
+
 
 6.	Two classifiers A and B are evaluated on a sample with P positive examples and N negative examples and their ROC graphs are plotted. It is found that the ROC of A dominates that of B, i.e. for every FP rate, TP rate(A) $\geq$ TP rate(B). What is the relationship between the precision-recall graphs of A and B on the same sample? (10 points)
 
 Answer: 
+The precision-recall graph is constructed using two metrics: True Positive Rate $(TPR)$ and Precision
+
+Y-Axis: Precision = $\frac{TP}{TP+FP}$
+X-Axis: $TPR = \frac{TP}{TP+FN}$
+
+For the ROC Graph we use $TPR$ and $FPR$
+$FPR  = \frac{FP}{FP+TN}$
+
+If for each decrease in the confidence threshold of our learning model the $TPR(A) \geq TPR(B)$ this means that the model A has a higher number of correctly predicted positive values than model B.  
+This should imply that the False Positive value for model A is also less than the False Positive value for model B.
+Knowing this we can say that the Precision of model A dominates that of model B: $Precision(A) \geq Precision(B)$ 
+
 
 7.	Prove that an ROC graph must be monotonically increasing. (10 points)
 
@@ -202,7 +219,6 @@ Either case, causes the curve to move up, to the right, or both.
 The only case in which the curve moves downwards, is if $TPR$ decreased while $FPR$ increased. Given that $TPR$ only ever increases with a decreasing confidence threshold, this case is impossible. 
 
 Therefore, the ROC curve is monotonically increasing, as it is impossible for a decrease in the confidence threshold to cause a decrease in $TPR$.
-
 
 
 8.	Prove that the ROC graph of a random classifier that ignores attributes and guesses each class with equal probability is a diagonal line. (10 points)
