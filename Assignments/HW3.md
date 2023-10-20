@@ -35,16 +35,27 @@ Label Entropy:
 $H(L) = -\frac{1}{2}log_{2}(\frac{1}{2}) -\frac{1}{2}log_{2}(\frac{1}{2}) = 1.0$
 
 Attribute Entropies:
+
 $H(L| A1) = P(A1=F)H(L|A1=F) + P(A1=T)H(L|A1=T)$
+
 $H(L| A1) = \frac{1}{2}(-\frac{1}{2}log_{2}(\frac{1}{2}) -\frac{1}{2}log_{2}(\frac{1}{2})) +  \frac{1}{2}(-\frac{1}{2}log_{2}(\frac{1}{2}) -\frac{1}{2}log_{2}(\frac{1}{2})) = 1.0$
+
 $-------------------------------$
+
 $H(L| A2) = P(A2=F)H(L|A2=F) + P(A2=T)H(L|A2=T)$
+
 $H(L| A2) = \frac{1}{2}(-\frac{1}{2}log_{2}(\frac{1}{2}) -\frac{1}{2}log_{2}(\frac{1}{2})) +  \frac{1}{2}(-\frac{1}{2}log_{2}(\frac{1}{2}) -\frac{1}{2}log_{2}(\frac{1}{2})) = 1.0$
+
 $-------------------------------$
+
 $H(L| A3) = P(A3=F)H(L|A3=F) + P(A3=T)H(L|A3=T)$
+
 $H(L| A3) = \frac{1}{2}(-\frac{1}{2}log_{2}(\frac{1}{2}) -\frac{1}{2}log_{2}(\frac{1}{2})) +  \frac{1}{2}(-\frac{1}{2}log_{2}(\frac{1}{2}) -\frac{1}{2}log_{2}(\frac{1}{2})) = 1.0$
+
 $-------------------------------$
+
 $H(L| A4) = P(A4=F)H(L|A4=F) + P(A4=T)H(L|A4=T)$
+
 $H(L| A4) = \frac{1}{2}(-\frac{1}{2}log_{2}(\frac{1}{2}) -\frac{1}{2}log_{2}(\frac{1}{2})) +  \frac{1}{2}(-\frac{1}{2}log_{2}(\frac{1}{2}) -\frac{1}{2}log_{2}(\frac{1}{2})) = 1.0$
 
 
