@@ -42,6 +42,11 @@ Answer:
 
 Answer:
   Learning algorithms use preference and restriction biases as two tactics to prevent overfitting, although they work differently and have advantages and disadvantages of their own. When comparing the advantages and disadvantages of preference and restriction bias together:
+  
+**Pros:**
+
+**Generalization:**
+**Preference Bias:simplifies models and reduces overfitting to noisy data, improving generalisation.**
 
 
   
