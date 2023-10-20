@@ -101,32 +101,15 @@ class DecisionTree(Classifier):
             warnings.warn('This is for demonstration purposes only.')
             
         
+        #print(X)
         
+        #print(y)
         
-        #print(len(split_criterion))
-        #print(split_criterion[13])
-        #print(X[:, 13])
-        # [100. 114. 110. ...  85. 107.  80.]
+        entropies = util.calculate_column_entropy(self._schema, X, y, split_criterion)
         
-        #entropy_13 = util.entropy_continuous(X[:, 13], y, split_criterion[13])
-        
-        #print(split_criterion[13])
-        
-        #return 0
-        
-            
-        #for i in range(len(split_criterion)):
-            #print(self._schema[i].name)
-            #print(i, split_criterion[i])
-            
-            
-        #chip_13_ 1
-            
-        
-        #entropies = util.calculate_column_entropy(self._schema, X, y, split_criterion)
-        
-        #print("\n".join([f"{i+1}. {entropy}" for i, entropy in enumerate(entropies)]))
-                
+        print(entropies)
+         
+         
         infogains = util.infogain(self._schema, X, y, split_criterion)
         
         # Masked infogains is the list of infogains that have not been used in the tree
@@ -169,28 +152,10 @@ class DecisionTree(Classifier):
             majority_label = util.majority_label(y)
             # returns leafe node
             return Node(schema = self._schema[max_ig_index], tests=None, class_label=majority_label)
-            
-        # Printing the schema of each masked feature
-        #print('Masked Features:')
-        #for i in range(len(self._schema)):
-            #if i in self.masked_indeces:
-                #print(self._schema[i].name)
-                #print(self._schema[i].ftype)
-                
-        #print('-------------------------')
         
-        # Printing the schema of each unnmasked feature
-        #print('Unmasked Features:')
-        #for i in range(len(self._schema)):
-            #if i not in self.masked_indeces:
-                #print(self._schema[i].name)
-                #print(self._schema[i].ftype)
-                
-        #print(root.get_schema().name) 
-                
-        #return 0
-    
-        #print("-------------------------")
+        return root
+        
+        '''
         # Constructing children of root node
         # Testing construction of a child node manually first
         for test in root.get_tests():
@@ -235,6 +200,8 @@ class DecisionTree(Classifier):
             
             #infogains = util.infogain(self._schema, mask_X, mask_y, split_criterion)
         return root
+        
+        '''
     
     def predict(self, X: np.ndarray) -> np.ndarray:
         """
@@ -296,48 +263,6 @@ class DecisionTree(Classifier):
                 predictions[i] = current_node.get_class_label()
                         
         return predictions 
-    
-                
-        
-        # This '.index' attribute does not work. It is not a list. It is a Feature object
-        #index = self.root.get_schema().index
-        
-        '''
-        for i in range(n_examples):
-            current_node = self.root
-            while not current_node.is_leaf:
-                # Get the value of the feature specified by the current node's schema.
-                feature_value = X[i, current_node.get_schema().index]
-    
-                if current_node.get_schema().ftype == FeatureType.DISCRETE:
-                    # If the feature is discrete
-                    if feature_value in current_node.get_children():
-                        current_node = current_node.get_child(feature_value)
-                    else:
-                        # Handle the case where the feature value is not in any child node
-                        # (e.g., return the majority class label or backtrack).
-                        predictions[i] = self._majority_label  # Use the majority label as a default
-                        break
-    
-                else:  # Assuming it's a continuous feature
-                    found = False
-                    for threshold in current_node.get_tests():
-                        if feature_value <= threshold:
-                            current_node = current_node.get_child(threshold)
-                            found = True
-                            break
-    
-                    if not found:
-                        # Handle the case where the feature value exceeds all thresholds.
-                        predictions[i] = self._majority_label  # Use the majority label as a default
-                        break
-    
-            # Assign the final class label predicted by the decision tree.
-            predictions[i] = current_node.get_class_label()
-    
-        return predictions
-        '''
-
         
         
 
@@ -482,10 +407,12 @@ def dtree(data_path: str, tree_depth_limit: int, use_cross_validation: bool = Tr
         decision_tree = DecisionTree(schema)
         decision_tree.fit(X_train, y_train)
         
+    #print(decision_tree.root.get_schema().name)
+        
     #print(X_train)
     #print(X_test)
     
-    print_tree(decision_tree.root)
+    #print_tree(decision_tree.root)
     #y_hat = decision_tree.predict(X_test)
     #print(X_test)
     
@@ -494,11 +421,7 @@ def dtree(data_path: str, tree_depth_limit: int, use_cross_validation: bool = Tr
     #print(y_hat)
     
     
-<<<<<<< HEAD
-    print_tree(decision_tree.root)
-=======
     #evaluate_and_print_metrics(decision_tree, X_test, y_test)
->>>>>>> bba8292ca554efebf82770645bd2aea760af2eea
 
 
 

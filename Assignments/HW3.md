@@ -52,7 +52,14 @@ Answer:
 
 7.	Prove that an ROC graph must be monotonically increasing. (10 points)
 
-Answer:
+Answer: 
+An ROC curve is constructed using two metrics: True Positive Rate (TPR) and False Positive Rate (FPR)
+
+Each new point along the curve is ($TPR, FPR)$.
+
+We go from 
+
+
 
 8.	Prove that the ROC graph of a random classifier that ignores attributes and guesses each class with equal probability is a diagonal line. (10 points)
 

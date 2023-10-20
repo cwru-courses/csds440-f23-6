@@ -11,20 +11,17 @@ from sting.data import FeatureType
 from decimal import Decimal
 
 
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.metrics import accuracy_score
+from sklearn.preprocessing import OneHotEncoder
+
+from sklearn.tree import export_graphviz
+import graphviz
+
 import util
 
 
 def dtree(data_path: str, tree_depth_limit: int, use_cross_validation: bool = True, information_gain: bool = True):
-    """
-    It is highly recommended that you make a function like this to run your program so that you are able to run it
-    easily from a Jupyter notebook. This function has been PARTIALLY implemented for you, but not completely!
-
-    :param data_path: The path to the data.
-    :param tree_depth_limit: Depth limit of the decision tree
-    :param use_cross_validation: If True, use cross validation. Otherwise, run on the full dataset.
-    :param information_gain: If true, use information gain as the split criterion. Otherwise use gain ratio.
-    :return:
-    """
 
     # last entry in the data_path is the file base (name of the dataset)
     path = os.path.expanduser(data_path).split(os.sep)
@@ -38,23 +35,18 @@ def dtree(data_path: str, tree_depth_limit: int, use_cross_validation: bool = Tr
         datasets = ((X, y, X, y),)
 
     for X_train, y_train, X_test, y_test in datasets:
-        print(X_train)
-        #decision_tree = DecisionTree(schema)
-        #decision_tree.fit(X_train, y_train)
+        #print(X_train)
         
-    #print(X_train)
-    #print(X_test)
+        # Train the decision tree
+        criterion = 'entropy'
+        clf = DecisionTreeClassifier(criterion=criterion, max_depth=tree_depth_limit if tree_depth_limit > 0 else None)
+        clf.fit(X_train, y_train)
+
+    dot_data = export_graphviz(clf, out_file=None, filled=True, rounded=True, special_characters=True)  
+    graph = graphviz.Source(dot_data) 
+    graph.view()
     
-    #print_tree(decision_tree.root)
-    #y_hat = decision_tree.predict(X_test)
-    #print(X_test)
-    
-    #print(y_test)
-    
-    #print(y_hat)
-    
-    
-    #evaluate_and_print_metrics(decision_tree, X_test, y_test)
+        
 
 
 
