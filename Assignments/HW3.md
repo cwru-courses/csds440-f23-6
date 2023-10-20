@@ -144,15 +144,36 @@ Answer:
 4.	Restriction biases of learning algorithms prevent overfitting by restricting the hypothesis space, while preference biases prevent overfitting by preferring simpler concepts but not necessarily restricting the hypothesis space. Discuss the pros and cons of preference vs restriction biases. (10 points)
 
 Answer:
-  Learning algorithms use preference and restriction biases as two tactics to prevent overfitting, although they work differently and have advantages and disadvantages of their own. When comparing the advantages and disadvantages of preference and restriction bias together:
+   Learning algorithms use preference and restriction biases as two tactics to prevent overfitting, although they work differently and have advantages and disadvantages of their own. When comparing the advantages and disadvantages of preference and restriction bias together:
   
-**Pros:**
+**Preference Bias vs. Restriction Bias:**
 
-**Generalization:**
-**Preference Bias:simplifies models and reduces overfitting to noisy data, improving generalisation.**
+**Flexibility vs. Robustness:**
 
+Preference Bias: Since it leaves up all possibilities, it provides greater flexibility. If needed, it can adjust and choose more intricate models.
 
-  
+Restriction Bias: It prevents overfitting to noise by explicitly capping the number of hypotheses the algorithm can produce, which adds resilience. If patterns are truly complicated and outside of the constrained domain, it may not be able to adjust to them.
+
+**Computational Complexity:**
+
+Preference Bias: can require more computing power because it may need to examine a larger space of hypotheses.
+
+Restriction Bias: Due to the limited space, implementations are typically easier to implement and may require less computing power.
+
+**Risk of Overfitting:**
+
+Preference Bias: Even while it usually favours simpler models, overfitting can nevertheless occur if an overly complicated model is erroneously chosen.
+
+Restriction Bias: If the real hypothesis, or a close approximation, is outside the confined space, there is a greater chance of underfitting.
+
+**Adaptability to Availability of Data:**
+
+Preference Bias: More adaptable. Preference biases have the ability to move towards more complicated models as additional data become available.
+
+Restriction Bias: Less adaptable. The algorithm may not be able to identify complicated patterns in the data if they are not included in the narrow hypothesis space.
+
+In conclusion, there are distinct trade-offs between preference bias and restriction bias. Preference bias is flexible and adaptive; it can select complex models but prefers simpler ones. Although restriction bias is more reliable and could be computationally efficient, underfitting is a possibility. To take use of each bias's advantages, a combination of the two could be used in a variety of real-world situations.
+
 
 5.	Person X wishes to evaluate the performance of a learning algorithm on a set of $n$ examples ( $n$ large). X employs the following strategy:  Divide the $n$ examples randomly into two equal-sized disjoint sets, A and B. Then train the algorithm on A and evaluate it on B. Repeat the previous two steps for $N$ iterations ( $N$ large), then average the $N$ performance measures obtained. Is this sound empirical methodology? Explain why or why not. (10 points)
 
