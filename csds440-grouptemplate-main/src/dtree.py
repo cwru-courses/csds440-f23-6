@@ -425,6 +425,12 @@ def evaluate_and_print_metrics(dtree: DecisionTree, X: np.ndarray, y: np.ndarray
     acc = util.accuracy(y, y_hat)
     print(f'Accuracy: {acc:.2f}')
     
+    precision = util.precision(y, y_hat)
+    print(f'Precision: {precision:.2f}')
+    
+    recall = util.recall(y, y_hat)
+    print(f'Recall: {recall:.2f}')
+    
     #print('Size:', 0)
     #print('Maximum Depth:', 0)
     

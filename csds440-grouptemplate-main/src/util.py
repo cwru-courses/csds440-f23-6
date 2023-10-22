@@ -143,7 +143,7 @@ def majority_label(labels):
 
 def minority_label(labels):
     unique_values, counts = np.unique(labels, return_counts=True)
-    return unique_values[np.argmin(counts)]
+    return unique_values[np.argmax(counts)]
 
 def infogain(schema, data, labels, split_criterion):
     # Get the entropy of the labels w.r.t themself
@@ -214,17 +214,68 @@ def accuracy(y: np.ndarray, y_hat: np.ndarray) -> float:
 
 
 def precision(y: np.ndarray, y_hat: np.ndarray) -> float:
-    raise NotImplementedError()
-
+    # True positives are cases when the actual label and the predicted label are both 1.
+    true_positives = np.sum((y == 1) & (y_hat == 1))
+    # Predicted positives are cases when the predicted label is 1.
+    predicted_positives = np.sum(y_hat == 1)
+    return true_positives / predicted_positives if predicted_positives > 0 else 0.0
+    
 
 def recall(y: np.ndarray, y_hat: np.ndarray) -> float:
-    raise NotImplementedError()
-
+    # True positives are cases when the actual label and the predicted label are both 1.
+    true_positives = np.sum((y == 1) & (y_hat == 1))
+    # Actual positives are cases when the actual label is 1.
+    actual_positives = np.sum(y == 1)
+    return true_positives / actual_positives if actual_positives > 0 else 0.0
+    
 
 def roc_curve_pairs(y: np.ndarray, p_y_hat: np.ndarray) -> Iterable[Tuple[float, float]]:
-    raise NotImplementedError()
+    # Sort the predicted probabilities and corresponding true labels in descending order.
+    desc_score_indices = np.argsort(p_y_hat)[::-1]
+    p_y_hat = p_y_hat[desc_score_indices]
+    y = y[desc_score_indices]
 
+    # Initialize variables
+    fpr_values = [0]
+    tpr_values = [0]
+    n_pos = np.sum(y)
+    n_neg = len(y) - n_pos
+    tp = 0
+    fp = 0
+
+    # Iterate over all unique thresholds in descending order
+    for threshold in np.unique(p_y_hat)[::-1]:
+        # Update counts of true positive and false positive
+        for i in range(len(p_y_hat)):
+            if p_y_hat[i] > threshold:
+                if y[i] == 1:
+                    tp += 1
+                else:
+                    fp += 1
+            else:
+                break  # since the arrays are sorted, no need to continue the loop after crossing the threshold
+
+        # Calculate false positive rate and true positive rate
+        fpr = fp / n_neg if n_neg != 0 else 0
+        tpr = tp / n_pos if n_pos != 0 else 0
+
+        # Append to the lists
+        fpr_values.append(fpr)
+        tpr_values.append(tpr)
+
+    return list(zip(fpr_values, tpr_values))
+    
+    
 
 def auc(y: np.ndarray, p_y_hat: np.ndarray) -> float:
     roc_pairs = roc_curve_pairs(y, p_y_hat)
-    raise NotImplementedError()
+        
+    # Initialize area under curve
+    auc_value = 0.0
+    
+    # Calculate AUC using the Trapezoidal rule
+    for i in range(1, len(roc_pairs)):
+        auc_value += (roc_pairs[i][0] - roc_pairs[i - 1][0]) * (roc_pairs[i][1] + roc_pairs[i - 1][1])
+    auc_value *= 0.5  # since we're applying the trapezoidal rule
+    
+    return auc_value
