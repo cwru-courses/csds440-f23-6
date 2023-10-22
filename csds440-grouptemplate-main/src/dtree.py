@@ -124,7 +124,11 @@ class DecisionTree(Classifier):
         #max_ig_index = np.where(infogains == masked_infogains[np.argmax(masked_infogains)])[0][0]
         max_ig_index = max_gain_tuple[0]
         
-        #print(self.masked_indices)     
+        #print('Masked Indices:', self.masked_indices)     
+        
+        #print('Infogains:', infogains)
+        
+        #print('------------------------')
         
         
         if infogains[max_ig_index] == 0:
@@ -146,10 +150,6 @@ class DecisionTree(Classifier):
         #root = Node(self._schema[max_ig_index], split_criterion[max_ig_index]) # Passing the schema of the root feature only, not general schema
         root = Node(schema = self._schema[max_ig_index], tests = split_criterion[max_ig_index], class_label = None) # Passing the schema of the root feature only, not general schema
         
-        #self.features_in_tree.append(self._schema[max_ig_index].name)
-        if max_ig_index not in self.masked_indices:
-            self.masked_indices.append(max_ig_index)
-        
         # If the main root of the tree has yet been initialized, set it to the current root
         if self.root is None:
             self.root = root
@@ -166,11 +166,14 @@ class DecisionTree(Classifier):
         # Constructing children of root node
         
         for test in root.get_tests():
-                        
+                                            
+
+            
             # Create masked data and labels for the current test only have rows in which the root feature is equal to the test
                     
             # If the root feature is continuous 
             if self._schema[max_ig_index].ftype == FeatureType.CONTINUOUS:
+                
                 # For continuous attributes, split based on threshold
                 mask1 = X[:, max_ig_index] <= test
                 mask2 = X[:, max_ig_index] > test
@@ -182,7 +185,7 @@ class DecisionTree(Classifier):
                 # Data for greater test
                 mask_X2 = X[mask2]
                 mask_y2 = y[mask2]
-                
+                    
                 
                 if len(self.masked_indices) == len(self._schema): # no more attributes to test
                     child1 = Node(schema = None, tests = None, class_label = util.majority_label(mask_y1))
@@ -191,7 +194,8 @@ class DecisionTree(Classifier):
                     root.add_child(test, child1, '<=')
                     root.add_child(test, child2, '>')
                 
-                else:   
+                else:                    
+                    
                     # If all label values are the same under the threshold, then create a leaf node
                     if len(np.unique(mask_y1)) == 1:
                         # Create a leaf node
@@ -244,18 +248,10 @@ class DecisionTree(Classifier):
                     #print("RECURSIVE CALL")
                     child = self.fit(mask_X, mask_y)
                     root.add_child(test, child)
-            
-            #entropies = util.calculate_column_entropy(self._schema, mask_X, mask_y, split_criterion)
-            
-            #infogains = util.infogain(self._schema, mask_X, mask_y, split_criterion)
-            
-            
-            
-            # Checking constructied children of most recent root
-            #if self._schema[max_ig_index].ftype == FeatureType.CONTINUOUS:
-                #print(root.get_schema().name)
-                
-                #print(root.get_children())
+                    
+        
+        if max_ig_index not in self.masked_indices:
+            self.masked_indices.append(max_ig_index)
                 
             
         return root
@@ -275,13 +271,6 @@ class DecisionTree(Classifier):
         n_examples = X.shape[0]
         # Initializing a NumPy array to store the predicted class labels for each example.
         predictions = np.empty(n_examples, dtype=int)
-        
-        #print(self._schema)
-        #print(self.root.get_schema().name)
-        
-        #index = self._schema.index(self.root.get_schema())
-        
-        #print(self._schema[index].name)
         
         
         for i in range (n_examples):
@@ -474,7 +463,7 @@ def dtree(data_path: str, tree_depth_limit: int, use_cross_validation: bool = Tr
     #print(X_train)
     #print(X_test)
     
-    print_tree(decision_tree.root)
+    #print_tree(decision_tree.root)
     #y_hat = decision_tree.predict(X_test)
     #print(X_test)
     
