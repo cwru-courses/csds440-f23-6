@@ -15,8 +15,6 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import accuracy_score
 from sklearn.preprocessing import OneHotEncoder
 
-from sklearn.tree import export_graphviz
-import graphviz
 
 import util
 
