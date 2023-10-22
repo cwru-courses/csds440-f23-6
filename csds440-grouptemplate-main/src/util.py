@@ -141,6 +141,10 @@ def majority_label(labels):
     unique_values, counts = np.unique(labels, return_counts=True)
     return unique_values[np.argmax(counts)]
 
+def minority_label(labels):
+    unique_values, counts = np.unique(labels, return_counts=True)
+    return unique_values[np.argmin(counts)]
+
 def infogain(schema, data, labels, split_criterion):
     # Get the entropy of the labels w.r.t themself
     entropy_labels = calculate_entropy(labels)

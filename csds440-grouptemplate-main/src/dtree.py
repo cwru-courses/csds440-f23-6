@@ -27,8 +27,11 @@ class Node():
         
     # Adds a child node to the current node given a certain test
     # all children will have an associated test, from the parent node
-    def add_child(self, test, node):
-        self.children[test] = node
+    def add_child(self, test, node, condition=None):
+        if condition is not None:  # This is for continuous attributes
+            self.children[(test, condition)] = node
+        else:  # This is for discrete attributes
+            self.children[test] = node
         
     # Returns the children of the node
     def get_children(self):
@@ -105,9 +108,9 @@ class DecisionTree(Classifier):
         
         #print(y)
         
-        entropies = util.calculate_column_entropy(self._schema, X, y, split_criterion)
+        #entropies = util.calculate_column_entropy(self._schema, X, y, split_criterion)
         
-        print(entropies)
+        #print(entropies)
          
          
         infogains = util.infogain(self._schema, X, y, split_criterion)
@@ -151,13 +154,11 @@ class DecisionTree(Classifier):
             #print("Leaf Name:", self._schema[max_ig_index].name)
             majority_label = util.majority_label(y)
             # returns leafe node
-            return Node(schema = self._schema[max_ig_index], tests=None, class_label=majority_label)
+            return Node(schema = self._schema[max_ig_index], tests=None, class_label=majority_label)        
+                
         
-        return root
-        
-        '''
         # Constructing children of root node
-        # Testing construction of a child node manually first
+        
         for test in root.get_tests():
             #print("Current test:", test)
             
@@ -166,42 +167,91 @@ class DecisionTree(Classifier):
             # If the root feature is continuous 
             if self._schema[max_ig_index].ftype == FeatureType.CONTINUOUS:
                 # For continuous attributes, split based on threshold
-                mask = X[:, max_ig_index] <= test
-            
+                mask1 = X[:, max_ig_index] <= test
+                mask2 = X[:, max_ig_index] > test
+
+                # Data for lesser than or equal test
+                mask_X1 = X[mask1]
+                mask_y1 = y[mask1]
+                
+                # Data for greater test
+                mask_X2 = X[mask2]
+                mask_y2 = y[mask2]
+                
+                
+                if len(self.masked_indeces) == len(self._schema): # no more attributes to test
+                    #print("LEAF ACTIVATED")
+                    child1 = Node(schema = None, tests = None, class_label = util.majority_label(mask_y1))
+                    child2 = Node(schema = None, tests = None, class_label = util.majority_label(mask_y2))
+
+                    root.add_child(test, child1, '<=')
+                    root.add_child(test, child2, '>')
+                        
+                # if all label values are the same under the threshold, then create a leaf node
+                #MIGHT WANNA SEPARATE THESE ACTUALLY
+                elif len(np.unique(mask_y1)) == 1 or len(np.unique(mask_y2)) == 1:
+                    #print("LEAF ACTIVATED")
+                    
+                    
+                    #print("Case 2")
+                    
+                    if len(np.unique(mask_y1)) == 1:
+                        mask_labels = mask_y1
+                    else:
+                        mask_labels = mask_y2
+                    
+                    # Create a leaf node
+                    child1 = Node(schema = None, tests = None, class_label = util.majority_label(mask_labels))
+                    child2 = Node(schema = None, tests = None, class_label = util.minority_label(mask_labels))
+                    
+                    root.add_child(test, child1, '<=')
+                    root.add_child(test, child2, '>')
+
+                
+                # Recursive Call
+                elif len(np.unique(mask_y1)) != 1 and len(np.unique(mask_y2)) != 1:
+                                        
+                    child1 = self.fit(mask_X1, mask_y1)
+                    child2 = self.fit(mask_X2, mask_y2)
+                    
+                    root.add_child(test, child1, '<=')
+                    root.add_child(test, child2, '>')
+                    
+           
+           
             # If the feature is discrete
             else:
                 # For discrete attributes, split based on equality
                 mask = X[:, max_ig_index] == test
             
-            mask_X = X[mask]
-            mask_y = y[mask]
+                mask_X = X[mask]
+                mask_y = y[mask]
                         
-            # if all label values are the same, then create a leaf node
-            if len(np.unique(mask_y)) == 1:
-                #print("LEAF ACTIVATED")
-                #root.set_as_leaf(util.majority_label(mask_y))
-                # Create a leaf node
-                child = Node(schema = None, tests = None, class_label = util.majority_label(mask_y))
-                root.add_child(test, child)
-            
-            elif len(self.masked_indeces) == len(self._schema): # no more attributes to test
-                #print("LEAF ACTIVATED")
-                child = Node(schema = None, tests = None, class_label = util.majority_label(mask_y))
-                root.add_child(test, child)
-
-            
-            # recursive call to fit covered by else case
-            else:
-                #print("RECURSIVE CALL")
-                child = self.fit(mask_X, mask_y)
-                root.add_child(test, child)
+                # if all label values are the same, then create a leaf node
+                if len(np.unique(mask_y)) == 1:
+                    #print("LEAF ACTIVATED")
+                    #root.set_as_leaf(util.majority_label(mask_y))
+                    # Create a leaf node
+                    child = Node(schema = None, tests = None, class_label = util.majority_label(mask_y))
+                    root.add_child(test, child)
+                
+                elif len(self.masked_indeces) == len(self._schema): # no more attributes to test
+                    #print("LEAF ACTIVATED")
+                    child = Node(schema = None, tests = None, class_label = util.majority_label(mask_y))
+                    root.add_child(test, child)
+                
+                # recursive call to fit covered by else case
+                else:
+                    #print("RECURSIVE CALL")
+                    child = self.fit(mask_X, mask_y)
+                    root.add_child(test, child)
             
             #entropies = util.calculate_column_entropy(self._schema, mask_X, mask_y, split_criterion)
             
             #infogains = util.infogain(self._schema, mask_X, mask_y, split_criterion)
         return root
         
-        '''
+        
     
     def predict(self, X: np.ndarray) -> np.ndarray:
         """
@@ -340,6 +390,38 @@ class DecisionTree(Classifier):
         return test_dic 
 
 
+'''
+def print_tree(node, depth=0):
+    """
+    Recursive function to print the structure of the decision tree.
+    
+    Args:
+        node: The current node to print.
+        depth: Current depth of the tree (used for indentation).
+    """
+    # Base case: If the node is a leaf
+    if node.is_leaf:
+        print("  " * depth + f"Leaf: Class label = {node.get_class_label()}")
+        return
+    
+    # If the node is not a leaf
+    print("  " * depth + f"Node: Schema = {node.get_schema().name}, Tests = {node.get_tests()}")
+    
+    # Recursively print children
+    for key, child_node in node.get_children().items():
+        # Check if the key is a tuple (for continuous attributes)
+        if isinstance(key, tuple):
+            test, condition = key
+            print("  " * (depth + 1) + f"Test = {test}, Condition = {condition}")
+        else:
+            print("  " * (depth + 1) + f"Test = {key}")
+        
+        if isinstance(child_node, Node):
+            print_tree(child_node, depth + 2)
+        else:
+            print("  " * (depth + 2) + f"ERROR: Child node of type {type(child_node).__name__} found, expected Node object")
+'''
+
 
 def print_tree(node, depth=0):
     """
@@ -358,9 +440,19 @@ def print_tree(node, depth=0):
     print("  " * depth + f"Node: Schema = {node.get_schema().name}, Tests = {node.get_tests()}")
     
     # Recursively print children
-    for test, child_node in node.get_children().items():
-        print("  " * (depth + 1) + f"Test = {test}")
-        print_tree(child_node, depth + 2)
+    for key, child_node in node.get_children().items():
+        # Check if the key is a tuple (for continuous attributes)
+        if isinstance(key, tuple):
+            test, condition = key
+            print("  " * (depth + 1) + f"Test = {test}, Condition = {condition}")
+        else:
+            print("  " * (depth + 1) + f"Test = {key}")
+        
+        if isinstance(child_node, Node):
+            print_tree(child_node, depth + 2)
+        else:
+            print("  " * (depth + 2) + f"ERROR: Child node of type {type(child_node).__name__} found, expected Node object")
+
 
                                                 
 
