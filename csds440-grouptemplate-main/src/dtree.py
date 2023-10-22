@@ -423,9 +423,11 @@ def evaluate_and_print_metrics(dtree: DecisionTree, X: np.ndarray, y: np.ndarray
 
     y_hat = dtree.predict(X)
     acc = util.accuracy(y, y_hat)
-    print(f'Accuracy:{acc:.2f}')
+    print(f'Accuracy: {acc:.2f}')
+    
     #print('Size:', 0)
     #print('Maximum Depth:', 0)
+    
     print('First Feature:', dtree.root.get_schema().name)
 
     #raise NotImplementedError()
@@ -472,7 +474,7 @@ def dtree(data_path: str, tree_depth_limit: int, use_cross_validation: bool = Tr
     #print(y_hat)
     
     
-    #evaluate_and_print_metrics(decision_tree, X_test, y_test)
+    evaluate_and_print_metrics(decision_tree, X_test, y_test)
 
 
 
