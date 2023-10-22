@@ -47,7 +47,7 @@ class Node():
     
     # Returns the child node associated with the test
     def get_child(self, test, condition=None):
-        if condition is not None:
+        if condition is not None:            
             return self.children[(test, condition)]
         else:
             return self.children[test]
@@ -80,15 +80,14 @@ class DecisionTree(Classifier):
         
         self.root = None
         self.features_in_tree = []
-        self.masked_indeces = []
+        self.masked_indices = []
         
         self.data = None
         self.labels = None
 
         
 
-    def fit(self, X: np.ndarray, y: np.ndarray, weights: Optional[np.ndarray] = None) -> None:        
-        
+    def fit(self, X: np.ndarray, y: np.ndarray, weights: Optional[np.ndarray] = None) -> None:
         #print('+------------------------+')
         """
         This is the method where the training algorithm will run.
@@ -106,9 +105,7 @@ class DecisionTree(Classifier):
             #split_criterion = self._determine_split_criterion(X, y)
         except NotImplementedError:
             warnings.warn('This is for demonstration purposes only.')
-            
-        print(split_criterion[1])
-        
+                
         #entropies = util.calculate_column_entropy(self._schema, X, y, split_criterion)
         
         #print(entropies)
@@ -116,13 +113,19 @@ class DecisionTree(Classifier):
         infogains = util.infogain(self._schema, X, y, split_criterion)
         
         # Masked infogains is the list of infogains that have not been used in the tree
-        masked_infogains = [infogains[i] for i in range(len(infogains)) if i not in self.masked_indeces]   
+        #masked_infogains = [infogains[i] for i in range(len(infogains)) if i not in self.masked_indices]  
+        masked_infogains = [(i, gain) for i, gain in enumerate(infogains) if i not in self.masked_indices]
         
-        #print(self.masked_indeces)     
+        # Find the tuple with the maximum gain in the masked list
+        max_gain_tuple = max(masked_infogains, key=lambda x: x[1])
         
-        #max_ig_index = np.argmax(infogains)
         # Masked ig index is the index of the feature with the highest infogain that has not been used in the tree
-        max_ig_index = np.where(infogains == masked_infogains[np.argmax(masked_infogains)])[0][0]
+        # The first element of this tuple is the index in the original list
+        #max_ig_index = np.where(infogains == masked_infogains[np.argmax(masked_infogains)])[0][0]
+        max_ig_index = max_gain_tuple[0]
+        
+        #print(self.masked_indices)     
+        
         
         if infogains[max_ig_index] == 0:
             #print("LEAF ACTIVATED")
@@ -144,15 +147,15 @@ class DecisionTree(Classifier):
         root = Node(schema = self._schema[max_ig_index], tests = split_criterion[max_ig_index], class_label = None) # Passing the schema of the root feature only, not general schema
         
         #self.features_in_tree.append(self._schema[max_ig_index].name)
-        if max_ig_index not in self.masked_indeces:
-            self.masked_indeces.append(max_ig_index)
+        if max_ig_index not in self.masked_indices:
+            self.masked_indices.append(max_ig_index)
         
         # If the main root of the tree has yet been initialized, set it to the current root
         if self.root is None:
             self.root = root
         
         # if there are no more attributes to test, return the single node tree root, with label = most common value of the target attribute in the examples
-        if len(self.masked_indeces) == len(self._schema):
+        if len(self.masked_indices) == len(self._schema):
             #print("LEAF ACTIVATED")
             #print("Leaf Name:", self._schema[max_ig_index].name)
             majority_label = util.majority_label(y)
@@ -181,7 +184,7 @@ class DecisionTree(Classifier):
                 mask_y2 = y[mask2]
                 
                 
-                if len(self.masked_indeces) == len(self._schema): # no more attributes to test
+                if len(self.masked_indices) == len(self._schema): # no more attributes to test
                     child1 = Node(schema = None, tests = None, class_label = util.majority_label(mask_y1))
                     child2 = Node(schema = None, tests = None, class_label = util.majority_label(mask_y2))
 
@@ -223,7 +226,7 @@ class DecisionTree(Classifier):
                 mask_X = X[mask]
                 mask_y = y[mask]
                 
-                if len(self.masked_indeces) == len(self._schema): # no more attributes to test
+                if len(self.masked_indices) == len(self._schema): # no more attributes to test
                     #print("LEAF ACTIVATED")
                     child = Node(schema = None, tests = None, class_label = util.majority_label(mask_y))
                     root.add_child(test, child)
@@ -297,19 +300,20 @@ class DecisionTree(Classifier):
                         predictions[i] = self._majority_label # Currently returning majority label as default
                         break
                     
-                else: # assuming it's a continuous feature
+                elif current_node.get_schema().ftype == FeatureType.CONTINUOUS: # assuming it's a continuous feature                    
                     found = False
                     for threshold in current_node.get_tests():
                         # Our feature value satisfies the threshold on one of the child node tests
                         if feature_value <= threshold:
-                            # Update the current node
-                            current_node = current_node.get_child(threshold, '<=')
+                            # Update the current node                            
+                            current_node = current_node.get_child(threshold, '<=')                            
                             found = True
                             break
                         else:
                             # Update the current node
                             current_node = current_node.get_child(threshold, '>')
                             found = True
+                            break
                             
                         
                     if not found:
@@ -470,11 +474,11 @@ def dtree(data_path: str, tree_depth_limit: int, use_cross_validation: bool = Tr
     #print(X_train)
     #print(X_test)
     
-    #print_tree(decision_tree.root)
-    y_hat = decision_tree.predict(X_test)
-    print(X_test)
+    print_tree(decision_tree.root)
+    #y_hat = decision_tree.predict(X_test)
+    #print(X_test)
     
-    print(y_test)
+    #print(y_test)
     
     #print(y_hat)
     
