@@ -11,7 +11,13 @@ from sting.data import FeatureType
 from decimal import Decimal
 
 
-import util
+import optimized_util
+
+import warnings
+from numba.core.errors import NumbaPendingDeprecationWarning
+
+# Suppress specific Numba deprecation warnings
+warnings.filterwarnings("ignore", category=NumbaPendingDeprecationWarning)
 
 class Node():
     def __init__(self, schema = None, tests = None, class_label = None):
@@ -71,7 +77,7 @@ class DecisionTree(Classifier):
         """
         This is the class where you will implement your decision tree. At the moment, we have provided some dummy code
         where this is simply a majority classifier in order to give you an idea of how the interface works. Don't forget
-        to use all the good programming skills you learned in 132 and utilize numpy optimizations wherever possible.
+        to use all the good programming skills you learned in 132 and test_utilize numpy optimizations wherever possible.
         Good luck!
         """
         
@@ -79,11 +85,9 @@ class DecisionTree(Classifier):
         self._majority_label = 0  # Protected attributes in Python have an underscore prefix
         
         self.root = None
-        self.features_in_tree = []
+        
         self.masked_indices = []
         
-        self.data = None
-        self.labels = None
 
         
 
@@ -100,20 +104,13 @@ class DecisionTree(Classifier):
         # Implement Split Criterion for Decision Tree
         try:
             split_criterion = self._determine_split_criterion(X, y, self._schema)
-            #split_criterion = self.other_determine_split_criterion(X, y, self._schema)
-            #split_criterion = self._determine_split_criterion(X, y, self._schema)
-            #split_criterion = self._determine_split_criterion(X, y)
         except NotImplementedError:
             warnings.warn('This is for demonstration purposes only.')
                 
-        #entropies = util.calculate_column_entropy(self._schema, X, y, split_criterion)
-        
-        #print(entropies)
          
-        infogains = util.infogain(self._schema, X, y, split_criterion)
+        infogains = optimized_util.infogain(self._schema, X, y, split_criterion)
         
         # Masked infogains is the list of infogains that have not been used in the tree
-        #masked_infogains = [infogains[i] for i in range(len(infogains)) if i not in self.masked_indices]  
         masked_infogains = [(i, gain) for i, gain in enumerate(infogains) if i not in self.masked_indices]
         
         # Find the tuple with the maximum gain in the masked list
@@ -121,20 +118,12 @@ class DecisionTree(Classifier):
         
         # Masked ig index is the index of the feature with the highest infogain that has not been used in the tree
         # The first element of this tuple is the index in the original list
-        #max_ig_index = np.where(infogains == masked_infogains[np.argmax(masked_infogains)])[0][0]
         max_ig_index = max_gain_tuple[0]
-        
-        #print('Masked Indices:', self.masked_indices)     
-        
-        #print('Infogains:', infogains)
-        
-        #print('------------------------')
         
         
         if infogains[max_ig_index] == 0:
             #print("LEAF ACTIVATED")
-            #print("Leaf Name:", self._schema[max_ig_index].name)
-            majority_label = util.majority_label(y)
+            majority_label = optimized_util.majority_label(y)
             # returns leaf node
             return Node(schema = self._schema[max_ig_index], tests=None, class_label=majority_label)
         
@@ -142,7 +131,7 @@ class DecisionTree(Classifier):
         if len(np.unique(y)) == 1:
             #print("LEAF ACTIVATED")
             #print("Leaf Name:", self._schema[max_ig_index].name)
-            majority_label = util.majority_label(y)
+            majority_label = optimized_util.majority_label(y)
             # returns leafe node
             return Node(schema = self._schema[max_ig_index], tests=None, class_label=majority_label)
         
@@ -158,7 +147,7 @@ class DecisionTree(Classifier):
         if len(self.masked_indices) == len(self._schema):
             #print("LEAF ACTIVATED")
             #print("Leaf Name:", self._schema[max_ig_index].name)
-            majority_label = util.majority_label(y)
+            majority_label = optimized_util.majority_label(y)
             # returns leafe node
             return Node(schema = self._schema[max_ig_index], tests=None, class_label=majority_label)        
                 
@@ -166,8 +155,6 @@ class DecisionTree(Classifier):
         # Constructing children of root node
         
         for test in root.get_tests():
-                                            
-
             
             # Create masked data and labels for the current test only have rows in which the root feature is equal to the test
                     
@@ -188,8 +175,8 @@ class DecisionTree(Classifier):
                     
                 
                 if len(self.masked_indices) == len(self._schema): # no more attributes to test
-                    child1 = Node(schema = None, tests = None, class_label = util.majority_label(mask_y1))
-                    child2 = Node(schema = None, tests = None, class_label = util.majority_label(mask_y2))
+                    child1 = Node(schema = None, tests = None, class_label = optimized_util.majority_label(mask_y1))
+                    child2 = Node(schema = None, tests = None, class_label = optimized_util.majority_label(mask_y2))
 
                     root.add_child(test, child1, '<=')
                     root.add_child(test, child2, '>')
@@ -199,7 +186,7 @@ class DecisionTree(Classifier):
                     # If all label values are the same under the threshold, then create a leaf node
                     if len(np.unique(mask_y1)) == 1:
                         # Create a leaf node
-                        child = Node(schema = None, tests = None, class_label = util.majority_label(mask_y1))
+                        child = Node(schema = None, tests = None, class_label = optimized_util.majority_label(mask_y1))
                         
                         root.add_child(test, child, '<=')
                     
@@ -211,7 +198,7 @@ class DecisionTree(Classifier):
                         
                     # If all label values are the same above the threshold, then create a leaf node
                     if len(np.unique(mask_y2)) == 1:
-                        child = Node(schema = None, tests = None, class_label = util.majority_label(mask_y2))
+                        child = Node(schema = None, tests = None, class_label = optimized_util.majority_label(mask_y2))
                         
                         root.add_child(test, child, '>')
                         
@@ -232,15 +219,14 @@ class DecisionTree(Classifier):
                 
                 if len(self.masked_indices) == len(self._schema): # no more attributes to test
                     #print("LEAF ACTIVATED")
-                    child = Node(schema = None, tests = None, class_label = util.majority_label(mask_y))
+                    child = Node(schema = None, tests = None, class_label = optimized_util.majority_label(mask_y))
                     root.add_child(test, child)
                         
                 # if all label values are the same, then create a leaf node
                 elif len(np.unique(mask_y)) == 1:
                     #print("LEAF ACTIVATED")
-                    #root.set_as_leaf(util.majority_label(mask_y))
                     # Create a leaf node
-                    child = Node(schema = None, tests = None, class_label = util.majority_label(mask_y))
+                    child = Node(schema = None, tests = None, class_label = optimized_util.majority_label(mask_y))
                     root.add_child(test, child)
 
                 # recursive call to fit covered by else case
@@ -327,7 +313,6 @@ class DecisionTree(Classifier):
         """
         return self._schema
 
-    # It is standard practice to prepend helper methods with an underscore "_" to mark them as protected.
     def _determine_split_criterion(self, X: np.ndarray, y: np.ndarray, schema: List[Feature]):
         """
         Determine decision tree split criterion. This is just an example to encourage you to use helper methods.
@@ -422,13 +407,13 @@ def evaluate_and_print_metrics(dtree: DecisionTree, X: np.ndarray, y: np.ndarray
     """
 
     y_hat = dtree.predict(X)
-    acc = util.accuracy(y, y_hat)
+    acc = optimized_util.accuracy(y, y_hat)
     print(f'Accuracy: {acc:.2f}')
     
-    precision = util.precision(y, y_hat)
+    precision = optimized_util.precision(y, y_hat)
     print(f'Precision: {precision:.2f}')
     
-    recall = util.recall(y, y_hat)
+    recall = optimized_util.recall(y, y_hat)
     print(f'Recall: {recall:.2f}')
         
     #print('Size:', 0)
@@ -458,14 +443,15 @@ def dtree(data_path: str, tree_depth_limit: int, use_cross_validation: bool = Tr
     schema, X, y = parse_c45(file_base, root_dir)
 
     if use_cross_validation:
-        datasets = util.cv_split(X, y, folds=5, stratified=True)
+        datasets = optimized_util.cv_split(X, y, folds=5, stratified=True)
     else:
         datasets = ((X, y, X, y),)
 
     for X_train, y_train, X_test, y_test in datasets:
-        decision_tree = DecisionTree(schema)
+        decision_tree = DecisionTree(schema)        
         decision_tree.fit(X_train, y_train)
         
+            
     #print(decision_tree.root.get_schema().name)
         
     #print(X_train)
@@ -481,7 +467,7 @@ def dtree(data_path: str, tree_depth_limit: int, use_cross_validation: bool = Tr
     
     
     evaluate_and_print_metrics(decision_tree, X_test, y_test)
-    
+        
     return decision_tree
 
 

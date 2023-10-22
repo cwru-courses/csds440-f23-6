@@ -5,12 +5,14 @@ from sting.data import FeatureType
 
 import numpy as np
 
+from numba import jit, njit, vectorize, float64, int64, boolean
+
+
 """
 This is where you will implement helper functions and utility code which you will reuse from project to project.
 Feel free to edit the parameters if necessary or if it makes it more convenient.
 Make sure you read the instruction clearly to know whether you have to implement a function for a specific assignment.
 """
-
 
 def count_label_occurrences(y: np.ndarray) -> Tuple[int, int]:
     """
@@ -58,93 +60,89 @@ def calculate_column_entropy(schema, X, y, split_criterion):
             entropies.append(entropy)
 
     return entropies
-            
-def entropy_continuous(column, labels, tests):    
-    entropies = []
+
+
+@jit(nopython=True)
+def entropy_continuous(column, labels, tests):
+    entropies = np.zeros(len(tests))  # use NumPy array for Numba compatibility
     
-    #print('Tests: ', tests)
-    for test in tests:
-        #print(test)
+    for i in range(len(tests)):
+        test = tests[i]
         
         # Split column data based on the test
         left_indices = column <= test
         right_indices = column > test
-        
-        
-        # Something is wrong with the split creation here, I havent pinned down what about this feature specifically causes the bug
-        #print('Test:', test)
-        #print('Column:', column)
-        #print('left:', left_indices)
-        #print('right:', right_indices)
-        
-        #print('Column:', column)
-        #print('Labels:', labels)
-        #print('Test:', test)
-        
-        
-        # Calculate the left and right entropies
-        #left_entropy = 0 if calculate_entropy(labels[left_indices]) == 1.0 else calculate_entropy(labels[left_indices])
-        left_entropy = calculate_entropy(labels[left_indices])
 
-        
-        #right_entropy = 0 if calculate_entropy(labels[right_indices]) == 1.0 else calculate_entropy(labels[right_indices])
+        # Calculate the left and right entropies
+        left_entropy = calculate_entropy(labels[left_indices])
         right_entropy = calculate_entropy(labels[right_indices])
 
-        
-        # Print the labeled left and right entropies
-        #print("left entropy: ", left_entropy)
-        #print("right entropy: ", right_entropy)
-        
-        #probability of left test
-        prob_left = len(labels[left_indices]) / len(labels)
-        #probability of right test
-        prob_right = len(labels[right_indices]) / len(labels)
-        
-        # Calculate the total entropy
-        #total_entropy += prob_left * left_entropy + prob_right * right_entropy
+        # probability of left test
+        prob_left = np.sum(left_indices) / labels.size  # use NumPy sum and size for Numba compatibility
+        # probability of right test
+        prob_right = np.sum(right_indices) / labels.size
         
         # Calculate the weighted entropy for this test value
-        weighted_entropy = prob_left * left_entropy + prob_right * right_entropy
-        entropies.append(weighted_entropy)
-        
-        
-    #print('Entropies:', entropies)
-    return min(entropies) 
+        entropies[i] = prob_left * left_entropy + prob_right * right_entropy
 
+    return np.min(entropies)  # use NumPy min for Numba compatibility
 
-def entropy_discrete(column, labels, tests):    
+@jit(nopython=True)
+def entropy_discrete(column, labels, tests):
     total_entropy = 0.0
     
     for test in tests:
         # Split column data based on the test
-        test_indeces = column == test
+        test_indices = column == test
         
         # Calculate the test entropy
-        test_entropy = calculate_entropy(labels[test_indeces])
+        test_entropy = calculate_entropy(labels[test_indices])
         
-        #probability of test
-        prob_test = len(labels[test_indeces]) / len(labels)
+        # probability of test
+        prob_test = np.sum(test_indices) / labels.size  # use NumPy sum and size for Numba compatibility
         
         # Calculate the total entropy
         total_entropy += prob_test * test_entropy
         
-    return total_entropy      
-    
-          
+    return total_entropy
+
+
+@jit(nopython=True)
 def calculate_entropy(labels):
-    unique_values, counts = np.unique(labels, return_counts=True)
-    probabilities = counts / len(labels)
+    count_0 = 0
+    count_1 = 0
+    
+    for value in labels:
+        if value == 0:
+            count_0 += 1
+        elif value == 1:
+            count_1 += 1
+
+    counts = np.array([count_0, count_1])
+
+    # Avoid division by zero if labels.size is zero
+    if labels.size == 0:
+        return 0.0
+
+    probabilities = counts / labels.size
+
+    # Ensure we don't take log of zero
+    probabilities = probabilities[probabilities > 0]
+    
     entropy_value = -np.sum(probabilities * np.log2(probabilities))
     return entropy_value
+
 
 def majority_label(labels):
     unique_values, counts = np.unique(labels, return_counts=True)
     return unique_values[np.argmax(counts)]
 
+
 def minority_label(labels):
     unique_values, counts = np.unique(labels, return_counts=True)
     return unique_values[np.argmax(counts)]
 
+'''
 def infogain(schema, data, labels, split_criterion):
     # Get the entropy of the labels w.r.t themself
     entropy_labels = calculate_entropy(labels)
@@ -153,6 +151,22 @@ def infogain(schema, data, labels, split_criterion):
     entropy_labels_data = calculate_column_entropy(schema, data, labels, split_criterion)
     
     # Calculate the information gain
+    information_gains = entropy_labels - entropy_labels_data
+    
+    return information_gains
+'''
+
+def infogain(schema, data, labels, split_criterion):
+    # Get the entropy of the labels w.r.t themselves
+    entropy_labels = calculate_entropy(labels)
+    
+    # Get the entropy of the labels w.r.t the data (for each feature)
+    entropy_labels_data = calculate_column_entropy(schema, data, labels, split_criterion)
+    
+    # Convert entropy_labels_data from list to np.array for vectorized operation
+    entropy_labels_data = np.array(entropy_labels_data)
+    
+    # Calculate the information gain for each feature
     information_gains = entropy_labels - entropy_labels_data
     
     return information_gains
