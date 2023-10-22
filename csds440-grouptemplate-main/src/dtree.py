@@ -180,42 +180,39 @@ class DecisionTree(Classifier):
                 
                 
                 if len(self.masked_indeces) == len(self._schema): # no more attributes to test
-                    #print("LEAF ACTIVATED")
                     child1 = Node(schema = None, tests = None, class_label = util.majority_label(mask_y1))
                     child2 = Node(schema = None, tests = None, class_label = util.majority_label(mask_y2))
 
                     root.add_child(test, child1, '<=')
                     root.add_child(test, child2, '>')
                         
-                # if all label values are the same under the threshold, then create a leaf node
-                #MIGHT WANNA SEPARATE THESE ACTUALLY
-                elif len(np.unique(mask_y1)) == 1 or len(np.unique(mask_y2)) == 1:
-                    #print("LEAF ACTIVATED")
-                    
-                    
-                    #print("Case 2")
-                    
-                    if len(np.unique(mask_y1)) == 1:
-                        mask_labels = mask_y1
-                    else:
-                        mask_labels = mask_y2
-                    
+                # If all label values are the same under the threshold, then create a leaf node
+                if len(np.unique(mask_y1)) == 1:
                     # Create a leaf node
-                    child1 = Node(schema = None, tests = None, class_label = util.majority_label(mask_labels))
-                    child2 = Node(schema = None, tests = None, class_label = util.minority_label(mask_labels))
+                    child = Node(schema = None, tests = None, class_label = util.majority_label(mask_y1))
                     
-                    root.add_child(test, child1, '<=')
-                    root.add_child(test, child2, '>')
-
+                    root.add_child(test, child, '<=')
                 
                 # Recursive Call
-                elif len(np.unique(mask_y1)) != 1 and len(np.unique(mask_y2)) != 1:
-                                        
-                    child1 = self.fit(mask_X1, mask_y1)
-                    child2 = self.fit(mask_X2, mask_y2)
+                else:             
+                    child = self.fit(mask_X1, mask_y1)
                     
-                    root.add_child(test, child1, '<=')
-                    root.add_child(test, child2, '>')
+                    root.add_child(test, child, '<=')
+                    
+                # If all label values are the same above the threshold, then create a leaf node
+                if len(np.unique(mask_y2)) == 1:
+                    child = Node(schema = None, tests = None, class_label = util.majority_label(mask_y2))
+                    
+                    root.add_child(test, child, '>')
+                    
+                # Recursive Call
+                else:         
+                    child = self.fit(mask_X2, mask_y2)
+                    
+                    root.add_child(test, child, '>')
+
+                
+
                     
            
            
@@ -451,7 +448,7 @@ def print_tree(node, depth=0):
         if isinstance(child_node, Node):
             print_tree(child_node, depth + 2)
         else:
-            print("  " * (depth + 2) + f"ERROR: Child node of type {type(child_node).__name__} found, expected Node object")
+            print("OUSBFJNKLDMKFEJNJFENKSKKDJSDKKJSK")
 
 
                                                 
@@ -504,7 +501,7 @@ def dtree(data_path: str, tree_depth_limit: int, use_cross_validation: bool = Tr
     #print(X_train)
     #print(X_test)
     
-    #print_tree(decision_tree.root)
+    print_tree(decision_tree.root)
     #y_hat = decision_tree.predict(X_test)
     #print(X_test)
     
