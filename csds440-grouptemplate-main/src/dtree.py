@@ -46,8 +46,11 @@ class Node():
         return self.tests
     
     # Returns the child node associated with the test
-    def get_child(self, test):
-        return self.children[test]
+    def get_child(self, test, condition=None):
+        if condition is not None:
+            return self.children[(test, condition)]
+        else:
+            return self.children[test]
     
     # Method to set a node as a leaf with a particular class label
     def set_as_leaf(self, class_label):
@@ -84,7 +87,8 @@ class DecisionTree(Classifier):
 
         
 
-    def fit(self, X: np.ndarray, y: np.ndarray, weights: Optional[np.ndarray] = None) -> None:
+    def fit(self, X: np.ndarray, y: np.ndarray, weights: Optional[np.ndarray] = None) -> None:        
+        
         #print('+------------------------+')
         """
         This is the method where the training algorithm will run.
@@ -103,20 +107,18 @@ class DecisionTree(Classifier):
         except NotImplementedError:
             warnings.warn('This is for demonstration purposes only.')
             
-        
-        #print(X)
-        
-        #print(y)
+        print(split_criterion[1])
         
         #entropies = util.calculate_column_entropy(self._schema, X, y, split_criterion)
         
         #print(entropies)
          
-         
         infogains = util.infogain(self._schema, X, y, split_criterion)
         
         # Masked infogains is the list of infogains that have not been used in the tree
-        masked_infogains = [infogains[i] for i in range(len(infogains)) if i not in self.masked_indeces]        
+        masked_infogains = [infogains[i] for i in range(len(infogains)) if i not in self.masked_indeces]   
+        
+        #print(self.masked_indeces)     
         
         #max_ig_index = np.argmax(infogains)
         # Masked ig index is the index of the feature with the highest infogain that has not been used in the tree
@@ -142,7 +144,8 @@ class DecisionTree(Classifier):
         root = Node(schema = self._schema[max_ig_index], tests = split_criterion[max_ig_index], class_label = None) # Passing the schema of the root feature only, not general schema
         
         #self.features_in_tree.append(self._schema[max_ig_index].name)
-        self.masked_indeces.append(max_ig_index)
+        if max_ig_index not in self.masked_indeces:
+            self.masked_indeces.append(max_ig_index)
         
         # If the main root of the tree has yet been initialized, set it to the current root
         if self.root is None:
@@ -160,8 +163,7 @@ class DecisionTree(Classifier):
         # Constructing children of root node
         
         for test in root.get_tests():
-            #print("Current test:", test)
-            
+                        
             # Create masked data and labels for the current test only have rows in which the root feature is equal to the test
                     
             # If the root feature is continuous 
@@ -185,36 +187,33 @@ class DecisionTree(Classifier):
 
                     root.add_child(test, child1, '<=')
                     root.add_child(test, child2, '>')
+                
+                else:   
+                    # If all label values are the same under the threshold, then create a leaf node
+                    if len(np.unique(mask_y1)) == 1:
+                        # Create a leaf node
+                        child = Node(schema = None, tests = None, class_label = util.majority_label(mask_y1))
                         
-                # If all label values are the same under the threshold, then create a leaf node
-                if len(np.unique(mask_y1)) == 1:
-                    # Create a leaf node
-                    child = Node(schema = None, tests = None, class_label = util.majority_label(mask_y1))
+                        root.add_child(test, child, '<=')
                     
-                    root.add_child(test, child, '<=')
-                
-                # Recursive Call
-                else:             
-                    child = self.fit(mask_X1, mask_y1)
-                    
-                    root.add_child(test, child, '<=')
-                    
-                # If all label values are the same above the threshold, then create a leaf node
-                if len(np.unique(mask_y2)) == 1:
-                    child = Node(schema = None, tests = None, class_label = util.majority_label(mask_y2))
-                    
-                    root.add_child(test, child, '>')
-                    
-                # Recursive Call
-                else:         
-                    child = self.fit(mask_X2, mask_y2)
-                    
-                    root.add_child(test, child, '>')
-
-                
-
-                    
-           
+                    # Recursive Call
+                    else:             
+                        child = self.fit(mask_X1, mask_y1)
+                        
+                        root.add_child(test, child, '<=')
+                        
+                    # If all label values are the same above the threshold, then create a leaf node
+                    if len(np.unique(mask_y2)) == 1:
+                        child = Node(schema = None, tests = None, class_label = util.majority_label(mask_y2))
+                        
+                        root.add_child(test, child, '>')
+                        
+                    # Recursive Call
+                    else:         
+                        child = self.fit(mask_X2, mask_y2)
+                        
+                        root.add_child(test, child, '>')        
+        
            
             # If the feature is discrete
             else:
@@ -223,20 +222,20 @@ class DecisionTree(Classifier):
             
                 mask_X = X[mask]
                 mask_y = y[mask]
+                
+                if len(self.masked_indeces) == len(self._schema): # no more attributes to test
+                    #print("LEAF ACTIVATED")
+                    child = Node(schema = None, tests = None, class_label = util.majority_label(mask_y))
+                    root.add_child(test, child)
                         
                 # if all label values are the same, then create a leaf node
-                if len(np.unique(mask_y)) == 1:
+                elif len(np.unique(mask_y)) == 1:
                     #print("LEAF ACTIVATED")
                     #root.set_as_leaf(util.majority_label(mask_y))
                     # Create a leaf node
                     child = Node(schema = None, tests = None, class_label = util.majority_label(mask_y))
                     root.add_child(test, child)
-                
-                elif len(self.masked_indeces) == len(self._schema): # no more attributes to test
-                    #print("LEAF ACTIVATED")
-                    child = Node(schema = None, tests = None, class_label = util.majority_label(mask_y))
-                    root.add_child(test, child)
-                
+
                 # recursive call to fit covered by else case
                 else:
                     #print("RECURSIVE CALL")
@@ -246,6 +245,16 @@ class DecisionTree(Classifier):
             #entropies = util.calculate_column_entropy(self._schema, mask_X, mask_y, split_criterion)
             
             #infogains = util.infogain(self._schema, mask_X, mask_y, split_criterion)
+            
+            
+            
+            # Checking constructied children of most recent root
+            #if self._schema[max_ig_index].ftype == FeatureType.CONTINUOUS:
+                #print(root.get_schema().name)
+                
+                #print(root.get_children())
+                
+            
         return root
         
         
@@ -294,17 +303,19 @@ class DecisionTree(Classifier):
                         # Our feature value satisfies the threshold on one of the child node tests
                         if feature_value <= threshold:
                             # Update the current node
-                            current_node = current_node.get_child(threshold)
+                            current_node = current_node.get_child(threshold, '<=')
                             found = True
                             break
+                        else:
+                            # Update the current node
+                            current_node = current_node.get_child(threshold, '>')
+                            found = True
+                            
                         
                     if not found:
                         # handle the case where the feature value exceeds all thresholds
                         predictions[i] = self._majority_label # Currently returning majority label as default
                         break
-            
-            #predictions[i] = current_node.get_class_label()
-            #print(current_node.get_class_label())
             
             if current_node.is_leaf:
                 predictions[i] = current_node.get_class_label()
@@ -374,50 +385,10 @@ class DecisionTree(Classifier):
                 
                 test_dic[i] = tests
                 
-        
-        #if len(tests) == 0:
-            # Print feature name
-            #print("Feature Name:", schema[i].name)
-            # Print feature data
-            #print("Feature Data:", X[:, i])
-            # Print feature labels
-            #print("Feature Labels:", y)
-                
                     
         return test_dic 
 
 
-'''
-def print_tree(node, depth=0):
-    """
-    Recursive function to print the structure of the decision tree.
-    
-    Args:
-        node: The current node to print.
-        depth: Current depth of the tree (used for indentation).
-    """
-    # Base case: If the node is a leaf
-    if node.is_leaf:
-        print("  " * depth + f"Leaf: Class label = {node.get_class_label()}")
-        return
-    
-    # If the node is not a leaf
-    print("  " * depth + f"Node: Schema = {node.get_schema().name}, Tests = {node.get_tests()}")
-    
-    # Recursively print children
-    for key, child_node in node.get_children().items():
-        # Check if the key is a tuple (for continuous attributes)
-        if isinstance(key, tuple):
-            test, condition = key
-            print("  " * (depth + 1) + f"Test = {test}, Condition = {condition}")
-        else:
-            print("  " * (depth + 1) + f"Test = {key}")
-        
-        if isinstance(child_node, Node):
-            print_tree(child_node, depth + 2)
-        else:
-            print("  " * (depth + 2) + f"ERROR: Child node of type {type(child_node).__name__} found, expected Node object")
-'''
 
 
 def print_tree(node, depth=0):
@@ -447,8 +418,6 @@ def print_tree(node, depth=0):
         
         if isinstance(child_node, Node):
             print_tree(child_node, depth + 2)
-        else:
-            print("OUSBFJNKLDMKFEJNJFENKSKKDJSDKKJSK")
 
 
                                                 
@@ -501,11 +470,11 @@ def dtree(data_path: str, tree_depth_limit: int, use_cross_validation: bool = Tr
     #print(X_train)
     #print(X_test)
     
-    print_tree(decision_tree.root)
-    #y_hat = decision_tree.predict(X_test)
-    #print(X_test)
+    #print_tree(decision_tree.root)
+    y_hat = decision_tree.predict(X_test)
+    print(X_test)
     
-    #print(y_test)
+    print(y_test)
     
     #print(y_hat)
     
