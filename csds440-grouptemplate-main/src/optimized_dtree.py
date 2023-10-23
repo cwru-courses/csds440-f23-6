@@ -73,7 +73,7 @@ class Node():
 # In Python, the convention for class names is CamelCase, just like in Java! However, the convention for method and
 # variable names is lowercase_separated_by_underscores, unlike Java.
 class DecisionTree(Classifier):
-    def __init__(self, schema: List[Feature]):
+    def __init__(self, schema: List[Feature], tree_depth_limit: int, information_gain: bool):
         """
         This is the class where you will implement your decision tree. At the moment, we have provided some dummy code
         where this is simply a majority classifier in order to give you an idea of how the interface works. Don't forget
@@ -88,10 +88,12 @@ class DecisionTree(Classifier):
         
         self.masked_indices = []
         
-
+        self.tree_depth_limit = tree_depth_limit
+        
+        self.information_gain = information_gain
         
 
-    def fit(self, X: np.ndarray, y: np.ndarray, weights: Optional[np.ndarray] = None) -> None:
+    def fit(self, X: np.ndarray, y: np.ndarray, weights: Optional[np.ndarray] = None, current_depth: int = 0) -> None:
         #print('+------------------------+')
         """
         This is the method where the training algorithm will run.
@@ -101,6 +103,15 @@ class DecisionTree(Classifier):
             y: The labels. The shape is (n_examples,)
             weights: Weights for each example. Will become relevant later in the course, ignore for now.
         """
+        
+            # 1. Check if the current depth has reached the tree depth limit
+        if current_depth >= self.tree_depth_limit:
+            majority_label = optimized_util.majority_label(y)
+            # Return leaf nodes
+            return Node(schema=None, tests=None, class_label=majority_label)
+        
+        
+        
         # Implement Split Criterion for Decision Tree
         try:
             split_criterion = self._determine_split_criterion(X, y, self._schema)
@@ -192,7 +203,7 @@ class DecisionTree(Classifier):
                     
                     # Recursive Call
                     else:             
-                        child = self.fit(mask_X1, mask_y1)
+                        child = self.fit(mask_X1, mask_y1, current_depth=current_depth + 1)
                         
                         root.add_child(test, child, '<=')
                         
@@ -204,7 +215,7 @@ class DecisionTree(Classifier):
                         
                     # Recursive Call
                     else:         
-                        child = self.fit(mask_X2, mask_y2)
+                        child = self.fit(mask_X2, mask_y2, current_depth=current_depth + 1)
                         
                         root.add_child(test, child, '>')        
         
@@ -232,7 +243,7 @@ class DecisionTree(Classifier):
                 # recursive call to fit covered by else case
                 else:
                     #print("RECURSIVE CALL")
-                    child = self.fit(mask_X, mask_y)
+                    child = self.fit(mask_X, mask_y, current_depth=current_depth + 1)
                     root.add_child(test, child)
                     
         
@@ -300,7 +311,36 @@ class DecisionTree(Classifier):
                 predictions[i] = current_node.get_class_label()
                         
         return predictions 
-        
+    
+    
+    def get_max_depth(self, node=None, current_depth=0):
+        """
+        Compute the maximum depth of the tree.
+
+        Args:
+            node: the current node being inspected. Starts with the root node.
+            current_depth: the depth of the current node.
+
+        Returns:
+            The maximum depth of the tree.
+        """
+        if node is None:
+            node = self.root  # Start with the root node if no node is provided
+
+        # If this is a leaf node (i.e., it has no children), then we've reached the bottom of this path.
+        if node.is_leaf:
+            return current_depth
+
+        # Recursive case: this node is not a leaf, so get the depth of each subtree.
+        children = node.get_children()
+        max_depth = current_depth
+        for child_key in children:
+            child_node = children[child_key]  # Access the actual Node instance
+            # Recur on each child subtree
+            child_depth = self.get_max_depth(child_node, current_depth + 1)
+            max_depth = max(max_depth, child_depth)
+
+        return max_depth
         
 
 
@@ -448,7 +488,7 @@ def dtree(data_path: str, tree_depth_limit: int, use_cross_validation: bool = Tr
         datasets = ((X, y, X, y),)
 
     for X_train, y_train, X_test, y_test in datasets:
-        decision_tree = DecisionTree(schema)        
+        decision_tree = DecisionTree(schema, tree_depth_limit, information_gain)        
         decision_tree.fit(X_train, y_train)
         
             
@@ -457,7 +497,6 @@ def dtree(data_path: str, tree_depth_limit: int, use_cross_validation: bool = Tr
     #print(X_train)
     #print(X_test)
     
-    #print_tree(decision_tree.root)
     #y_hat = decision_tree.predict(X_test)
     #print(X_test)
     
@@ -467,6 +506,13 @@ def dtree(data_path: str, tree_depth_limit: int, use_cross_validation: bool = Tr
     
     
     evaluate_and_print_metrics(decision_tree, X_test, y_test)
+    
+    max_depth = decision_tree.get_max_depth()
+    
+    print(max_depth)
+    
+    print_tree(decision_tree.root)
+
         
     return decision_tree
 

@@ -42,15 +42,6 @@ def calculate_column_entropy(schema, X, y, split_criterion):
         # Check if the column is continuous or discrete
         if schema[i].ftype == FeatureType.CONTINUOUS:
             
-            #print(i)
-            # If the column is continuous, calculate the entropy of the column
-            #print(schema[i].name)
-            #print(column)
-            #print('Passing in Tests:', split_criterion[i])
-            #print('Passing in Labels:', y)
-            #print('Passing in Column:', column)
-            
-            
             entropy = entropy_continuous(column, y, split_criterion[i])
             entropies.append(entropy)
             

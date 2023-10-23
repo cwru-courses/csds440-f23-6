@@ -67,7 +67,7 @@ class Node():
 # In Python, the convention for class names is CamelCase, just like in Java! However, the convention for method and
 # variable names is lowercase_separated_by_underscores, unlike Java.
 class DecisionTree(Classifier):
-    def __init__(self, schema: List[Feature]):
+    def __init__(self, schema: List[Feature], tree_depth_limit: int, information_gain: bool):
         """
         This is the class where you will implement your decision tree. At the moment, we have provided some dummy code
         where this is simply a majority classifier in order to give you an idea of how the interface works. Don't forget
@@ -84,6 +84,10 @@ class DecisionTree(Classifier):
         
         self.data = None
         self.labels = None
+        
+        self.tree_depth_limit = tree_depth_limit
+        
+        self.information_gain = information_gain
 
         
 
@@ -463,7 +467,7 @@ def dtree(data_path: str, tree_depth_limit: int, use_cross_validation: bool = Tr
         datasets = ((X, y, X, y),)
 
     for X_train, y_train, X_test, y_test in datasets:
-        decision_tree = DecisionTree(schema)
+        decision_tree = DecisionTree(schema, tree_depth_limit, information_gain)
         decision_tree.fit(X_train, y_train)
         
     #print(decision_tree.root.get_schema().name)
