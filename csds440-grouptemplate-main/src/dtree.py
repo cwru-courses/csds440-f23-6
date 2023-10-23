@@ -13,6 +13,12 @@ from decimal import Decimal
 
 import util
 
+import warnings
+from numba.core.errors import NumbaPendingDeprecationWarning
+
+# Suppress specific Numba deprecation warnings
+warnings.filterwarnings("ignore", category=NumbaPendingDeprecationWarning)
+
 class Node():
     def __init__(self, schema = None, tests = None, class_label = None):
         self.schema = schema
@@ -71,7 +77,7 @@ class DecisionTree(Classifier):
         """
         This is the class where you will implement your decision tree. At the moment, we have provided some dummy code
         where this is simply a majority classifier in order to give you an idea of how the interface works. Don't forget
-        to use all the good programming skills you learned in 132 and utilize numpy optimizations wherever possible.
+        to use all the good programming skills you learned in 132 and test_utilize numpy optimizations wherever possible.
         Good luck!
         """
         
@@ -79,19 +85,15 @@ class DecisionTree(Classifier):
         self._majority_label = 0  # Protected attributes in Python have an underscore prefix
         
         self.root = None
-        self.features_in_tree = []
-        self.masked_indices = []
         
-        self.data = None
-        self.labels = None
+        self.masked_indices = []
         
         self.tree_depth_limit = tree_depth_limit
         
         self.information_gain = information_gain
-
         
 
-    def fit(self, X: np.ndarray, y: np.ndarray, weights: Optional[np.ndarray] = None) -> None:
+    def fit(self, X: np.ndarray, y: np.ndarray, weights: Optional[np.ndarray] = None, current_depth: int = 0) -> None:
         #print('+------------------------+')
         """
         This is the method where the training algorithm will run.
@@ -101,23 +103,25 @@ class DecisionTree(Classifier):
             y: The labels. The shape is (n_examples,)
             weights: Weights for each example. Will become relevant later in the course, ignore for now.
         """
+        
+            # 1. Check if the current depth has reached the tree depth limit
+        if current_depth >= self.tree_depth_limit:
+            majority_label = util.majority_label(y)
+            # Return leaf nodes
+            return Node(schema=None, tests=None, class_label=majority_label)
+        
+        
+        
         # Implement Split Criterion for Decision Tree
         try:
             split_criterion = self._determine_split_criterion(X, y, self._schema)
-            #split_criterion = self.other_determine_split_criterion(X, y, self._schema)
-            #split_criterion = self._determine_split_criterion(X, y, self._schema)
-            #split_criterion = self._determine_split_criterion(X, y)
         except NotImplementedError:
             warnings.warn('This is for demonstration purposes only.')
                 
-        #entropies = util.calculate_column_entropy(self._schema, X, y, split_criterion)
-        
-        #print(entropies)
          
         infogains = util.infogain(self._schema, X, y, split_criterion)
         
         # Masked infogains is the list of infogains that have not been used in the tree
-        #masked_infogains = [infogains[i] for i in range(len(infogains)) if i not in self.masked_indices]  
         masked_infogains = [(i, gain) for i, gain in enumerate(infogains) if i not in self.masked_indices]
         
         # Find the tuple with the maximum gain in the masked list
@@ -125,19 +129,11 @@ class DecisionTree(Classifier):
         
         # Masked ig index is the index of the feature with the highest infogain that has not been used in the tree
         # The first element of this tuple is the index in the original list
-        #max_ig_index = np.where(infogains == masked_infogains[np.argmax(masked_infogains)])[0][0]
         max_ig_index = max_gain_tuple[0]
-        
-        #print('Masked Indices:', self.masked_indices)     
-        
-        #print('Infogains:', infogains)
-        
-        #print('------------------------')
         
         
         if infogains[max_ig_index] == 0:
             #print("LEAF ACTIVATED")
-            #print("Leaf Name:", self._schema[max_ig_index].name)
             majority_label = util.majority_label(y)
             # returns leaf node
             return Node(schema = self._schema[max_ig_index], tests=None, class_label=majority_label)
@@ -170,8 +166,6 @@ class DecisionTree(Classifier):
         # Constructing children of root node
         
         for test in root.get_tests():
-                                            
-
             
             # Create masked data and labels for the current test only have rows in which the root feature is equal to the test
                     
@@ -209,7 +203,7 @@ class DecisionTree(Classifier):
                     
                     # Recursive Call
                     else:             
-                        child = self.fit(mask_X1, mask_y1)
+                        child = self.fit(mask_X1, mask_y1, current_depth=current_depth + 1)
                         
                         root.add_child(test, child, '<=')
                         
@@ -221,7 +215,7 @@ class DecisionTree(Classifier):
                         
                     # Recursive Call
                     else:         
-                        child = self.fit(mask_X2, mask_y2)
+                        child = self.fit(mask_X2, mask_y2, current_depth=current_depth + 1)
                         
                         root.add_child(test, child, '>')        
         
@@ -242,7 +236,6 @@ class DecisionTree(Classifier):
                 # if all label values are the same, then create a leaf node
                 elif len(np.unique(mask_y)) == 1:
                     #print("LEAF ACTIVATED")
-                    #root.set_as_leaf(util.majority_label(mask_y))
                     # Create a leaf node
                     child = Node(schema = None, tests = None, class_label = util.majority_label(mask_y))
                     root.add_child(test, child)
@@ -250,7 +243,7 @@ class DecisionTree(Classifier):
                 # recursive call to fit covered by else case
                 else:
                     #print("RECURSIVE CALL")
-                    child = self.fit(mask_X, mask_y)
+                    child = self.fit(mask_X, mask_y, current_depth=current_depth + 1)
                     root.add_child(test, child)
                     
         
@@ -318,7 +311,36 @@ class DecisionTree(Classifier):
                 predictions[i] = current_node.get_class_label()
                         
         return predictions 
-        
+    
+    
+    def get_max_depth(self, node=None, current_depth=0):
+        """
+        Compute the maximum depth of the tree.
+
+        Args:
+            node: the current node being inspected. Starts with the root node.
+            current_depth: the depth of the current node.
+
+        Returns:
+            The maximum depth of the tree.
+        """
+        if node is None:
+            node = self.root  # Start with the root node if no node is provided
+
+        # If this is a leaf node (i.e., it has no children), then we've reached the bottom of this path.
+        if node.is_leaf:
+            return current_depth
+
+        # Recursive case: this node is not a leaf, so get the depth of each subtree.
+        children = node.get_children()
+        max_depth = current_depth
+        for child_key in children:
+            child_node = children[child_key]  # Access the actual Node instance
+            # Recur on each child subtree
+            child_depth = self.get_max_depth(child_node, current_depth + 1)
+            max_depth = max(max_depth, child_depth)
+
+        return max_depth
         
 
 
@@ -331,7 +353,6 @@ class DecisionTree(Classifier):
         """
         return self._schema
 
-    # It is standard practice to prepend helper methods with an underscore "_" to mark them as protected.
     def _determine_split_criterion(self, X: np.ndarray, y: np.ndarray, schema: List[Feature]):
         """
         Determine decision tree split criterion. This is just an example to encourage you to use helper methods.
@@ -416,8 +437,7 @@ def print_tree(node, depth=0):
         if isinstance(child_node, Node):
             print_tree(child_node, depth + 2)
 
-
-                                                
+                            
 
 def evaluate_and_print_metrics(dtree: DecisionTree, X: np.ndarray, y: np.ndarray):
     """
@@ -467,15 +487,15 @@ def dtree(data_path: str, tree_depth_limit: int, use_cross_validation: bool = Tr
         datasets = ((X, y, X, y),)
 
     for X_train, y_train, X_test, y_test in datasets:
-        decision_tree = DecisionTree(schema, tree_depth_limit, information_gain)
+        decision_tree = DecisionTree(schema, tree_depth_limit, information_gain)        
         decision_tree.fit(X_train, y_train)
         
+            
     #print(decision_tree.root.get_schema().name)
         
     #print(X_train)
     #print(X_test)
     
-    #print_tree(decision_tree.root)
     #y_hat = decision_tree.predict(X_test)
     #print(X_test)
     
@@ -486,6 +506,13 @@ def dtree(data_path: str, tree_depth_limit: int, use_cross_validation: bool = Tr
     
     evaluate_and_print_metrics(decision_tree, X_test, y_test)
     
+    max_depth = decision_tree.get_max_depth()
+    
+    print(max_depth)
+    
+    print_tree(decision_tree.root)
+
+        
     return decision_tree
 
 
