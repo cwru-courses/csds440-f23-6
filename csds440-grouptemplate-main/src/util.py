@@ -39,16 +39,6 @@ def calculate_column_entropy(schema, X, y, split_criterion):
         column = X[:, i]
         # Check if the column is continuous or discrete
         if schema[i].ftype == FeatureType.CONTINUOUS:
-            
-            #print(i)
-            # If the column is continuous, calculate the entropy of the column
-            #print(schema[i].name)
-            #print(column)
-            #print('Passing in Tests:', split_criterion[i])
-            #print('Passing in Labels:', y)
-            #print('Passing in Column:', column)
-            
-            
             entropy = entropy_continuous(column, y, split_criterion[i])
             entropies.append(entropy)
             
@@ -69,17 +59,7 @@ def entropy_continuous(column, labels, tests):
         # Split column data based on the test
         left_indices = column <= test
         right_indices = column > test
-        
-        
-        # Something is wrong with the split creation here, I havent pinned down what about this feature specifically causes the bug
-        #print('Test:', test)
-        #print('Column:', column)
-        #print('left:', left_indices)
-        #print('right:', right_indices)
-        
-        #print('Column:', column)
-        #print('Labels:', labels)
-        #print('Test:', test)
+    
         
         
         # Calculate the left and right entropies
@@ -89,11 +69,6 @@ def entropy_continuous(column, labels, tests):
         
         #right_entropy = 0 if calculate_entropy(labels[right_indices]) == 1.0 else calculate_entropy(labels[right_indices])
         right_entropy = calculate_entropy(labels[right_indices])
-
-        
-        # Print the labeled left and right entropies
-        #print("left entropy: ", left_entropy)
-        #print("right entropy: ", right_entropy)
         
         #probability of left test
         prob_left = len(labels[left_indices]) / len(labels)
@@ -156,7 +131,8 @@ def infogain(schema, data, labels, split_criterion):
     information_gains = entropy_labels - entropy_labels_data
     
     return information_gains
-    
+
+
 def cv_split(
         X: np.ndarray, y: np.ndarray, folds: int, stratified: bool = False
     ) -> Tuple[Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray], ...]:

@@ -490,29 +490,6 @@ def dtree(data_path: str, tree_depth_limit: int, use_cross_validation: bool = Tr
         decision_tree = DecisionTree(schema, tree_depth_limit, information_gain)        
         decision_tree.fit(X_train, y_train)
         
-            
-    #print(decision_tree.root.get_schema().name)
-        
-    #print(X_train)
-    #print(X_test)
-    
-    #y_hat = decision_tree.predict(X_test)
-    #print(X_test)
-    
-    #print(y_test)
-    
-    #print(y_hat)
-    
-    
-    evaluate_and_print_metrics(decision_tree, X_test, y_test)
-    
-    max_depth = decision_tree.get_max_depth()
-    
-    print(max_depth)
-    
-    print_tree(decision_tree.root)
-
-        
     return decision_tree
 
 
