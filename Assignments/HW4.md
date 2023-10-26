@@ -46,9 +46,24 @@ We want to prove that $f$ has a global minimum at $x$.
 
 Proof:
 Assume for the sake of contradiction that  $f$ has a local minimum at $x$ bit, not a global minimum. This implies:
-1. There exists a neighbourhood $H$ around $x$ such that for all $y$ in $H$, 
+1. There exists a neighbourhood $H$ around $x$ such that for all $y$ in $H$, f(y)>=f(x).
+2. There exists a point $z$ outside $H$ such that f(z)<f(x).
 
-3.	Consider the LP: $\min c^Tx$ s.t. $Ax \geq b, x \geq 0$, where $T$ is the transpose, $A$ is the 4x2 matrix: \[ 0 −1; −1 −1; −1 2; 1 −1\], $b$ is a 4x1 vector \[−5; −9;0; −3\] and $c$ is a 2x1 vector \[−1; −2\]. (a) Draw the feasible region in $R^2$. (b) Draw the contours of $c^Tx =−12$, $c^Tx =−14$ and $c^Tx =−16$ and determine the solution graphically. (10 points)
+For 0<λ<1, consider the point:
+w = λx+(1-λ)z
+When we say w = λx+(1-λ)z for some λ∈(0,1), what we mean is that w is a weighted average of x and z.
+
+Because f is convex, by Jensen's inequality, we have:
+f(w)<=λf(x)+(1-λ)f(z)
+
+Give that f(z)<f(x), this implies:
+f(w)<λf(x)+(1-λ)f(x) = f(x)
+
+ However, by adjusting the value of λ, we can make w sufficiently close to x such that w falls within the neighborhood $H$. This contradicts the assumption that for all y in $H$, f(y)>=f(x).
+ Thus, our assumption that f has a local minimum at x but not a global minimum is incorrect. Hence, if f is convex and has a local minimum at x, it must also have a global minimum at x.
+
+
+4.	Consider the LP: $\min c^Tx$ s.t. $Ax \geq b, x \geq 0$, where $T$ is the transpose, $A$ is the 4x2 matrix: \[ 0 −1; −1 −1; −1 2; 1 −1\], $b$ is a 4x1 vector \[−5; −9;0; −3\] and $c$ is a 2x1 vector \[−1; −2\]. (a) Draw the feasible region in $R^2$. (b) Draw the contours of $c^Tx =−12$, $c^Tx =−14$ and $c^Tx =−16$ and determine the solution graphically. (10 points)
 
 Answer: 
 
