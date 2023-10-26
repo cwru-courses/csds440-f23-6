@@ -8,6 +8,34 @@ Names and github IDs (if your github ID is not your name or Case ID):
 1.	Show that the set $C=$ \{ $x|Ax\geq b$ \}, $A \in R^{m\times n}$, $x \in R^n$, $b \in R^m$, is a convex set. Note that this describes the constraint set of a linear program. (10 points)
 
 Answer: 
+The set C is convex. This means that for any two points x1 and x2 in C and for any λ where 0<=λ<=1 ( λ is a scalar that lies in the interval [0,1] ):
+
+A(λx1+(1−λ)x2)>=b
+provided that Ax1>=b and Ax2>=b.
+
+Proof:
+
+Given that x1 and x2 are in C:
+
+1. Ax1>=b
+2. Ax2>=b
+
+Now consider the linear combination of these inequalities with coefficients λ and 1-λ respectively:
+
+λAx1+(1−λ)Ax2>=λb+(1−λ)b
+
+Using the distributive property, this becomes:
+A(λx1+(1−λ)x2)≥λb+(1−λ)b
+
+Here we can simplify the right-hand side to:
+λb+(1-λ)b = b(λ+(1-λ)) = b(1)
+= b
+
+Now, because λb+(1-λ)b is just b, this inequality becomes:
+
+A(λx1+(1−λ)x2)>=b
+
+This proves our initial statement. For any two points x1 and x2 in C and for any λ in the interval [0,1], the convex combination λx1+(1-λ)x2 is also in C. So this confirms that C is convex.
 
 2.	A function $f$ is said to have a global minimum at $x$ if for all $y$, $f(y) \geq f(x)$. It is said to have a local minimum at $x$ if there exists a neighborhood $H$ around $x$ so that for all $y$ in $H$, $f(y)\geq f(x)$. Show that, if $f$ is convex, every local minimum is a global minimum. [Hint: Prove by contradiction using Jensen’s inequality.] (10 points)
 
