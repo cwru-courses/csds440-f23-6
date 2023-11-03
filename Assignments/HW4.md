@@ -174,3 +174,16 @@ Answer:
 9.	When learning the weights for the perceptron, we dropped the *sign* activation function to make the objective smooth. Show that the same strategy does not work for an arbitrary ANN. (Hint: consider the shape of the decision boundary if we did this.)  (10 points)
 
 Answer:
+
+A smooth activation function (such as the logistic sigmoid or hyperbolic tangent) is a better option when learning the weights for a perceptron than the sign activation function. Unfortunately, for several reasons, this method cannot be applied directly to any artificial neural network (ANN):
+
+1. **Complex Decision Boundaries:** Complex and non-linear decision boundaries can be modeled by ANNs with several layers and non-linear activation functions. The activation functions and weights have a complicated function that transforms the decision boundary. A simple, smooth function may be used in place of non-linear activation functions to produce a decision boundary that may not be able to accurately depict the intended function.
+
+2. **Loss Function:** Generally, gradient-based optimization techniques like backpropagation are used to train ANNs. The computation of gradients that drive weight updates during training depends on how smoothly the activation functions are fitted. It would be difficult to compute gradients—which are required for the convergence of optimization methods like gradient descent—if non-smooth activation functions, like the sign function, were used.
+
+3. **Function Approximation:** In order to effectively capture and represent complicated processes, artificial neural networks (ANNs) frequently rely on the non-linear characteristics of activation functions. The network’s capacity to approximate intricate mappings may be restricted if these non-linearities are eliminated.
+
+4. **Expressiveness:** The capacity of ANNs to recognize and learn from both linear and non-linear correlations in data is well recognized. The expressiveness of the network is greatly restricted when non-linear activation functions are swapped out for linear ones, which also lessens the network's capacity to recognize intricate patterns and correlations in data.
+
+In conclusion, while a smooth activation function can effectively replace the sign activation function in a basic perceptron model, this approach is inappropriate for arbitrary artificial neural networks (ANNs). To capture complex patterns and relationships in data, artificial neural networks (ANNs) use numerous layers and non-linear activation functions. Modifying the activation functions can produce a fundamentally different and less expressive model.
+
