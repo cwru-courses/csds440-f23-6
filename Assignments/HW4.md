@@ -147,6 +147,93 @@ The solution, which minimizes cᵀx, is where the contours of c₁x = -12, c₁x
 
 Answer: 
 
+The duality theorem for linear programming, which asserts that for all viable solutions (x, u) of the primal and dual linear programs, the following inequality holds, can be used to demonstrate that for every feasible (x, u) (meeting the constraints of the primordial and dual LPs), bᵀu ≤ cᵀx.
+
+cᵀx ≥ bᵀu
+
+Let's prove this inequality step by step:
+
+Given the primal linear program (LP):
+Minimize cᵀx
+Subject to Ax > b
+x > 0
+
+And it's dual:
+Maximize bᵀu
+Subject to Au ≤ c
+u ≥ 0
+
+We have the following for any possible solution (x, u) that meets the requirements of the dual and primal LPs:
+
+Ax > b  (primal constraint)
+Au ≤ c  (dual constraint)
+x > 0  (primal constraint)
+u ≥ 0  (dual constraint)
+
+Now, let's multiply the dual constraint by u:
+
+uᵀ(Au) ≤ uᵀc
+
+Since u is non-negative (u ≥ 0), we can write:
+
+uᵀ(Au) = uᵀ(Au)
+
+Now, let's add the two inequalities, one from the primal and one from the dual:
+
+Ax + uᵀ(Au) > b + uᵀc
+
+Using the distributive property, we can rewrite this as:
+
+(Ax + uᵀAu) > (b + uᵀc)
+
+Now, let's focus on the left-hand side of the inequality:
+
+(Ax + uᵀAu) = (xᵀAᵀ + uᵀAu)  (since x is a column vector and we use the transpose)
+
+Using the properties of transposition, we have:
+
+xᵀAᵀ + uᵀAu = (uᵀAu + xᵀAᵀ)
+
+Now, let's recall that the primal LP and dual LP are both feasible, so their objective functions are bounded:
+
+cᵀx > -∞
+bᵀu > -∞
+
+Since both are bounded, we can add them to the inequality:
+
+cᵀx + bᵀu > -∞
+
+Now, we can write the inequality as:
+
+(uᵀAu + xᵀAᵀ) > (bᵀu + cᵀx)
+
+Now, let's compare the terms on both sides of the inequality:
+
+uᵀAu + xᵀAᵀ is the objective function of the dual LP.
+bᵀu + cᵀx is the objective function of the primal LP.
+
+So, we have:
+
+(uᵀAu + xᵀAᵀ) > (bᵀu + cᵀx)
+
+Since the dual LP maximizes uᵀAu + xᵀAᵀ, and the primal LP minimizes bᵀu + cᵀx, by the duality theorem, we have:
+
+uᵀAu + xᵀAᵀ ≥ bᵀu + cᵀx
+
+Now, we have shown that for any feasible (x, u), uᵀAu + xᵀAᵀ ≥ bᵀu + cᵀx. By rearranging the terms, we get:
+
+xᵀAᵀ + uᵀAu ≥ bᵀu + cᵀx
+
+An inequality can have its words rearranged without affecting its direction, therefore we have:
+
+bᵀu + cᵀx ≤ xᵀAᵀ + uᵀAu
+
+And that's the inequality we were trying to prove:
+
+bᵀu + cᵀx ≤ xᵀAᵀ + uᵀAu
+
+This proves that for any feasible (x, u), bᵀu + cᵀx ≤ xᵀAᵀ + uᵀAu, which is a fundamental result in linear programming duality.
+
 5.	Derive the backpropagation weight updates for hidden-to-output and input-to-hidden weights when the loss function is cross entropy with a weight decay term. Cross entropy is defined as $L(\mathbf{w})=\sum_i y_i\log{(\hat{y}_i)}+(1-y_i)\log{(1-\hat{y}_i)}$ , where $i$ ranges over examples, $y_i$ is true label (assumed 0/1) and $\hat{y}_i$  is the estimated label for the $i^{th}$ example. (10 points)
 
 Answer:
@@ -232,6 +319,37 @@ In conclusion, weight updates for hidden-to-output weights include the weight de
 6.	Consider a neural network with a single hidden layer with sigmoid activation functions and a single output unit also with a sigmoid activation, and fixed weights. Show that there exists an equivalent network, which computes exactly the same function, where the hidden unit activations are the $\tanh$ function shown in class, and the output unit still has a sigmoid activation. (10 points)
 
 Answer:
+
+To show that there exists an equivalent network where the hidden unit activations are the hyperbolic tangent (tanh) function while the output unit still has a sigmoid activation, we'll first establish the relationship between sigmoid and tanh activations and then demonstrate the equivalence.
+
+1. **Sigmoid Activation Function:** The sigmoid activation function, denoted as σ(x), is given by:
+
+   σ(x) = 1 / (1 + e^(-x))
+
+2. **Tanh Activation Function:** The tanh activation function, denoted as tanh(x), is given by:
+
+   tanh(x) = (e^(x) - e^(-x)) / (e^(x) + e^(-x))
+
+Now, let's consider the transformation that will allow us to replace sigmoid activations in the hidden layer with tanh activations while keeping the overall behavior of the network the same:
+
+We know that:
+
+σ(x) = 2σ(2x) - 1
+
+This relationship allows us to express the sigmoid function in terms of tanh:
+
+σ(x) = 2 * (1 / (1 + e^(-2x))) - 1
+σ(x) = 2 * (1 / (1 + e^(-2x))) - (1 + 1)
+σ(x) = 2 / (1 + e^(-2x)) - 1
+
+Now, we can replace the sigmoid activations in the hidden layer with equivalent tanh activations:
+
+- Sigmoid activation in the hidden layer: σ(x) 
+- Equivalent tanh activation in the hidden layer: 2 * tanh(2x) - 1
+
+The output unit continues to use the sigmoid activation function as before.
+
+Therefore, you can replace the sigmoid activations in the hidden layer with tanh activations using the transformation described above, and the network will compute exactly the same function. This is possible because the sigmoid and tanh activations have similar S-shaped curves, and the transformation preserves the overall behavior of the network while changing the activation function in the hidden layer.
 
 7.	Draw an artificial neural network structure which can perfectly classify the examples shown in the table below. Treat attributes as continuous. Show all of the weights on the edges. For this problem, assume that the activation functions are sign functions instead of sigmoids. Propagate each example through your network and show that the classification is indeed correct.
 (10 points)
