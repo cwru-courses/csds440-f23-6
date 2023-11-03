@@ -69,8 +69,8 @@ The subdifferential only contains non-negative subgradients, hence for a convex 
 3.	Consider the LP: $\min c^Tx$ s.t. $Ax \geq b, x \geq 0$, where $T$ is the transpose, $A$ is the 4x2 matrix: \[ 0 −1; −1 −1; −1 2; 1 −1\], $b$ is a 4x1 vector \[−5; −9;0; −3\] and $c$ is a 2x1 vector \[−1; −2\]. (a) Draw the feasible region in $R^2$. (b) Draw the contours of $c^Tx =−12$, $c^Tx =−14$ and $c^Tx =−16$ and determine the solution graphically. (10 points)
 
 Answer: 
-To visualize the feasible region and draw the contours, we'll first find the vertices of the feasible region by solving the given linear program:
 
+To visualize the feasible region and draw the contours, we'll first find the vertices of the feasible region by solving the given linear program:
 Minimize cᵀx
 Subject to Ax > b
 x > 0
@@ -122,7 +122,6 @@ The solution will be the point within the feasible region where the contours of 
 Now, let's draw the feasible region and the contours on a graph:
 
 
-
                c₁x = -16
                |   
                |
@@ -152,7 +151,6 @@ The duality theorem for linear programming, which asserts that for all viable so
 cᵀx ≥ bᵀu
 
 Let's prove this inequality step by step:
-
 Given the primal linear program (LP):
 Minimize cᵀx
 Subject to Ax > b
@@ -171,65 +169,50 @@ x > 0  (primal constraint)
 u ≥ 0  (dual constraint)
 
 Now, let's multiply the dual constraint by u:
-
 uᵀ(Au) ≤ uᵀc
 
 Since u is non-negative (u ≥ 0), we can write:
-
 uᵀ(Au) = uᵀ(Au)
 
 Now, let's add the two inequalities, one from the primal and one from the dual:
-
 Ax + uᵀ(Au) > b + uᵀc
 
 Using the distributive property, we can rewrite this as:
-
 (Ax + uᵀAu) > (b + uᵀc)
 
 Now, let's focus on the left-hand side of the inequality:
-
 (Ax + uᵀAu) = (xᵀAᵀ + uᵀAu)  (since x is a column vector and we use the transpose)
 
 Using the properties of transposition, we have:
-
 xᵀAᵀ + uᵀAu = (uᵀAu + xᵀAᵀ)
 
 Now, let's recall that the primal LP and dual LP are both feasible, so their objective functions are bounded:
-
 cᵀx > -∞
 bᵀu > -∞
 
 Since both are bounded, we can add them to the inequality:
-
 cᵀx + bᵀu > -∞
 
 Now, we can write the inequality as:
-
 (uᵀAu + xᵀAᵀ) > (bᵀu + cᵀx)
 
 Now, let's compare the terms on both sides of the inequality:
-
 uᵀAu + xᵀAᵀ is the objective function of the dual LP.
 bᵀu + cᵀx is the objective function of the primal LP.
 
 So, we have:
-
 (uᵀAu + xᵀAᵀ) > (bᵀu + cᵀx)
 
 Since the dual LP maximizes uᵀAu + xᵀAᵀ, and the primal LP minimizes bᵀu + cᵀx, by the duality theorem, we have:
-
 uᵀAu + xᵀAᵀ ≥ bᵀu + cᵀx
 
 Now, we have shown that for any feasible (x, u), uᵀAu + xᵀAᵀ ≥ bᵀu + cᵀx. By rearranging the terms, we get:
-
 xᵀAᵀ + uᵀAu ≥ bᵀu + cᵀx
 
 An inequality can have its words rearranged without affecting its direction, therefore we have:
-
 bᵀu + cᵀx ≤ xᵀAᵀ + uᵀAu
 
 And that's the inequality we were trying to prove:
-
 bᵀu + cᵀx ≤ xᵀAᵀ + uᵀAu
 
 This proves that for any feasible (x, u), bᵀu + cᵀx ≤ xᵀAᵀ + uᵀAu, which is a fundamental result in linear programming duality.
