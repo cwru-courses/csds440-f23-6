@@ -8,34 +8,29 @@ Names and github IDs (if your github ID is not your name or Case ID):
 1.	Show that the set $C=$ \{ $x|Ax\geq b$ \}, $A \in R^{m\times n}$, $x \in R^n$, $b \in R^m$, is a convex set. Note that this describes the constraint set of a linear program. (10 points)
 
 Answer: 
-The set C is convex. This means that for any two points x1 and x2 in C and for any λ where 0<=λ<=1 ( λ is a scalar that lies in the interval [0,1] ):
+We employ the definition of convexity to demonstrate the convexity of the set C = {x | Axe >= b}. If the line segment joining any two locations in the set is also totally contained inside the set, then the set is convex. Mathematically speaking, a set X is convex if the point λx₁ + (1-λ)x₂ is also in X for any two points x₁ and x₂ in X and for any λ in the range [0,1].
 
-A(λx1+(1−λ)x2)>=b
-provided that Ax1>=b and Ax2>=b.
+In this case, C is defined as follows:
+C = {x | Ax ≥ b}
 
-Proof:
+Where:
+- A is a matrix of size M×n.
+- x is a vector in Rⁿ.
+- b is a vector in Rᴹ.
 
-Given that x1 and x2 are in C:
+Now, let's take two points x₁ and x₂ in the set C, which means that Ax₁ ≥ b and Ax₂ ≥ b.
 
-1. Ax1>=b
-2. Ax2>=b
+We want to show that for any λ in the range [0,1], the point λx₁ + (1-λ)x₂ is also in the set C, which means that A(λx₁ + (1-λ)x₂) ≥ b.
 
-Now consider the linear combination of these inequalities with coefficients λ and 1-λ respectively:
+Let's prove this:
+A(λx₁ + (1-λ)x₂) = λAx₁ + (1-λ)Ax₂
 
-λAx1+(1−λ)Ax2>=λb+(1−λ)b
+Since Ax₁ ≥ b and Ax₂ ≥ b, we have:
+λAx₁ + (1-λ)Ax₂ ≥ λb + (1-λ)b = b (by the properties of linear combinations)
 
-Using the distributive property, this becomes:
-A(λx1+(1−λ)x2)≥λb+(1−λ)b
+So, A(λx₁ + (1-λ)x₂) ≥ b, which means that the convex combination of x₁ and x₂, λx₁ + (1-λ)x₂, is also in the set C.
 
-Here we can simplify the right-hand side to:
-λb+(1-λ)b = b(λ+(1-λ)) = b(1)
-= b
-
-Now, because λb+(1-λ)b is just b, this inequality becomes:
-
-A(λx1+(1−λ)x2)>=b
-
-This proves our initial statement. For any two points x1 and x2 in C and for any λ in the interval [0,1], the convex combination λx1+(1-λ)x2 is also in C. So this confirms that C is convex.
+Therefore, the set C = {x | Ax ≥ b} is convex, which is a desirable property for the constraint set of a linear program.
 
 2.	A function $f$ is said to have a global minimum at $x$ if for all $y$, $f(y) \geq f(x)$. It is said to have a local minimum at $x$ if there exists a neighborhood $H$ around $x$ so that for all $y$ in $H$, $f(y)\geq f(x)$. Show that, if $f$ is convex, every local minimum is a global minimum. [Hint: Prove by contradiction using Jensen’s inequality.] (10 points)
 
