@@ -121,6 +121,8 @@ The solution will be the point within the feasible region where the contours of 
 
 Now, let's draw the feasible region and the contours on a graph:
 
+
+
                c₁x = -16
                |   
                |
@@ -136,6 +138,8 @@ Now, let's draw the feasible region and the contours on a graph:
     /      \
    /        \
 (0,0)   (4.5,4.5)
+
+
 
 The solution, which minimizes cᵀx, is where the contours of c₁x = -12, c₁x = -14, and c₁x = -16 intersect. This point can be found on the graph where the three contours meet, and it represents the optimal solution to the linear program.
 
