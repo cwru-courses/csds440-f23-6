@@ -85,6 +85,60 @@ b = [-5; -9; 0; -3]
 
 c = [-1; -2]
 
+(a) Finding the Feasible Region:
+
+We'll start by solving the inequalities Ax > b, where x > 0. This will help us identify the feasible region. To do this, we need to find the vertices of the feasible region. The vertices are the points where the constraints intersect.
+
+Let's solve these inequalities to find the vertices:
+
+1. 0x - x ≥ -5   →  -x ≥ -5   →  x ≤ 5
+2. -1x - 1x ≥ -9 →  -2x ≥ -9 →  x ≤ 4.5
+3. -1x + 2x ≥ 0  →  x ≥ 0
+4. 1x - 1x ≥ -3  →  0 ≥ -3 (always true)
+
+So, we have the following vertices for the feasible region: (0, 0), (5, 0), and (4.5, 4.5).
+
+Now, let's move on to part (b) to draw the contours of c₁x and determine the solution graphically.
+
+(b) Drawing the Contours and Determining the Solution Graphically:
+
+We will draw the contours for c₁x = -12, c₁x = -14, and c₁x = -16. To do this, we need to find the corresponding c₂ values for each contour:
+
+1. c₁x = -12
+c₂x = -2 * x = -12 → x = 6
+2. c₁x = -14
+c₂x = -2 * x = -14 → x = 7
+3. c₁x = -16
+c₂x = -2 * x = -16 → x = 8
+
+Now, we will draw these contours on the graph:
+
+- For c₁x = -12, we have a contour at x = 6.
+- For c₁x = -14, we have a contour at x = 7.
+- For c₁x = -16, we have a contour at x = 8.
+
+The solution will be the point within the feasible region where the contours of c₁x = -12, c₁x = -14, and c₁x = -16 intersect. From the vertices we found earlier (0, 0), (5, 0), and (4.5, 4.5), we can see that the solution will be at the intersection of the contours.
+
+Now, let's draw the feasible region and the contours on a graph:
+
+               c₁x = -16
+               |   
+               |
+   (5,0)       |
+     +---+---- + +
+     |   |      |   
+     |   |    c₁x = -14
+     |   |   /   
+     |   |  /
+     |   | /   
+     |   |/
+     +---+
+    /      \
+   /        \
+(0,0)   (4.5,4.5)
+
+The solution, which minimizes cᵀx, is where the contours of c₁x = -12, c₁x = -14, and c₁x = -16 intersect. This point can be found on the graph where the three contours meet, and it represents the optimal solution to the linear program.
+
 4.	Consider the primal linear program (LP): $\min c^Tx$ s.t. $Ax \geq b, x \geq 0$ and its dual: $\max b^Tu$ s.t. $A^Tu \leq c, u \geq 0$. Prove that for any feasible $(x,u)$ (i.e. $x$ and $u$ satisfying the constraints of the two LPs), $b^Tu \leq c^Tx$. (10 points)
 
 Answer: 
