@@ -1,4 +1,4 @@
-# CSDS440 Written Homework 3
+# CSDS440 Written Homework 4
 **Instructions:** Each question is worth 10 points unless otherwise stated. Write your answers below the question. Each answer should be formatted so it renders properly on github. **Answers that do not render properly may not be graded.** Please comment the last commit with "FINAL COMMIT" and **enter the final commit ID in canvas by the due date.** 
 
 When working as a group, only one answer to each question is needed unless otherwise specified. Each person in each group must commit and push their own work. **You will not get credit for work committed/pushed by someone else even if done by you.** Commits should be clearly associated with your name or CWRU ID (abc123). Each person is expected to do an approximately equal share of the work, as shown by the git logs. **If we do not see evidence of equal contribution from the logs for someone, their individual grade will be reduced.** 
@@ -35,32 +35,55 @@ Therefore, the set C = {x | Ax ≥ b} is convex, which is a desirable property f
 2.	A function $f$ is said to have a global minimum at $x$ if for all $y$, $f(y) \geq f(x)$. It is said to have a local minimum at $x$ if there exists a neighborhood $H$ around $x$ so that for all $y$ in $H$, $f(y)\geq f(x)$. Show that, if $f$ is convex, every local minimum is a global minimum. [Hint: Prove by contradiction using Jensen’s inequality.] (10 points)
 
 Answer: 
+A function ƒ exhibiting convexity is a crucial characteristic supporting the idea that each local minimum is a global minimum. It's called the "non-negativity of the subdifferential."
 
-Given: $f$ is convex and has a local minimum at $x$.
-We want to prove that $f$ has a global minimum at $x$.
+Let's define the concept of the subdifferential:
 
-Proof:
-Assume for the sake of contradiction that  $f$ has a local minimum at $x$ bit, not a global minimum. This implies:
-1. There exists a neighbourhood $H$ around $x$ such that for all $y$ in $H$, f(y)>=f(x).
-2. There exists a point $z$ outside $H$ such that f(z)<f(x).
+All of the function's subgradients at a given point x make up the subdifferential of a convex function ƒ, which is represented as ∂̒(x). An arbitrary vector g that ensures the following inequality holds for every point y is a subgradient at x:
 
-For 0<λ<1, consider the point:
-w = λx+(1-λ)z
-When we say w = λx+(1-λ)z for some λ∈(0,1), what we mean is that w is a weighted average of x and z.
+ƒ(y) ≥ ƒ(x) + gᵀ(y - x)
 
-Because f is convex, by Jensen's inequality, we have:
-f(w)<=λf(x)+(1-λ)f(z)
+Now, let's consider a function ƒ that has a local minimum at point x, which means there exists a neighborhood H around x such that, for all y in H, ƒ(y) ≥ ƒ(x).
 
-Give that f(z)<f(x), this implies:
-f(w)<λf(x)+(1-λ)f(x) = f(x)
+Our goal is to establish the global minimum of this local minimum.
 
- However, by adjusting the value of λ, we can make w sufficiently close to x such that w falls within the neighborhood $H$. This contradicts the assumption that for all y in $H$, f(y)>=f(x).
- Thus, our assumption that f has a local minimum at x but not a global minimum is incorrect. Hence, if f is convex and has a local minimum at x, it must also have a global minimum at x.
+If g is a subgradient at x for a convex function ƒ, then g belongs to the subdifferential ∂ƒ(x). According to the subdifferential's definition, at every point y, we have:
 
+ƒ(y) ≥ ƒ(x) + gᵀ(y - x)
 
-4.	Consider the LP: $\min c^Tx$ s.t. $Ax \geq b, x \geq 0$, where $T$ is the transpose, $A$ is the 4x2 matrix: \[ 0 −1; −1 −1; −1 2; 1 −1\], $b$ is a 4x1 vector \[−5; −9;0; −3\] and $c$ is a 2x1 vector \[−1; −2\]. (a) Draw the feasible region in $R^2$. (b) Draw the contours of $c^Tx =−12$, $c^Tx =−14$ and $c^Tx =−16$ and determine the solution graphically. (10 points)
+Now, for any y in the neighborhood H around x, we know that ƒ(y) ≥ ƒ(x). Thus, the inequality becomes:
+
+ƒ(x) ≥ ƒ(x) + gᵀ(y - x)
+
+By subtracting ƒ(x) from both sides, we get:
+
+0 ≥ gᵀ(y - x)
+
+Since this inequality applies when y = x, it also holds for all y in the neighborhood H. Therefore:
+0 ≥ gᵀ(0) = 0
+
+Thus, gᵀ(0) = 0 is implied. It follows that all subgradients in the ∂ƒ(x) are non-negative since this inequality holds for all subgradients g.
+
+The subdifferential only contains non-negative subgradients, hence for a convex function, every local minimum is also a global minimum. This characteristic guarantees that the function cannot have any local minima or "bumps" inside the convex region.
+
+3.	Consider the LP: $\min c^Tx$ s.t. $Ax \geq b, x \geq 0$, where $T$ is the transpose, $A$ is the 4x2 matrix: \[ 0 −1; −1 −1; −1 2; 1 −1\], $b$ is a 4x1 vector \[−5; −9;0; −3\] and $c$ is a 2x1 vector \[−1; −2\]. (a) Draw the feasible region in $R^2$. (b) Draw the contours of $c^Tx =−12$, $c^Tx =−14$ and $c^Tx =−16$ and determine the solution graphically. (10 points)
 
 Answer: 
+To visualize the feasible region and draw the contours, we'll first find the vertices of the feasible region by solving the given linear program:
+
+Minimize cᵀx
+Subject to Ax > b
+x > 0
+
+Given:
+A = [ 0  -1;
+     -1 -1;
+     -1  2;
+      1 -1]
+
+b = [-5; -9; 0; -3]
+
+c = [-1; -2]
 
 4.	Consider the primal linear program (LP): $\min c^Tx$ s.t. $Ax \geq b, x \geq 0$ and its dual: $\max b^Tu$ s.t. $A^Tu \leq c, u \geq 0$. Prove that for any feasible $(x,u)$ (i.e. $x$ and $u$ satisfying the constraints of the two LPs), $b^Tu \leq c^Tx$. (10 points)
 
