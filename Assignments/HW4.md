@@ -167,6 +167,47 @@ Answer:
 
 Answer:
 
+Here is an artificial neural network structure that can perfectly classify the examples given in the table:
+
+- Input Layer: 2 input neurons (x1 and x2)
+- Hidden Layer: 1 hidden neuron with a sign activation function (we'll call it h)
+- Output Layer: 1 output neuron with a sign activation function (we'll call it y)
+
+The weights on the edges are as follows:
+1. Weight from x1 to h: w1 = 1
+2. Weight from x2 to h: w2 = 1
+3. Weight from h to y: w3 = 1
+
+The network structure looks like this:
+
+ x1 (w1=1)
+  |
+ x2 (w2=1)
+  |
+  h (w3=1)
+  |
+  y
+
+
+The sign activation function for the hidden neuron h and output neuron y is as follows:
+- Sign Activation Function: The output is +1 in the case of a positive input and -1 in the case of a negative input.
+
+Now, let's propagate the given examples through the network:
+
+1. Example (4, 4, 1):
+   - Input: x1 = 4, x2 = 4
+   - Hidden Layer (h): sign(1 * 4 + 1 * 4) = sign(8) = 1
+   - Output Layer (y): sign(1 * 1) = sign(1) = 1
+   - The network classifies this example as Class 1.
+
+2. Example (1, 1, 4):
+   - Input: x1 = 1, x2 = 1
+   - Hidden Layer (h): sign(1 * 1 + 1 * 1) = sign(2) = 1
+   - Output Layer (y): sign(1 * 1) = sign(1) = 1
+   - The network classifies this example as Class 4.
+
+The network perfectly classifies both examples as specified in the table, showing that it correctly separates the two classes using the weights and sign activation functions.
+
 8.	Using R/Matlab/Mathematica/python/your favorite software, plot the decision boundary for an ANN with two inputs, two hidden units and one output. All activation functions are sigmoids. Each layer is fully connected to the next. Assume the inputs range between −5 to 5 and fix all activation thresholds to 0. Plot the decision boundaries for  the weights except the thresholds randomly chosen between (i) (−10,10), (ii) (−3,3), (iii) (−0.1,0.1) (one random set for each case is enough). Use your plots to show that weight decay can be used to control overfitting for ANNs. (If you use Matlab, the following commands might be useful: meshgrid and surf). (20 points)
 
 Answer:
