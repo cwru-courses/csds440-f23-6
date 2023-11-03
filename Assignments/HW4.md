@@ -290,6 +290,48 @@ The network perfectly classifies both examples as specified in the table, showin
 
 Answer:
 
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.neural_network import MLPClassifier
+
+# Define the input range
+x1_range = np.linspace(-5, 5, 400)
+x2_range = np.linspace(-5, 5, 400)
+X1, X2 = np.meshgrid(x1_range, x2_range)
+input_data = np.c_[X1.ravel(), X2.ravel()]
+
+# Define weight ranges
+weight_ranges = [(-10, 10), (-3, 3), (-0.1, 0.1)]
+
+# Initialize plots
+fig, axes = plt.subplots(1, 3, figsize=(15, 5))
+fig.subtitle('Decision Boundaries with Different Weight Ranges')
+
+for i, weight_range in enumerate(weight_ranges):
+    # Generate random weights within the specified range
+    weights_hidden = np.random.uniform(weight_range[0], weight_range[1], size=(2, 2))
+    weights_output = np.random.uniform(weight_range[0], weight_range[1], size=(2,))
+    
+    # Create and train a multi-layer perceptron classifier
+    clf = MLPClassifier(hidden_layer_sizes=(2,), activation='logistic', max_iter=1000)
+    clf.coefs_ = [weights_hidden, weights_output]
+    clf.intercepts_ = [np.zeros(2), np.zeros(1)]
+    clf.fit(input_data, np.zeros(len(input_data)))
+    
+    # Predict the decision boundary
+    decision_boundary = clf.predict(input_data)
+    decision_boundary = decision_boundary.reshape(X1.shape)
+    
+    # Plot the decision boundary
+    axes[i].contourf(X1, X2, decision_boundary, levels=[-0.5, 0.5], cmap=plt.cm.RdBu, alpha=0.7)
+    axes[i].set_xlim(-5, 5)
+    axes[i].set_ylim(-5, 5)
+    axes[i].set_xlabel('Input X1')
+    axes[i].set_ylabel('Input X2')
+    axes[i].set_title(f'Weight Range: {weight_range}')
+
+plt.show()
+
 9.	When learning the weights for the perceptron, we dropped the *sign* activation function to make the objective smooth. Show that the same strategy does not work for an arbitrary ANN. (Hint: consider the shape of the decision boundary if we did this.)  (10 points)
 
 Answer:
