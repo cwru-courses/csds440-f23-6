@@ -150,6 +150,84 @@ Answer:
 5.	Derive the backpropagation weight updates for hidden-to-output and input-to-hidden weights when the loss function is cross entropy with a weight decay term. Cross entropy is defined as $L(\mathbf{w})=\sum_i y_i\log{(\hat{y}_i)}+(1-y_i)\log{(1-\hat{y}_i)}$ , where $i$ ranges over examples, $y_i$ is true label (assumed 0/1) and $\hat{y}_i$  is the estimated label for the $i^{th}$ example. (10 points)
 
 Answer:
+Calculus's chain rule can be used to determine the backpropagation weight updates for hidden-to-output and input-to-hidden weights when the loss function is cross-entropy with a weight decay term. One definition of the loss function is:
+
+L(w) = -(1/n) * Σ[i=1 to n] [y_i * log(ŷ_i) + (1 - y_i) * log(1 - ŷ_i)] + (λ/2) * Σ[j=1 to H] Σ[k=1 to M] w_jk^2
+
+Where:
+- n is the no: of examples.
+- H is the no: of hidden units.
+- M is the no: of output units.
+- y_i is the true label (assumed to be 0 or 1).
+- ŷ_i is the estimated label for the i-th example.
+- w_jk represents the weight connecting the j-th hidden unit to the k-th output unit.
+- λ is the weight decay hyperparameter.
+
+The weight updates for input-to-hidden weights (v_ij) and hidden-to-output weights (w_jk) will be derived.
+
+**1. Weight Updates for Hidden-to-Output Weights (w_jk):**
+
+In relation to w_jk, the loss function is defined as follows:
+
+∂L/∂w_jk = -(1/n) * Σ[i=1 to n] [y_i * (1/ŷ_i) * ∂ŷ_i/∂w_jk - (1 - y_i) * (1/(1 - ŷ_i)) * ∂(1 - ŷ_i)/∂w_jk] + λ * w_jk
+
+To compute the derivatives ∂ŷ_i/∂w_jk and ∂(1 - ŷ_i)/∂w_jk, you can use the chain rule:
+
+∂ŷ_i/∂w_jk = ∂(σ(net_k))/∂net_k * ∂(net_k)/∂w_jk = ŷ_i * (1 - ŷ_i) * z_j
+
+∂(1 - ŷ_i)/∂w_jk = -∂ŷ_i/∂w_jk = -ŷ_i * (1 - ŷ_i) * z_j
+
+Where:
+- σ(net_k) is the sigmoid activation function applied to net_k.
+- net_k is the weighted sum of inputs to the output unit k.
+- z_j is the output of the j-th hidden unit.
+
+Now, you can substitute these derivatives into the expression for ∂L/∂w_jk:
+
+∂L/∂w_jk = -(1/n) * Σ[i=1 to n] [y_i * (1/ŷ_i) * ŷ_i * (1 - ŷ_i) * z_j - (1 - y_i) * (1/(1 - ŷ_i)) * (-ŷ_i) * (1 - ŷ_i) * z_j] + λ * w_jk
+
+Simplify further:
+
+∂L/∂w_jk = -(1/n) * Σ[i=1 to n] [y_i * (1 - ŷ_i) * z_j + (1 - y_i) * (-ŷ_i) * z_j] + λ * w_jk
+
+Now, you can update the weight w_jk using a gradient descent update rule:
+
+w_jk = w_jk - η * ∂L/∂w_jk
+
+Where η is the learning rate.
+
+**2. Weight Updates for Input-to-Hidden Weights (v_ij):**
+
+Since the input-to-hidden weights are unaffected by the weight decay term, the update for v_ij is unchanged from the conventional backpropagation update and does not include a weight decay term. The conventional gradient descent rule would be used to update v_ij after calculating the gradient of the loss with respect to v_ij.
+
+In conclusion, the weight updates for hidden-to-output weights contain an extra regularisation term in the gradient when the loss function is cross-entropy with a weight decay term, but the weight updates for input-to-hidden weights do not include the weight decay term.
+
+Let's review the weight updates taking cross-entropy loss with weight decay into consideration for both input-to-hidden weights (v_ij) and hidden-to-output weights (w_jk):
+
+**Weight Updates for Hidden-to-Output Weights (w_jk):**
+
+The cross-entropy loss term and the weight decay term are both included in the update rule for w_jk:
+
+w_jk = w_jk - η * ∂L/∂w_jk
+
+Where:
+- The gradient of the cross-entropy loss, which incorporates both the loss term and the weight decay term, is ∂L/∂w_jk with respect to w_jk.
+
+The additional regularisation component (λ * w_jk) in the gradient represents the weight decay term.
+
+
+**Weight Updates for Input-to-Hidden Weights (v_ij):**
+
+The weight updates for input-to-hidden weights adhere to the conventional backpropagation update rule and do not contain the weight decay term:
+
+v_ij = v_ij - η * ∂L/∂v_ij
+
+Where:
+- The gradient of the cross-entropy loss relative to v_ij, devoid of the weight decay term, is expressed as ∂L/∂v_ij.
+
+This indicates that the weight updates for input-to-hidden weights are unaffected by the regularisation term (λ * v_ij), and the updates are carried out using the conventional gradient descent procedure.
+
+In conclusion, weight updates for hidden-to-output weights include the weight decay term as an extra regularisation term in the gradient when using cross-entropy loss with a weight decay term in a neural network, whereas weight updates for input-to-hidden weights do not include the weight decay term and adhere to the conventional backpropagation update rules. This enables you to use weight decay regularisation to prevent overfitting and optimize the model's performance on the specified task at the same time.
 
 6.	Consider a neural network with a single hidden layer with sigmoid activation functions and a single output unit also with a sigmoid activation, and fixed weights. Show that there exists an equivalent network, which computes exactly the same function, where the hidden unit activations are the $\tanh$ function shown in class, and the output unit still has a sigmoid activation. (10 points)
 
