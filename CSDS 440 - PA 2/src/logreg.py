@@ -32,7 +32,7 @@ class LogisticRegression:
         if self.weights is not None:
             return np.asarray(self.sigmoid(X * self.weights)).reshape(-1)
         else:
-            raise ValueError("Model is not trained yet.")
+            raise ValueError("Model is not trained yet")
 
 def main():
     seed(12345)
