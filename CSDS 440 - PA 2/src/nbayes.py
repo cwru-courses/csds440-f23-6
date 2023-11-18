@@ -65,7 +65,6 @@ class NaiveBayesClassifier:
             return np.asarray(ret)
         else:
             raise ValueError("Model is not trained yet.")
-
 def main():
     argv = sys.argv[1:]
     path = argv[0]
