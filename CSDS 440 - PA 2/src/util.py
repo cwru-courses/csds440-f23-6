@@ -118,7 +118,6 @@ class ReportGenerator:
             print('Recall:{:.03f} {:.03f}'.format(rec, 0))
             print('Area under ROC {:.03f}'.format(auc))
 
-
 class DataLoader:
     @staticmethod
     def n_fold(n_sample, n_fold=5):
