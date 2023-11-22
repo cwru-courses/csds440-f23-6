@@ -26,6 +26,33 @@ Answer:
 5.	For a constrained programming problem $\min_w f(w)$ s.t. $g_i(w) \leq 0, h_j(w)=0$, the generalized Lagrangian is defined by $L(w,\alpha,\beta)=f(w)+\sum_i \alpha_i g_i(w)+ \sum_j \beta_j h_j(w), \alpha_i \geq 0$. A primal linear program is a constrained program of the form: $\min_x c^Tx$ s.t. $Ax \geq b, x \geq 0$ where $T$ represents the transpose. Using the generalized Lagrangian, show that the dual form of the primal LP is $\max_u b^Tu$ s.t. $A^Tu \leq  c, u \geq 0$. (10 points)
 
 Answer:
+Deriving the Dual Form of a Primal Linear Program
+
+In the context of constrained programming, a primal linear program is defined as follows:
+
+Minimize 𝑥 𝑐^𝑇𝑥 such that 𝐴𝑥 ≥ 𝑏, 𝑥 ≥ 0.
+
+The dual form of this primal LP can be derived using the generalized Lagrangian, defined as:
+
+𝐿(𝑤, 𝛼, 𝛽) = 𝑓(𝑤) + ∑𝑖 𝛼𝑖𝑔𝑖(𝑤) + ∑𝑗 𝛽𝑗ℎ𝑗(𝑤), where 𝛼𝑖 ≥ 0.
+
+To find the dual form, we'll follow these steps:
+
+1. Introduce Lagrange multipliers for the inequality constraints: 𝛼𝑖 ≥ 0.
+2. Define the Lagrangian for the primal LP as follows:
+   𝐿(𝑥, 𝛼) = 𝑐^𝑇𝑥 + ∑𝑖 𝛼𝑖(𝑏𝑖 - (𝐴𝑖)^𝑇𝑥)
+   
+3. To obtain the dual function, maximize 𝐿(𝑥, 𝛼) with respect to 𝑥 while keeping 𝛼 fixed.
+
+   Dual function: 𝑔(𝛼) = max𝑥 𝐿(𝑥, 𝛼)
+
+4. We find that the dual form is:
+   maximize 𝑢 𝑢^𝑇𝑏 - ∑𝑖 𝛼𝑖(𝐴𝑖)^𝑇𝑐
+   
+5. The dual problem can be formulated as:
+   maximize 𝑢 𝑢^𝑇𝑏 such that 𝐴^𝑇𝑢 ≤ 𝑐, 𝑢 ≥ 0.
+
+This is the dual form of the primal LP, where we maximize a function of the Lagrange multipliers 𝛼 to obtain the dual solution 𝑢. The dual problem helps find a lower bound on the optimal value of the primal LP.
 
 6.	Suppose $K_1$ and $K_2$ are two valid kernels. Show that for positive $a$ and $b$, the following are also valid kernels: (i) $aK_1+bK_2$ and (ii) $aK_1K_2$, where the product is the Hadamard product: if $K=K_1K_2$ then $K(x,y)=K_1(x,y)K_2(x,y)$. (10 points)
 
