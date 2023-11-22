@@ -209,6 +209,8 @@ for k in range(total_classifiers + 1):
         print(f"For k = {k}, ensemble error rate is {error_rate:.2f} < {desired_error_rate}.")
 
 <img width="960" alt="image" src="https://github.com/cwru-courses/csds440-f23-6/assets/143508973/5598ef2e-140b-406a-a7a8-b50aec7632e1">
+<img width="960" alt="image" src="https://github.com/cwru-courses/csds440-f23-6/assets/143508973/7028cfb4-432b-4492-91ab-56814460c0e0">
+<img width="960" alt="image" src="https://github.com/cwru-courses/csds440-f23-6/assets/143508973/0f88e527-68ca-44ce-b4f9-36d48f80b4a6">
 
 
 This code calculates the ensemble error rate for different values of "k" (the number of good classifiers) and "m" (the number of bad classifiers) and checks if it's less than the desired error rate of 0.5. The loop iterates through different values of "k" and prints the combinations that meet the criterion.
