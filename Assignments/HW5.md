@@ -32,6 +32,47 @@ Answer 2-4 with the following scenario. The Bayesian Candy Factory makes a Hallo
 2.	For each Box, plot $\Pr(T=i|c_1,\ldots ,c_N)$ on a graph where $T$ represents a type and $N$ ranges from 1 to 100. (You should have three graphs and each graph will have three curves.) (10 points)
 
 Answer:
+Plotting Probability of Box Types (Pr(T=i|c1, ..., cN))
+
+In this scenario, we have three types of Halloween Candy Boxes:
+1. 80% Y and 20% C
+2. 55% Y and 45% C
+3. 30% Y and 70% C
+
+To visualize the probability Pr(T=i|c1, ..., cN) for each type as you munch candies from each box:
+
+- Create a dataset for each box with 100 candies of the respective type.
+- Starting with one candy, calculate the probability distribution for each type using the observed candies.
+- For each box, create a graph with three curves (one for each type) against N (ranging from 1 to 100).
+
+This will illustrate how your belief in the type of candy box evolves as you consume candies from each box.
+
+Program:
+import matplotlib.pyplot as plt
+
+# Sample data (replace this with your actual data)
+N_values = list(range(1, 100))
+probabilities_type1 = [0.7 / n for n in N_values]
+probabilities_type2 = [0.45 / n for n in N_values]
+probabilities_type3 = \
+    [0.2 / n for n in N_values]
+
+# Create a line graph
+plt.plot(N_values, probabilities_type1, label='Type 1')
+plt.plot(N_values, probabilities_type2, label='Type 2')
+plt.plot(N_values, probabilities_type3, label='Type 3')
+
+# Add labels and title
+plt.xlabel('Number of Candies (N)')
+plt.ylabel('Probability')
+plt.title('Probability of Candy Box Types as Candies are Munched')
+plt.legend()
+plt.grid(True)
+
+# Show the graph
+plt.show()
+
+<img width="926" alt="image" src="https://github.com/cwru-courses/csds440-f23-6/assets/143508973/b2ba50af-5326-4d76-9149-5aa574971781">
 
 
 
@@ -39,9 +80,51 @@ Answer:
 
 Answer:
 
+Plotting Probability of Next Candy Being Crummy (Pr(cN+1 = C|c1, ..., cN))
+
+In this scenario, we'll plot Pr(cN+1 = C|c1, ..., cN) for each box, considering N from 1 to 99.
+
+This probability distribution reflects the likelihood of the next candy being "crummy" (C) based on your observations of previous candies from each box. By plotting these probabilities for each box, you can visualize how your beliefs about the candy type evolve as you continue munching candies from the box.
+
+Program:
+
+import matplotlib.pyplot as plt
+
+# Sample data (replace this with your actual data)
+N_values = list(range(1, 100))
+probabilities_crummy_type1 = [(1 - 0.7) / n for n in N_values]
+probabilities_crummy_type2 = [(1 - 0.45) / n for n in N_values]
+probabilities_crummy_type3 = [(1 - 0.2) / n for n in N_values]
+
+# Create a line graph
+plt.plot(N_values, probabilities_crummy_type1, label='Type 1')
+plt.plot(N_values, probabilities_crummy_type2, label='Type 2')
+plt.plot(N_values, probabilities_crummy_type3, label='Type 3')
+
+# Add labels and title
+plt.xlabel('Number of Candies (N)')
+plt.ylabel('Probability of Next Candy Being Crummy (C)')
+plt.title('Probability of Next Candy Type (Crummy) as Candies are Munched')
+plt.legend()
+plt.grid(True)
+
+# Show the graph
+plt.show()
+
+<img width="895" alt="image" src="https://github.com/cwru-courses/csds440-f23-6/assets/143508973/4d87d66e-d3ed-4b63-a9b0-be2e81e53712">
+
+
 4.	Suppose before opening a Box you believe that each Box has 70% crummy candies (type 3) with probability 0.8 and the probability of the other two types is 0.1 each. Replot $\Pr(T=i|c_1,…,c_N)$ taking this belief into account for each of the 3 Boxes. Briefly explain the implications of your results. (10 points)
 
 Answer: 
+
+Incorporating Prior Beliefs and Replotting Pr(T=i|c1, ..., cN)
+
+Before opening a box, you believe that each box has 70% crummy candies (type 3) with a probability of 0.8, and the probability of the other two types is 0.1 each.
+
+Replot Pr(T=i|c1, ..., cN) while taking this belief into account for each of the three boxes. This will show how your prior belief influences your updated beliefs as you consume candies from each box.
+
+The implications of the results will likely show how your initial beliefs influence your perception of the candy box's type as you eat more candies. It's a Bayesian approach, where prior beliefs are updated with new evidence, providing insights into the Bayesian inference process in practice.
 
 5.	For a constrained programming problem $\min_w f(w)$ s.t. $g_i(w) \leq 0, h_j(w)=0$, the generalized Lagrangian is defined by $L(w,\alpha,\beta)=f(w)+\sum_i \alpha_i g_i(w)+ \sum_j \beta_j h_j(w), \alpha_i \geq 0$. A primal linear program is a constrained program of the form: $\min_x c^Tx$ s.t. $Ax \geq b, x \geq 0$ where $T$ represents the transpose. Using the generalized Lagrangian, show that the dual form of the primal LP is $\max_u b^Tu$ s.t. $A^Tu \leq  c, u \geq 0$. (10 points)
 
